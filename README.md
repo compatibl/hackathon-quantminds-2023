@@ -1,8 +1,5 @@
 # QuantMinds-CompatibL Hackathon (2023)
 ![GitHub](https://img.shields.io/github/license/compatibl/hackathon)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/hackathon)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hackathon)
-![PyPI](https://img.shields.io/pypi/v/hackathon)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/compatibl/hackathon/pulls)
 ## Overview
 
