@@ -1,4 +1,4 @@
-# QuantMinds Hackathon (2023)
+# QuantMinds-CompatibL Hackathon (2023)
 ![GitHub](https://img.shields.io/github/license/compatibl/hackathon)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/hackathon)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/hackathon)
@@ -6,7 +6,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/compatibl/hackathon/pulls)
 ## Overview
 
-The theme of this inaugural QuantMinds Hackathon is Quantitative Finance AI.
+The theme of the inaugural QuantMinds-CompatibL Hackathon is Quantitative Finance AI.
 
 **QuantMinds conference pass is not required and participation is possible with or without coding.**
 
@@ -32,7 +32,10 @@ the InterContinental O2 Hotel, One Waterview Drive, Greenwich Peninsula, SE10 0T
 
 ## Equipment
 
-- Participants will use their own computer equipment. 
+- With models hosted online, a basic laptop is all you need.
+- For non-coding entries, you can use an online playground provided by the organizers or any other
+playground (however see the note below about third-party playgrounds).
+- For coding entries, you can clone this GitHub repo and work using Python 3.9 or later, or use your own tools.
 - Instructions for registering and getting API keys for online model hosting services will be provided.
 - The cost of model hosting service use during the hackathon is expected to be less than GBP 50.
 
@@ -53,10 +56,18 @@ equal parts through a public drawing.
 
 ## Submission Format
 
+- Non-coding and coding entries will compete alongside one another in each category.
+- Coding participants are welcome to use and modify pre- and post-processing code
+for the non-coding  entries included in this GitHub repo.
+- Using advanced methods including chains is permitted for coding entries.
+- Using your own tools instead of cloning this repo is permitted as long as both
+the entry itself and the tools are licensed under Apache or MIT license.
+Contact the organizers for information on other licenses.
+
 Participants can choose between non-code and code submission formats in each of the four categories,
 to be scored together in each category.
 
-### Non-Code Submission Format
+#### Non-Code Submission Format Details
 
 - The competition entry is a text prompt submitted by email
 guides the model to produce the desired
@@ -67,14 +78,15 @@ application will be provided by the organizers for use with participants' own ke
 - The entry is scored by parsing JSON in the model output.
 - Any text before the opening or after the closing curly brackets is ignored.
 
-### Code Submission Format
+#### Code Submission Format Details
 
 - Participants can submit their own Python code via GitHub.
 - The code should read a .csv file with input data and produce a .csv file with
 output fields.
 - A sample open-source environment will be provided by the organizers in this package, however
-its use is not required and any other open-source environment in Python or another mainstream
-programming language that the organizers can install and run for scoring can be used.
+its use is optional and the entry can use any other open-source toolset in Python (MIT or Apache license).
+- The competition entry itself must be provided under an open source license (MIT or Apache)
+as keeping the entries confidential is not practical in competition format.
 
 ## Scoring Rules
 
@@ -87,20 +99,28 @@ including for those parameters whose correct value is empty.
 disregarded. Any additional fields in JSON will be disregarded. If more than one JSON is provided in the output,
 only the first one will be used.
 
-## Models
+## Model Versions
 
 - When using GPT models, either GPT-4 or GPT-3.4-Turbo models are permitted. GPT-4-Turbo
 model is not permitted.
 - When using LLAMA models, any model from the LLAMA 2 family is permitted, including
 LLAMA-2-70B and CodeLlama-34B.
+- Model settings such as seed, temperature, top-p, top-k and others may be specified with the entry.
 
-*IMPORTANT:* The use of ChatGPT (as opposed to OpenAI API) 
-is not recommended as ChatGPT has very different behavior than the
-[OpenAI API](https://platform.openai.com/overview), and the model
-will be scored using the OpenAI API rather than ChatGPT.
+## Use of ChatGPT and Third-Party Playgrounds
+
+- Using ChatGPT to prepare a submission is not recommended. Reason: ChatGPT and OpenAI API have significant differences, 
+which will likely cause reduced performance when the entry is tuned using ChatGPT and then scored using OpenAI API. 
+- Similar differences may exist between some of the LLAMA-based third party playgrounds and the LLAMA 2 API.
+- When using a third-party playground, ensure that no hidden pre- or post-processing is present and
+the model parameters are known and can be specified with your competition entry.
+
+## Model Hosting
 
 - Both on-code and code submissions will be scored using model hosting service specified by the participant.
-- Only those hosting services for which the organizers can obtain a key online without a lengthy
-submission process are permitted (e.g. OpenAI, Replicate, or Fireworks.ai). The cost of scoring runs
-will be borne by the organizers.
-- Model settings such as seed, temperature, top-p, top-k and others may be specified with the entry.
+- For non-coding entries, the options are OpenAI (GPT categories only), Replicate, or Fireworks.ai.
+- For coding entries, the same options are available or any other where
+the organizers can obtain a key online without a lengthy submission process.
+- Coding entries can also use local models. The organizers will provide GPU hardware to score them.
+- The cost of scoring using hosted models or GPU hardware will be borne by the organizers.
+
