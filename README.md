@@ -11,16 +11,20 @@ The theme of the inaugural QuantMinds-CompatibL Hackathon is Quantitative Financ
 conference venue during registration (in case of a team entry, by at least one team member).
 - During the hackathon, participants can work onsite or offsite. Limited space will be available at the venue 
 on a first come, first served basis.
-- Register in advance by visiting [this link](https://informaconnect.com/quantminds-international/hackathon/)
+- Register in advance by emailing [Martina.DeGrassi@informa.com](mailto:Martina.DeGrassi@informa.com)
 or on-site at the start of the hackathon (time and venue details are provided below).
 
 This package provides guidelines and competition rules. The source
 code samples will be pushed to GitHub prior to competition start.
 
-## Venue and Date
+## Date and Venue
 
 The Hackathon will take place on Monday, November 13, from 9am to 4pm London time at
-the InterContinental O2 Hotel, One Waterview Drive, Greenwich Peninsula, SE10 0TW, London.
+the InterContinental London - The O2, 1 Waterview Drive, SE10 0TW, London. The hotel is located
+on Greenwich Peninsula near the O2 Arena
+([Google Maps](https://maps.app.goo.gl/bRSPhmtevTKvqy6x8)).
+
+Further venue and event details can be found [here](https://informaconnect.com/quantminds-international/hackathon/).
 
 ## Entries
 
