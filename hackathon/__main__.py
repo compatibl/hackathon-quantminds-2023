@@ -64,7 +64,7 @@ async def http_exception_handler(_, exc):
 
 def main(host: str, port: int, workers: int):
     uvicorn.run(
-        app="main:app",
+        app="__main__:app",
         host=host,
         port=port,
         workers=workers,
