@@ -33,7 +33,7 @@ class OpenAIProvider(BaseProvider):
         return results
 
     async def _run(self, param: ProviderParam) -> ProviderAnswer:
-        question = param.prompt.format(input=param.context)
+        question = self.build_question(prompt=param.prompt, context=param.context)
         openai.api_key = self.api_key
         messages = [{"role": "user", "content": question}]
         try:

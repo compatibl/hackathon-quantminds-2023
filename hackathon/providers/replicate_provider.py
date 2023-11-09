@@ -34,7 +34,7 @@ class ReplicateProvider(BaseProvider):
         return results
 
     async def _run(self, param: ProviderParam) -> ProviderAnswer:
-        question = param.prompt.format(input=param.context)
+        question = self.build_question(prompt=param.prompt, context=param.context)
         os.environ["REPLICATE_API_TOKEN"] = self.api_key
         try:
             output = await replicate.async_run(

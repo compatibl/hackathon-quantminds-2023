@@ -46,3 +46,12 @@ class BaseProvider(abc.ABC):
     @staticmethod
     def get_error_answer(msg: str) -> str:
         return f"An error has occurred: {msg}"
+
+    @staticmethod
+    def build_question(prompt: str, context: str) -> str:
+        if "{input}" not in prompt:
+            prompt += "\nYour answer should be based on the following input: \n```\n{input}\n```"
+
+        question = prompt.format(input=context)
+        return question
+
