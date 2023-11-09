@@ -24,7 +24,7 @@ def get_settings():
 
 
 class Settings(BaseSettings):
-    data_path: str = os.getenv("DATA_PATH", "../data")
+    data_path: str = os.getenv("DATA_PATH", "./data")
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
     host: str = os.getenv("HOST", "localhost")
     port: int = os.getenv("PORT", 8000)
