@@ -87,7 +87,7 @@ class AIBaseBody(BaseModel):
 
 class AIRunBody(AIBaseBody):
     experiment_name: str = Field(description="Experiment name.")
-    sample_id: int = Field(description="Sample Id.")
+    sample_id: Optional[int] = Field(default=None, description="Sample Id.")
     input: str = Field(description="AI request input")
     prompt: Optional[str] = Field(default=None, description="AI request prompt.")
 

@@ -140,21 +140,13 @@ def _validate_body_model(provider: AIProvider, body: AIBaseBody) -> bool:
     return True
 
 
-# Temporary function
-def _correct_answer_for_input(input: str):
-    experiment_file_path = Path(__file__).parents[2].joinpath(f"data/code-test.csv")
-    with open(experiment_file_path, newline="", encoding="utf-8-sig") as csvfile:
-        csvreader = csv.DictReader(csvfile)
-        for row in csvreader:
-            if row['input'] == input:
-                return row
-    return None
+def _correct_answer_for_sample(experiment_name: str, sample_id: int):
+    experiment_file_path = Path(__file__).parents[2].joinpath(f"data/{experiment_name}.csv")
+    correct_answer = pd.read_csv(experiment_file_path, header=0).iloc[sample_id - 1]
+    return correct_answer
 
 
 def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISampleItem]]:
-    # TODO: Improve logic
-    if correct_answer is None:
-        return 0.0, []
 
     del correct_answer["input"]
 
@@ -162,7 +154,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     closing_brace = answer.find("}")
 
     if opening_brace != -1 and closing_brace != -1:
-        json_only = answer[opening_brace : closing_brace + 1]
+        json_only = answer[opening_brace: closing_brace + 1]
 
     else:
         return 0.0, [
@@ -205,7 +197,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
         )
         for key in set(correct_answer.keys()) - {'instrument_type'}:
             model_value = str(json_answer.get(key, '-'))
-            correct_value = correct_answer[key]
+            correct_value = str(correct_answer[key])
             # TODO: softer
             score = item_score if model_value == correct_value else 0.0
             total_score += score
@@ -233,10 +225,6 @@ async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(de
     _validate_body_model_params(ai_provider, body)
     _validate_body_model(ai_provider, body)
 
-    # TODO: use provider_model in calculations
-    # body.experiment_name
-    # body.sample_id
-
     param = ProviderParam(
         sample_id=body.sample_id,
         provider_model=body.provider_model,
@@ -250,10 +238,23 @@ async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(de
     provider_answers = await get_provider(ai_provider, api_key).run([param])
     answer = provider_answers[0].answer if provider_answers else ""
 
-    # TODO: Temporary solution until we don't have the experiment name and sample number (only works because we only have one test file)
-    correct_answer = _correct_answer_for_input(body.input)
-
-    overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=correct_answer)
+    experiment_name = body.experiment_name
+    if "custom" in experiment_name:
+        file_path = Path(__file__).parents[2].joinpath(f"data/{experiment_name}.csv")
+        df_columns = set(pd.read_csv(file_path).columns) - {'input'}
+        sample_data = [
+            AISampleItem(
+                field=col,
+                model="",
+                correct="",
+                score=0.0,
+            )
+            for col in df_columns
+        ]
+        overall_sample_score = 0.0
+    else:
+        correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
+        overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=correct_answer)
 
     return AIRunResponse(
         overall_sample_score=round(overall_sample_score, 2),
