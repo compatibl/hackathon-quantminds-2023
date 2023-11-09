@@ -306,7 +306,7 @@ async def score(ai_provider: AIProvider, body: AIScoreBody, api_key: str = Heade
             experiment_data.append(
                 {
                     "overall_sample_score": overall_sample_score,
-                    "sample_id": index,
+                    "sample_id": index + 1,
                     "output": answer,
                     "sample_data": sample_data,
                 }
