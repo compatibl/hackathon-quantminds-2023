@@ -31,10 +31,15 @@ on Greenwich Peninsula near the O2 Arena
 
 Further venue and event details can be found [here](https://informaconnect.com/quantminds-international/hackathon/).
 
-## Entries
+## Competition
 
 - Both individual and team participation is permitted (one entry per individual)
 - Each individual or team can participate in one or more of the four categories
+- Participants can provide an alias to be shown in scoreboard for individual and team entries.
+Real names will not be disclosed without permission. 
+
+Most importantly, participation in the hackathon without entering the competition is welcome and
+can provide valuable experience with practical applications of AI in a collaborative environment.
 
 ## Equipment
 
@@ -44,6 +49,26 @@ playground (however see the note below about third-party playgrounds).
 - For coding entries, you can clone this GitHub repo and work using Python 3.9 or later, or use your own tools.
 - Instructions for registering and getting API keys for online model hosting services will be provided.
 - The cost of model hosting service use during the hackathon is expected to be less than GBP 50.
+
+## Scoring Software Package
+
+- The open-source software package that will be used for scoring can be downloaded from GitHub at this URL
+.
+- The same package will be available online during the hackathon at the URL that will be posted at the start
+of the competition.
+- The same package can be used to develop and test your entry for both coding and non-coding submissions.
+Its use is not required and is a matter of convenience. Any other playground or Python package can be used
+instead to submit the entry.
+
+#### Installation
+
+1. Ensure your computer has Python 3.9 or later
+2. Checkout from GitHub:
+[https://github.com/compatibl/hackathon-quantminds-2023](https://github.com/compatibl/hackathon-quantminds-2023)
+3. Create and activate venv or conda environment
+4. Run `pip install -r requirements.txt`
+5. Run `python -m hackathon`
+6. Click on the URL in text output to open the UI
 
 ## Competition Categories
 
