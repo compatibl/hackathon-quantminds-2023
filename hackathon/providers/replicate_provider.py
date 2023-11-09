@@ -27,9 +27,7 @@ logger = logging.getLogger(__name__)
 class ReplicateProvider(BaseProvider):
     model_token_dict = {"llama-2-7b-chat": "13c3cdee13ee059ab779f0291d29054dab00a47dad8261375654de5540165fb0",
                         "llama-2-13b-chat": "f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d",
-                        "llama-2-70b-chat": "02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
-                        "codellama-13b-instruct": "ca8c51bf3c1aaf181f9df6f10f31768f065c9dddce4407438adc5975a59ce530",
-                        "codellama-34b-instruct": "b17fdb44c843000741367ae3d73e2bb710d7428a662238ddebbf4302db2b5422"}
+                        "llama-2-70b-chat": "02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3"}
     
     async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
         coroutines = [self._run(param) for param in params]
