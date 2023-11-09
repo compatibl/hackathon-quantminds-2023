@@ -1,0 +1,27 @@
+﻿input,instrument_type,buy_sell,put_call,df,strike
+"double param1 = -1;
+double param2 = 100000;
+double param3 = 0.9;
+double param4 = 100.0;
+
+std::vector<double> price(const std::vector<double>& underlying) {
+
+ std::vector<double> payoff(underlying.size());
+ for (size_t i = 0; i < underlying.size(); i++) {
+   payoff[i] = param1 * param2 * (param4 - underlying[i] > 0 ? 1 : 0) * param3;
+ }",digital_option,sell,put,0.9,100.0
+"float param1 = 1;
+float param2 = 100000;
+float param3 = 0.9;
+float param4 = 100.0;
+
+float price() {
+  float sum = 0.0;
+  int path_count = 1000;
+  for (int path_index = 0; path_index < path_count; path_index++) {
+    float underlying = simulate(path_index);
+    sum += param1 * param2 * max(param4 - underlying, 0.) * param3;
+  }
+  sum /= path_count;
+  return sum;
+}",european_option,buy,put,0.9,100.0
