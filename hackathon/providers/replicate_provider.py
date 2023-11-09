@@ -13,19 +13,11 @@
 # limitations under the License.
 
 import os
+
 import replicate
 
 
-def run_replicate(
-    *,
-    prompt: str,
-    context: str,
-    seed: int,
-    temperature: float,
-    top_p: float,
-    top_k: int,
-    api_key: str
-):
+def run_replicate(*, prompt: str, context: str, seed: int, temperature: float, top_p: float, top_k: int, api_key: str):
     question = prompt.format(context=context)
     os.environ["REPLICATE_API_TOKEN"] = api_key
     output = replicate.run(

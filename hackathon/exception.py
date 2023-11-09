@@ -19,9 +19,7 @@ from fastapi import HTTPException
 
 
 class AppException(HTTPException):
-    http_status_info: dict[int, HTTPStatus] = {
-        int(status): status for status in HTTPStatus
-    }
+    http_status_info: dict[int, HTTPStatus] = {int(status): status for status in HTTPStatus}
 
     def __init__(
         self,

@@ -18,11 +18,11 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
-from starlette.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.middleware.cors import CORSMiddleware
 
-from hackathon.exception import AppException
 from hackathon.api import routes
+from hackathon.exception import AppException
 from hackathon.hackathon_settings import get_settings
 
 app = FastAPI()
@@ -52,17 +52,13 @@ async def app_exception_handler(_, exc: AppException):
         "description": exc.description,
         "detail": exc.detail,
     }
-    return JSONResponse(
-        content=content, status_code=exc.status_code, headers=exc.headers
-    )
+    return JSONResponse(content=content, status_code=exc.status_code, headers=exc.headers)
 
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(_, exc):
     headers = getattr(exc, "headers", None)
-    app_exception = AppException(
-        status_code=exc.status_code, detail=exc.detail, headers=headers
-    )
+    app_exception = AppException(status_code=exc.status_code, detail=exc.detail, headers=headers)
     return await app_exception_handler(_, app_exception)
 
 

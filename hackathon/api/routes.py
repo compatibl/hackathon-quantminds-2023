@@ -15,31 +15,28 @@
 import csv
 import glob
 import json
-import pandas as pd
-
 from pathlib import Path
 from typing import Annotated, Tuple
-from starlette import status
 
+import pandas as pd
 from fastapi import APIRouter, Depends
 from fastapi.params import Header
+from starlette import status
 
 from hackathon.exception import AppException
 from hackathon.hackathon_settings import get_settings
 from hackathon.models.ai_models import (
-    AIRunBody,
-    AIScoreBody,
-    AIScoreResponse,
     AIBaseBody,
-    SampleInputResponse,
+    AIModelParamItem,
     AIProvider,
     AIProviderResponseItem,
-    AIModelParamItem,
+    AIRunBody,
     AIRunResponse,
     AISampleItem,
+    AIScoreBody,
+    AIScoreResponse,
+    SampleInputResponse,
 )
-
-
 from hackathon.providers.fireworks_provider import run_fireworks
 from hackathon.providers.openai_provider import run_openai
 from hackathon.providers.replicate_provider import run_replicate
@@ -63,14 +60,9 @@ def get_experiment_inputs(
     file_path = Path(settings.data_path, f"{experiment_name}.csv")
     try:
         inputs = pd.read_csv(file_path, usecols=["input"]).T.values.tolist()[0]
-        result = [
-            SampleInputResponse(index=index + 1, value=value)
-            for index, value in enumerate(inputs)
-        ]
+        result = [SampleInputResponse(index=index + 1, value=value) for index, value in enumerate(inputs)]
     except FileNotFoundError:
-        raise AppException(
-            status.HTTP_400_BAD_REQUEST, f"Experiment {experiment_name} not exists."
-        )
+        raise AppException(status.HTTP_400_BAD_REQUEST, f"Experiment {experiment_name} not exists.")
     except pd.errors.EmptyDataError:
         return []
     except ValueError:
@@ -91,9 +83,7 @@ async def get_ai_providers():
     for provider in AIProvider:
         available_params = list()
         for param in provider.available_params:
-            param_item = AIModelParamItem(
-                param_name=param.value, default_value=param.default_value
-            )
+            param_item = AIModelParamItem(param_name=param.value, default_value=param.default_value)
             available_params.append(param_item)
         provider_item = AIProviderResponseItem(
             provider_name=provider.value,
@@ -122,7 +112,7 @@ def _validate_body_model(provider: AIProvider, body: AIBaseBody) -> bool:
 
 # Temporary function
 def _correct_answer_for_input(input: str):
-    experiment_file_path = (Path(__file__).parents[2].joinpath(f"data/experiment_test.csv"))
+    experiment_file_path = Path(__file__).parents[2].joinpath(f"data/experiment_test.csv")
     with open(experiment_file_path, newline="", encoding="utf-8-sig") as csvfile:
         csvreader = csv.DictReader(csvfile)
         for row in csvreader:
@@ -142,7 +132,7 @@ def _extract_sample_data(answer: str, correct_answer) -> Tuple[float, list[AISam
     closing_brace = answer.find("}")
 
     if opening_brace != -1 and closing_brace != -1:
-        json_only = answer[opening_brace:closing_brace + 1]
+        json_only = answer[opening_brace : closing_brace + 1]
 
     else:
         return 0.0, [
@@ -175,16 +165,21 @@ def _extract_sample_data(answer: str, correct_answer) -> Tuple[float, list[AISam
     sample_items = []
     total_score = 0.0
     if 'instrument_type' in json_answer.keys() and correct_answer['instrument_type'] == json_answer['instrument_type']:
-        sample_items.append(AISampleItem(field='instrument_type', model=json_answer['instrument_type'],
-                                         correct=correct_answer['instrument_type'], score=item_score))
+        sample_items.append(
+            AISampleItem(
+                field='instrument_type',
+                model=json_answer['instrument_type'],
+                correct=correct_answer['instrument_type'],
+                score=item_score,
+            )
+        )
         for key in set(correct_answer.keys()) - {'instrument_type'}:
             model_value = str(json_answer.get(key, '-'))
             correct_value = correct_answer[key]
             # TODO: softer
             score = item_score if model_value == correct_value else 0.0
             total_score += score
-            sample_items.append(AISampleItem(field=key, model=model_value,
-                                             correct=correct_value, score=score))
+            sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value, score=score))
 
         return total_score, sample_items
 
@@ -204,9 +199,7 @@ def _extract_sample_data(answer: str, correct_answer) -> Tuple[float, list[AISam
     description="Run the sample.",
     response_model=AIRunResponse,
 )
-async def run(
-    ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(default=None)
-):
+async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(default=None)):
     _validate_body_model_params(ai_provider, body)
     _validate_body_model(ai_provider, body)
 
@@ -259,9 +252,7 @@ async def run(
     description="Score all samples of the experiment.",
     # response_model=AIScoreResponse,
 )
-async def score(
-    ai_provider: AIProvider, body: AIScoreBody, api_key: str = Header(default=None)
-):
+async def score(ai_provider: AIProvider, body: AIScoreBody, api_key: str = Header(default=None)):
     _validate_body_model_params(ai_provider, body)
     _validate_body_model(ai_provider, body)
 
@@ -273,11 +264,7 @@ async def score(
 
     provider_model = body.provider_model
 
-    experiment_file_path = (
-        Path(__file__)
-        .parents[2]
-        .joinpath(f"data/experiment_{body.experiment_name.lower()}.csv")
-    )
+    experiment_file_path = Path(__file__).parents[2].joinpath(f"data/experiment_{body.experiment_name.lower()}.csv")
     if not experiment_file_path.exists() or not experiment_file_path.is_file():
         raise AppException(422, "Invalid experiment name.")
 
@@ -316,17 +303,15 @@ async def score(
                 raise AppException(500, "Unsupported AI provider.")
 
             overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=row)
-            experiment_data.append({
-                "overall_sample_score": overall_sample_score,
-                "sample_id": index,
-                "output": answer,
-                "sample_data": sample_data
-            })
+            experiment_data.append(
+                {
+                    "overall_sample_score": overall_sample_score,
+                    "sample_id": index,
+                    "output": answer,
+                    "sample_data": sample_data,
+                }
+            )
             overall_experiment_score += overall_sample_score
 
-
     # TODO create model in the format below
-    return {
-        "overall_experiment_score": overall_experiment_score,
-        "experiment_data": []
-    }
+    return {"overall_experiment_score": overall_experiment_score, "experiment_data": []}
