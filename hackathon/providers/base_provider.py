@@ -20,6 +20,7 @@ from typing import Optional
 @dataclass
 class ProviderParam:
     sample_id: int
+    provider_model: str
     prompt: Optional[str] = None
     context: Optional[str] = None
     seed: Optional[int] = None

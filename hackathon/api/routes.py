@@ -234,12 +234,12 @@ async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(de
     _validate_body_model(ai_provider, body)
 
     # TODO: use provider_model in calculations
-    # body.provider_model
     # body.experiment_name
     # body.sample_id
 
     param = ProviderParam(
         sample_id=body.sample_id,
+        provider_model=body.provider_model,
         prompt=body.prompt,
         context=body.input,
         seed=body.seed,
@@ -276,9 +276,6 @@ async def score(
     _validate_body_model_params(ai_provider, body)
     _validate_body_model(ai_provider, body)
 
-    # TODO: use provider_model in calculations
-    # body.provider_model
-
     experiment_file_path = Path(settings.data_path, f"{body.experiment_name}.csv")
     if not experiment_file_path.exists() or not experiment_file_path.is_file():
         raise AppException(
@@ -296,6 +293,7 @@ async def score(
         for index, row in enumerate(csvreader, start=1):
             param = ProviderParam(
                 sample_id=index,
+                provider_model=body.provider_model,
                 prompt=body.prompt,
                 context=row["input"],
                 seed=body.seed,

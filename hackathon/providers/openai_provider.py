@@ -38,7 +38,7 @@ class OpenAIProvider(BaseProvider):
         messages = [{"role": "user", "content": question}]
         try:
             response = await openai.ChatCompletion.acreate(
-                model="gpt-4",
+                model=param.provider_model,
                 messages=messages,
                 temperature=param.temperature,
             )

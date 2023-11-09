@@ -38,7 +38,7 @@ class FireworksProvider(BaseProvider):
         fireworks.client.api_key = self.api_key
         try:
             response = await fireworks.client.Completion.acreate(
-                model="accounts/fireworks/models/llama-v2-70b-chat",
+                model=f"accounts/fireworks/models/{param.provider_model}",
                 prompt=question,
                 max_tokens=1024,
                 temperature=param.temperature,
