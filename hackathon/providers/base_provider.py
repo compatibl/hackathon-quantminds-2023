@@ -55,3 +55,14 @@ class BaseProvider(abc.ABC):
         question = prompt.format(input=context)
         return question
 
+    @staticmethod
+    def add_llama_formatting(question: str) -> str:
+        if not question.startswith("[INST]") or not question.startswith("<s>[INST]"):
+            question = "[INST]" + question
+
+        if not question.endswith("[/INST]"):
+            question = question + "[/INST]"
+
+        return question
+
+

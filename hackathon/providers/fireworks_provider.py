@@ -34,11 +34,12 @@ class FireworksProvider(BaseProvider):
 
     async def _run(self, param: ProviderParam) -> ProviderAnswer:
         question = self.build_question(prompt=param.prompt, context=param.context)
+        formatted_question = self.add_llama_formatting(question)
         fireworks.client.api_key = self.api_key
         try:
             response = await fireworks.client.Completion.acreate(
                 model=f"accounts/fireworks/models/{param.provider_model}",
-                prompt=question,
+                prompt=formatted_question,
                 max_tokens=1024,
                 temperature=param.temperature,
                 top_p=param.top_p,

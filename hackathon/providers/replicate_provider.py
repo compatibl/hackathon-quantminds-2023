@@ -35,12 +35,13 @@ class ReplicateProvider(BaseProvider):
 
     async def _run(self, param: ProviderParam) -> ProviderAnswer:
         question = self.build_question(prompt=param.prompt, context=param.context)
+        formatted_question = self.add_llama_formatting(question)
         os.environ["REPLICATE_API_TOKEN"] = self.api_key
         try:
             output = await replicate.async_run(
                 f"meta/{param.provider_model}:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
                 input={
-                    "prompt": question,
+                    "prompt": formatted_question,
                     "seed": param.seed,
                     "temperature": param.temperature,
                     "top_p": param.top_p,
