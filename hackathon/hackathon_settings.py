@@ -25,8 +25,8 @@ class Settings(BaseSettings):
         " instrument.\nReturn only JSON with keys:\ninstrument_type - enum with values european_option, american_option"
         ", digital_option, barrier_option\nbuy_sell - enum with values buy and sell\nput_call - enum with values put "
         "and call\ndf - discount factor\nstrike - strike price\nbarrier - barrier price (use this key only for "
-        "barrier_option)\nCode:\n```\n{context}\n```",
-        "text": "Pay attention and remember information below.\nContext:\n```\n{context}\n```\nAccording to the "
+        "barrier_option)\nCode:\n```\n{input}\n```",
+        "text": "Pay attention and remember information below.\nContext:\n```\n{input}\n```\nAccording to the "
         "information in the  context above, fill following fields:\ninstrument_type: string,\ninitial_date: date,"
         "\nend_date: date",
     }

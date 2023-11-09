@@ -33,7 +33,7 @@ class FireworksProvider(BaseProvider):
         return results
 
     async def _run(self, param: ProviderParam) -> ProviderAnswer:
-        question = param.prompt.format(context=param.context)
+        question = param.prompt.format(input=param.context)
 
         fireworks.client.api_key = self.api_key
         try:
