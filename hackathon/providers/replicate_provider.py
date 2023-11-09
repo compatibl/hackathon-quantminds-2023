@@ -12,41 +12,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
 import logging
 import os
 
 import replicate
-from fastapi import status
 from replicate.exceptions import ReplicateException
 
-from hackathon.exception import AppException
+from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, ProviderParam
 
 logger = logging.getLogger(__name__)
 
 
-def run_replicate(*, prompt: str, context: str, seed: int, temperature: float, top_p: float, top_k: int, api_key: str):
-    question = prompt.format(context=context)
-    os.environ["REPLICATE_API_TOKEN"] = api_key
-    try:
-        output = replicate.run(
-            "meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
-            input={
-                "prompt": question,
-                "seed": seed,
-                "temperature": temperature,
-                "top_p": top_p,
-                "top_k": top_k,
-            },
-        )
-    except ReplicateException as err:
-        logger.exception("Somthing go wrong with Replicate.")
-        raise AppException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=str(err),
-        )
+class ReplicateProvider(BaseProvider):
+    async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
+        coroutines = [self._run(param) for param in params]
+        if coroutines:
+            results = await asyncio.gather(*coroutines)
+        else:
+            results = list()
+        return results
 
-    answer = ""
-    for item in output:
-        answer += item
+    async def _run(self, param: ProviderParam) -> ProviderAnswer:
+        question = param.prompt.format(context=param.context)
+        os.environ["REPLICATE_API_TOKEN"] = self.api_key
+        try:
+            output = await replicate.async_run(
+                "meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
+                input={
+                    "prompt": question,
+                    "seed": param.seed,
+                    "temperature": param.temperature,
+                    "top_p": param.top_p,
+                    "top_k": param.top_k,
+                },
+            )
+            answer = "".join(output)
+        except ReplicateException as err:
+            answer = str(err)
+        except:
+            answer = "Replicate is not available for now. Please try again later."
 
-    return answer
+        return ProviderAnswer(sample_id=param.sample_id, answer=answer)

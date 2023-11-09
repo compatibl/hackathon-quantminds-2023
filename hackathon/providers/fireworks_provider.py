@@ -12,38 +12,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
 import logging
 
 import fireworks.client
-import httpx
+from fireworks.client.error import FireworksError
 
-from fastapi import status
-from hackathon.exception import AppException
+from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, ProviderParam
 
 logger = logging.getLogger(__name__)
 
 
-def run_fireworks(
-    prompt: str,
-    context: str,
-    api_key: str,
-    temperature: float,
-    top_p: float,
-):
-    question = prompt.format(context=context)
+class FireworksProvider(BaseProvider):
+    async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
+        coroutines = [self._run(param) for param in params]
+        if coroutines:
+            results = await asyncio.gather(*coroutines)
+        else:
+            results = list()
+        return results
 
-    fireworks.client.api_key = api_key
-    try:
-        response = fireworks.client.Completion.create(
-            model="accounts/fireworks/models/llama-v2-70b-chat",
-            prompt=question,
-            max_tokens=1024,
-            temperature=temperature,
-            top_p=top_p,
-        )
-    except httpx.HTTPStatusError as err:
-        logger.exception("Somthing go wrong with Fireworks.")
-        raise AppException(status.HTTP_503_SERVICE_UNAVAILABLE, str(err))
+    async def _run(self, param: ProviderParam) -> ProviderAnswer:
+        question = param.prompt.format(context=param.context)
 
-    answer = response.choices[0].text
-    return answer
+        fireworks.client.api_key = self.api_key
+        try:
+            response = await fireworks.client.Completion.acreate(
+                model="accounts/fireworks/models/llama-v2-70b-chat",
+                prompt=question,
+                max_tokens=1024,
+                temperature=param.temperature,
+                top_p=param.top_p,
+            )
+            answer = response.choices[0].text
+        except FireworksError as err:
+            try:
+                answer = err.args[0]["fault"]["faultstring"]
+            except:
+                answer = str(err)
+        except:
+            answer = "Fireworks is not available for now. Please try again later."
+
+        return ProviderAnswer(sample_id=param.sample_id, answer=answer)

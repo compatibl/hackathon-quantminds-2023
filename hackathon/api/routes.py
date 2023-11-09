@@ -18,16 +18,17 @@ import json
 import logging
 from pathlib import Path
 from typing import Annotated, Optional
-from functools import partial
 
 import pandas as pd
 from fastapi import APIRouter, Depends, status
 from fastapi.params import Header
 
 from hackathon.exception import AppException
-from hackathon.hackathon_settings import get_settings, Settings
+from hackathon.hackathon_settings import Settings, get_settings
 from hackathon.models.ai_models import (
     AIBaseBody,
+    AIExperimentInfoItem,
+    AIExperimentItem,
     AIModelParamItem,
     AIProvider,
     AIProviderResponseItem,
@@ -37,12 +38,9 @@ from hackathon.models.ai_models import (
     AIScoreBody,
     AIScoreResponse,
     SampleInputResponse,
-    AIExperimentItem,
-    AIExperimentInfoItem,
 )
-from hackathon.providers.fireworks_provider import run_fireworks
-from hackathon.providers.openai_provider import run_openai
-from hackathon.providers.replicate_provider import run_replicate
+from hackathon.providers.base_provider import ProviderParam
+from hackathon.providers.manager import get_provider
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +71,7 @@ def get_experiments(settings: Annotated[Settings, Depends(get_settings)]):
         info_item = AIExperimentInfoItem(
             experiment_name=experiment_name,
             default_prompt=default_prompt,
-            default_table=default_table
+            default_table=default_table,
         )
         experiments.append(info_item)
     return experiments
@@ -226,47 +224,6 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     ]
 
 
-def _get_answer(
-    ai_provider: AIProvider,
-    prompt: str,
-    context: str,
-    api_key: str,
-    seed: Optional[int] = None,
-    temperature: Optional[float] = None,
-    top_p: Optional[float] = None,
-    top_k: Optional[int] = None,
-):
-    run_func = {
-        AIProvider.REPLICATE: partial(
-            run_replicate,
-            prompt=prompt,
-            context=context,
-            seed=seed,
-            temperature=temperature,
-            top_p=top_p,
-            top_k=top_k,
-            api_key=api_key,
-        ),
-        AIProvider.FIREWORKS: partial(
-            run_fireworks,
-            prompt=prompt,
-            context=input,
-            temperature=temperature,
-            top_p=top_p,
-            api_key=api_key,
-        ),
-        AIProvider.OPENAI: partial(
-            run_openai,
-            prompt=prompt,
-            context=input,
-            temperature=temperature,
-            api_key=api_key,
-        ),
-    }.get(ai_provider)
-    assert run_func, f"There is no implementation for {ai_provider}"
-    return run_func()
-
-
 @router.post(
     path="/{ai_provider}/run",
     description="Run the sample.",
@@ -281,17 +238,17 @@ async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(de
     # body.experiment_name
     # body.sample_id
 
-    answer = _get_answer(
-        ai_provider=ai_provider,
+    param = ProviderParam(
+        sample_id=body.sample_id,
         prompt=body.prompt,
         context=body.input,
-        api_key=api_key,
         seed=body.seed,
         temperature=body.temperature,
         top_p=body.top_p,
         top_k=body.top_k,
     )
-    logger.debug(answer)
+    provider_answers = await get_provider(ai_provider, api_key).run([param])
+    answer = provider_answers[0].answer if provider_answers else ""
 
     # TODO: Temporary solution until we don't have the experiment name and sample number (only works because we only have one test file)
     correct_answer = _correct_answer_for_input(body.input)
@@ -299,7 +256,7 @@ async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(de
     overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=correct_answer)
 
     return AIRunResponse(
-        overall_sample_score=overall_sample_score,
+        overall_sample_score=round(overall_sample_score, 2),
         output=answer,
         sample_data=sample_data,
     )
@@ -329,26 +286,36 @@ async def score(
             detail=f"Experiment name {body.experiment_name} is invalid.",
         )
 
+    provider = get_provider(ai_provider, api_key)
     experiment_data: list[AIExperimentItem] = []
     overall_experiment_score: float = 0.0
     with open(experiment_file_path, newline="", encoding="utf-8-sig") as csvfile:
-        csvreader = csv.DictReader(csvfile)
+        csvreader = list(csv.DictReader(csvfile))
+
+        provider_params = list()
         for index, row in enumerate(csvreader, start=1):
-            answer = _get_answer(
-                ai_provider=ai_provider,
+            param = ProviderParam(
+                sample_id=index,
                 prompt=body.prompt,
                 context=row["input"],
-                api_key=api_key,
                 seed=body.seed,
                 temperature=body.temperature,
                 top_p=body.top_p,
                 top_k=body.top_k,
             )
+            provider_params.append(param)
 
+        provider_answers = await provider.run(provider_params)
+
+        for provider_answer in provider_answers:
+            sample_id = provider_answer.sample_id
+            answer = provider_answer.answer
+
+            row = csvreader[sample_id - 1]
             overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=row)
             item = AIExperimentItem(
                 overall_sample_score=round(overall_sample_score, 2),
-                sample_id=index + 1,
+                sample_id=sample_id,
                 output=answer,
                 sample_data=sample_data,
             )

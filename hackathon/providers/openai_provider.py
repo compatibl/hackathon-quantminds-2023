@@ -12,31 +12,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
 import logging
 
 import openai
-from fastapi import status
+from openai import OpenAIError
 
-from hackathon.exception import AppException
+from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, ProviderParam
 
 logger = logging.getLogger(__name__)
 
 
-def run_openai(prompt: str, context: str, temperature: float, api_key: str):
-    question = prompt.format(context=context)
-    openai.api_key = api_key
-    messages = [{"role": "user", "content": question}]
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=messages,
-            temperature=temperature,
-        )
-    except openai.error.AuthenticationError:
-        raise AppException(status.HTTP_400_BAD_REQUEST, "Invalid OpenAI API key.")
-    except openai.error.OpenAIError as err:
-        logger.exception("Somthing go wrong with OpenAI.")
-        raise AppException(status.HTTP_503_SERVICE_UNAVAILABLE, str(err))
+class OpenAIProvider(BaseProvider):
+    async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
+        coroutines = [self._run(param) for param in params]
+        if coroutines:
+            results = await asyncio.gather(*coroutines)
+        else:
+            results = list()
+        return results
 
-    answer = response["choices"][0]["message"]["content"]
-    return answer
+    async def _run(self, param: ProviderParam) -> ProviderAnswer:
+        question = param.prompt.format(context=param.context)
+        openai.api_key = self.api_key
+        messages = [{"role": "user", "content": question}]
+        try:
+            response = await openai.ChatCompletion.acreate(
+                model="gpt-4",
+                messages=messages,
+                temperature=param.temperature,
+            )
+            answer = response["choices"][0]["message"]["content"]
+        except OpenAIError as err:
+            answer = str(err)
+        except:
+            answer = "OpenAI is not available for now. Please try again later."
+
+        return ProviderAnswer(sample_id=param.sample_id, answer=answer)
