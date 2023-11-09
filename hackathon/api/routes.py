@@ -89,7 +89,7 @@ def get_experiment_inputs(
     file_path = Path(settings.data_path, f"{experiment_name}.csv")
     try:
         inputs = pd.read_csv(file_path, usecols=["input"]).T.values.tolist()[0]
-        result = [SampleInputResponse(sample_id=index, value=value) for index, value in enumerate(inputs, start=1)]
+        result = [SampleInputResponse(index=index, value=value) for index, value in enumerate(inputs, start=1)]
     except FileNotFoundError:
         raise AppException(status.HTTP_400_BAD_REQUEST, f"Experiment {experiment_name} not exists.")
     except pd.errors.EmptyDataError:

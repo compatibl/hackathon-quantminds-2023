@@ -117,7 +117,7 @@ class AIScoreResponse(BaseModel):
 
 
 class SampleInputResponse(BaseModel):
-    sample_id: int = Field(description="Sample Id.")
+    index: int = Field(description="Sample Id.")
     value: str = Field(description="Value.")
 
 
