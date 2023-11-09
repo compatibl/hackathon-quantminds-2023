@@ -43,7 +43,8 @@ from hackathon.providers.replicate_provider import run_replicate
 
 router = APIRouter(prefix="", tags=["AI"])
 
-DEFAULT_PROMPTS = {"code": "You will be given the context below in the form of code that is the pricing function of some financial instrument.\nReturn only JSON with keys:\ninstrument_type - enum with values european_option, american_option, digital_option, barrier_option\nbuy_sell - enum with values buy and sell\nput_call - enum with values put and call\ndf - discou\nfactor\nstrike - strike price\nbarrier - barrier price (use this key only for barrier_option)\nCode:\n```\n{context}\n```"}
+DEFAULT_PROMPTS = {"code": "You will be given the context below in the form of code that is the pricing function of some financial instrument.\nReturn only JSON with keys:\ninstrument_type - enum with values european_option, american_option, digital_option, barrier_option\nbuy_sell - enum with values buy and sell\nput_call - enum with values put and call\ndf - discou\nfactor\nstrike - strike price\nbarrier - barrier price (use this key only for barrier_option)\nCode:\n```\n{context}\n```",
+                   "text": "Pay attention and remember information below.\nContext:\n```\n{context}\n```\nAccording to the information in the  context above, fill following fields:\ninstrument_type: string,\ninitial_date: date,\nend_date: date"}
 
 
 @router.get(path="/experiments", description="Get all available experiments names.")
