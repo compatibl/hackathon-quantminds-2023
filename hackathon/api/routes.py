@@ -264,7 +264,7 @@ async def score(ai_provider: AIProvider, body: AIScoreBody, api_key: str = Heade
 
     provider_model = body.provider_model
 
-    experiment_file_path = Path(__file__).parents[2].joinpath(f"data/experiment_{body.experiment_name.lower()}.csv")
+    experiment_file_path = Path(__file__).parents[2].joinpath(f"data/{body.experiment_name.lower()}.csv")
     if not experiment_file_path.exists() or not experiment_file_path.is_file():
         raise AppException(422, "Invalid experiment name.")
 
@@ -314,4 +314,4 @@ async def score(ai_provider: AIProvider, body: AIScoreBody, api_key: str = Heade
             overall_experiment_score += overall_sample_score
 
     # TODO create model in the format below
-    return {"overall_experiment_score": overall_experiment_score, "experiment_data": []}
+    return {"overall_experiment_score": overall_experiment_score, "experiment_data": experiment_data}
