@@ -17,6 +17,11 @@ or on-site at the start of the hackathon (time and venue details are provided be
 This package provides guidelines and competition rules. The source
 code samples will be pushed to GitHub prior to competition start.
 
+## Technical Support
+
+For technical support before and during the hackathon, email
+[support@compatibl-hackathon.freshdesk.com](mailto:support@compatibl-hackathon.freshdesk.com)
+
 ## Date and Venue
 
 The Hackathon will take place on Monday, November 13, from 9am to 4pm London time at
