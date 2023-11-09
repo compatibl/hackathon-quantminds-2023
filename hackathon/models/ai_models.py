@@ -86,6 +86,8 @@ class AIBaseBody(BaseModel):
 
 
 class AIRunBody(AIBaseBody):
+    experiment_name: str = Field(description="Experiment name.")
+    sample_id: int = Field(description="Sample Id.")
     input: str = Field(description="AI request input")
     prompt: Optional[str] = Field(default=None, description="AI request prompt.")
 
@@ -134,3 +136,9 @@ class AIProviderResponseItem(BaseModel):
     provider_name: str
     models: list[AIModel]
     available_params: list[AIModelParamItem]
+
+
+class AIExperimentInfoItem(BaseModel):
+    experiment_name: str
+    default_prompt: str
+    default_table: list[AISampleItem]

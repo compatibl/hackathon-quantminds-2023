@@ -38,6 +38,7 @@ from hackathon.models.ai_models import (
     AIScoreResponse,
     SampleInputResponse,
     AIExperimentItem,
+    AIExperimentInfoItem,
 )
 from hackathon.providers.fireworks_provider import run_fireworks
 from hackathon.providers.openai_provider import run_openai
@@ -47,18 +48,19 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="", tags=["AI"])
 
-DEFAULT_PROMPTS = {"code": "You will be given the context below in the form of code that is the pricing function of some financial instrument.\nReturn only JSON with keys:\ninstrument_type - enum with values european_option, american_option, digital_option, barrier_option\nbuy_sell - enum with values buy and sell\nput_call - enum with values put and call\ndf - discou\nfactor\nstrike - strike price\nbarrier - barrier price (use this key only for barrier_option)\nCode:\n```\n{context}\n```",
-                   "text": "Pay attention and remember information below.\nContext:\n```\n{context}\n```\nAccording to the information in the  context above, fill following fields:\ninstrument_type: string,\ninitial_date: date,\nend_date: date"}
 
-
-@router.get(path="/experiments", description="Get all available experiments names.")
+@router.get(
+    path="/experiments",
+    description="Get all available experiments names.",
+    response_model=list[AIExperimentInfoItem],
+)
 def get_experiments(settings: Annotated[Settings, Depends(get_settings)]):
     path = Path(settings.data_path, "*.csv")
     experiments = []
     for file in glob.glob(str(path)):
         df_columns = set(pd.read_csv(file).columns) - {'input'}
         experiment_name = Path(file).stem
-        default_prompt = DEFAULT_PROMPTS[experiment_name.split('-')[0]]
+        default_prompt = settings.default_prompts[experiment_name.split('-')[0]]
         default_table = [
             AISampleItem(
                 field=col,
@@ -68,12 +70,12 @@ def get_experiments(settings: Annotated[Settings, Depends(get_settings)]):
             )
             for col in df_columns
         ]
-        experiments.append(
-            {"experiment_name": experiment_name,
-             "default_prompt": default_prompt,
-             "default_table": default_table
-             }
+        info_item = AIExperimentInfoItem(
+            experiment_name=experiment_name,
+            default_prompt=default_prompt,
+            default_table=default_table
         )
+        experiments.append(info_item)
     return experiments
 
 
@@ -276,6 +278,8 @@ async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(de
 
     # TODO: use provider_model in calculations
     # body.provider_model
+    # body.experiment_name
+    # body.sample_id
 
     answer = _get_answer(
         ai_provider=ai_provider,
