@@ -161,7 +161,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
             AISampleItem(
                 field=k,
                 model="-",
-                correct=v,
+                correct=str(v),
                 score=0.0,
             )
             for k, v in correct_answer.items()
@@ -175,7 +175,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
             AISampleItem(
                 field=k,
                 model="-",
-                correct=v,
+                correct=str(v),
                 score=0.0,
             )
             for k, v in correct_answer.items()
@@ -183,7 +183,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
 
     logger.debug(json_answer)
 
-    item_score = 1 / len(json_answer.keys())
+    item_score = round(1 / len(json_answer.keys()),2)
     sample_items = []
     total_score = 0.0
     if 'instrument_type' in json_answer.keys() and correct_answer['instrument_type'] == json_answer['instrument_type']:
@@ -195,6 +195,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
                 score=item_score,
             )
         )
+        total_score += item_score
         for key in set(correct_answer.keys()) - {'instrument_type'}:
             model_value = str(json_answer.get(key, '-'))
             correct_value = str(correct_answer[key])
@@ -209,7 +210,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
         AISampleItem(
             field=k,
             model=str(json_answer.get(k, '-')),
-            correct=v,
+            correct=str(v),
             score=0.0,
         )
         for k, v in correct_answer.items()
