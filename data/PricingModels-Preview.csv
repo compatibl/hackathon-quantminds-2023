@@ -1,4 +1,4 @@
-﻿input,instrument_type,buy_sell,put_call,df,strike
+﻿Input,InstrumentType,BuySell,PutCall,Notional,Strike
 "double param1 = -1;
 double param2 = 100000;
 double param3 = 0.9;
@@ -9,7 +9,7 @@ std::vector<double> price(const std::vector<double>& underlying) {
  std::vector<double> payoff(underlying.size());
  for (size_t i = 0; i < underlying.size(); i++) {
    payoff[i] = param1 * param2 * (param4 - underlying[i] > 0 ? 1 : 0) * param3;
- }",digital_option,sell,put,0.9,100.0
+ }",DigitalOption,Sell,Put,100000,100
 "float param1 = 1;
 float param2 = 100000;
 float param3 = 0.9;
@@ -24,4 +24,4 @@ float price() {
   }
   sum /= path_count;
   return sum;
-}",european_option,buy,put,0.9,100.0
+}",EuropeanOption,Buy,Put,100000,100

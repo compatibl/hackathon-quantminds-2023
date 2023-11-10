@@ -21,14 +21,16 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     default_prompts: dict[str, str] = {
-        "PricingModels": "You will be given the context below in the form of code that is the pricing function of some financial"
-        " instrument.\nReturn only JSON with keys:\ninstrument_type - enum with values european_option, american_option"
-        ", digital_option, barrier_option\nbuy_sell - enum with values buy and sell\nput_call - enum with values put "
-        "and call\ndf - discount factor\nstrike - strike price\nbarrier - barrier price (use this key only for "
-        "barrier_option)\nCode:\n```\n{input}\n```",
+        "PricingModels": "You will be given the context below in the form of code "
+                         "that is the pricing function of some financial"
+        " instrument.\nReturn only JSON with keys:\nInstrumentType - enum with values EuropeanOption, AmericanOption"
+        ", DigitalOption, BarrierOption\nBuySell - Enum with values Buy and Sell\nPutCall - Enum with values Put "
+        "and Call\nNotional - notional amount\nStrike - Strike price\nBarrier - barrier level (use this key only for "
+        "BarrierOption)\nSource code:\n```\n{input}\n```",
         "TermSheets": "Pay attention and remember information below.\nContext:\n```\n{input}\n```\nAccording to the "
-        "information in the context above, return only JSON with keys:\ninstrument_type: string,\nmaturity_date: date,"
-        "\nsettlement_date: date",
+        "information in the context above, return only JSON with keys:\n"
+        "InstrumentType - enum with values Vanilla Swap, Amortizing Swap, Cross-Currency Swap,\n"
+        "MaturityDate: date,\nSettlementDate: date",
     }
     allow_origins: list[str] = ["http://localhost:3000"]
     static_path: Path = Path(__file__).parents[1].joinpath("./wwwroot")

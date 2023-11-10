@@ -86,7 +86,7 @@ def get_experiment_inputs(
 ) -> list[SampleInputResponse]:
     file_path = Path(settings.data_path, f"{experiment_name}.csv")
     try:
-        inputs = pd.read_csv(file_path, usecols=["input"]).T.values.tolist()[0]
+        inputs = pd.read_csv(file_path, usecols=["Input"]).T.values.tolist()[0]
         result = [SampleInputResponse(index=index, value=value) for index, value in enumerate(inputs, start=1)]
     except FileNotFoundError:
         raise AppException(status.HTTP_400_BAD_REQUEST, f"Experiment {experiment_name} not exists.")
@@ -151,7 +151,7 @@ def _correct_answer_for_sample(experiment_name: str, sample_id: int):
 
 def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISampleItem]]:
 
-    del correct_answer["input"]
+    del correct_answer["Input"]
 
     opening_brace = answer.find("{")
     closing_brace = answer.find("}")
@@ -189,17 +189,17 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     item_score = round(1 / len(json_answer.keys()),2)
     sample_items = []
     total_score = 0.0
-    if 'instrument_type' in json_answer.keys() and correct_answer['instrument_type'] == json_answer['instrument_type']:
+    if 'InstrumentType' in json_answer.keys() and correct_answer['InstrumentType'] == json_answer['InstrumentType']:
         sample_items.append(
             AISampleItem(
-                field='instrument_type',
-                model=json_answer['instrument_type'],
-                correct=correct_answer['instrument_type'],
+                field='InstrumentType',
+                model=json_answer['InstrumentType'],
+                correct=correct_answer['InstrumentType'],
                 score=item_score,
             )
         )
         total_score += item_score
-        for key in set(correct_answer.keys()) - {'instrument_type'}:
+        for key in set(correct_answer.keys()) - {'InstrumentType'}:
             model_value = str(json_answer.get(key, '-'))
             correct_value = str(correct_answer[key])
             # TODO: softer
@@ -299,7 +299,7 @@ async def score(
                 sample_id=index,
                 provider_model=body.provider_model,
                 prompt=body.prompt,
-                context=row["input"],
+                context=row["Input"],
                 seed=body.seed,
                 temperature=body.temperature,
                 top_p=body.top_p,

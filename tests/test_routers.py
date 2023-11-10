@@ -76,7 +76,7 @@ def test_run_sample_ok(client: Client, test_case: dict):
             "sample_id": test_case["sample_id"],
             "experiment_name": test_case["experiment_name"],
             "provider_model": test_case["model"],
-            "input": "double param1 = -1;\ndouble param2 = 100000;\ndouble param3 = 0.9;\ndouble param4 = 100.0;\n "
+            "Input": "double param1 = -1;\ndouble param2 = 100000;\ndouble param3 = 0.9;\ndouble param4 = 100.0;\n "
             "\nstd::vector<double> price(const std::vector<double>& underlying) {\n \nstd::vector<double> "
             "payoff(underlying.size());\nfor (size_t i = 0; i < underlying.size(); i++) {\n   payoff[i] = param1 * "
             "param2 * (param4 - underlying[i] > 0 ? 1 : 0) * param3;\n}\n \ndouble average = "
