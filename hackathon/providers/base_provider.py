@@ -15,7 +15,7 @@
 import abc
 import asyncio
 from dataclasses import dataclass
-from typing import Optional
+from typing import Final, Optional
 
 
 @dataclass
@@ -37,6 +37,8 @@ class ProviderAnswer:
 
 
 class BaseProvider(abc.ABC):
+    RETRY_ATTEMPT: Final[int] = 3
+
     def __init__(self, api_key: str):
         self.api_key = api_key
 

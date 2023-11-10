@@ -12,27 +12,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Final
+
+import aiohttp
 import openai
 from openai import OpenAIError
+from tenacity import retry, stop_after_attempt
 
 from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, ProviderParam
 
 
 class OpenAIProvider(BaseProvider):
+    REQUEST_TIMEOUT: Final[int] = 30
+
+    async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
+        async with aiohttp.ClientSession() as session:
+            openai.aiosession.set(session)
+            openai.api_key = self.api_key
+            return await super().run(params)
+
     async def get_answer(self, param: ProviderParam) -> ProviderAnswer:
-        question = self.build_question(prompt=param.prompt, context=param.context)
-        openai.api_key = self.api_key
-        messages = [{"role": "user", "content": question}]
         try:
-            response = await openai.ChatCompletion.acreate(
-                model=param.provider_model,
-                messages=messages,
-                temperature=param.temperature,
-            )
+            response = await self._openai_create(param)
             answer = response["choices"][0]["message"]["content"]
         except OpenAIError as err:
             answer = self.get_error_answer(str(err))
         except:
             answer = self.get_error_answer("OpenAI is not available for now. Please try again later.")
-
         return ProviderAnswer(sample_id=param.sample_id, answer=answer)
+
+    @retry(reraise=True, stop=stop_after_attempt(BaseProvider.RETRY_ATTEMPT))
+    async def _openai_create(self, param: ProviderParam):
+        question = self.build_question(prompt=param.prompt, context=param.context)
+        messages = [{"role": "user", "content": question}]
+        return await openai.ChatCompletion.acreate(
+            model=param.provider_model,
+            messages=messages,
+            temperature=param.temperature,
+            request_timeout=self.REQUEST_TIMEOUT,
+        )
