@@ -25,7 +25,8 @@ class Settings(BaseSettings):
                          "that is the pricing function of some financial"
         " instrument.\nReturn only JSON with keys:\nInstrumentType - enum with values EuropeanOption, AmericanOption"
         ", DigitalOption, BarrierOption\nBuySell - Enum with values Buy and Sell\nPutCall - Enum with values Put "
-        "and Call\nNotional - notional amount\nStrike - Strike price\nBarrier - barrier level (use this key only for "
+        "and Call\nNotional - notional amount with no decimal places\n"
+        "Strike - Strike price with no decimal places\nBarrier - barrier level with no decimal places (use this key only for "
         "BarrierOption)\nSource code:\n```\n{input}\n```",
         "TermSheets": "Pay attention and remember information below.\nContext:\n```\n{input}\n```\nAccording to the "
         "information in the context above, return only JSON with keys:\n"
