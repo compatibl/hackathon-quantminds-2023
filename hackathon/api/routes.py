@@ -242,23 +242,8 @@ async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(de
     provider_answers = await get_provider(ai_provider, api_key).run([param])
     answer = provider_answers[0].answer if provider_answers else ""
 
-    experiment_name = body.experiment_name
-    if "custom" in experiment_name:
-        file_path = Path(__file__).parents[2].joinpath(f"data/{experiment_name}.csv")
-        df_columns = set(pd.read_csv(file_path).columns) - {'input'}
-        sample_data = [
-            AISampleItem(
-                field=col,
-                model="",
-                correct="",
-                score=0.0,
-            )
-            for col in df_columns
-        ]
-        overall_sample_score = 0.0
-    else:
-        correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
-        overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=correct_answer)
+    correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
+    overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=correct_answer)
 
     return AIRunResponse(
         overall_sample_score=round(overall_sample_score, 2),
