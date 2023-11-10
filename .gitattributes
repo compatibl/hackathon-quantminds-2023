@@ -2,3 +2,4 @@
 * text=auto
 
 # Exclusions from automatic detection
+wwwroot/** -text
