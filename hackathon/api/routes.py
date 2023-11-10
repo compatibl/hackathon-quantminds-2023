@@ -286,10 +286,9 @@ async def score(
     provider = get_provider(ai_provider, api_key)
     experiment_data: list[AIExperimentItem] = []
     overall_experiment_score: float = 0.0
+    provider_params = list()
     with open(experiment_file_path, newline="", encoding="utf-8-sig") as csvfile:
-        csvreader = list(csv.DictReader(csvfile))
-
-        provider_params = list()
+        csvreader = csv.DictReader(csvfile)
         for index, row in enumerate(csvreader, start=1):
             param = ProviderParam(
                 sample_id=index,
@@ -303,18 +302,21 @@ async def score(
             )
             provider_params.append(param)
 
-        provider_answers = await provider.run(provider_params)
+    provider_answers = await provider.run(provider_params)
+    provider_answers_dict = {p_answer.sample_id: p_answer for p_answer in provider_answers}
 
-        for provider_answer in provider_answers:
-            sample_id = provider_answer.sample_id
-            answer = provider_answer.answer
+    with open(experiment_file_path, newline="", encoding="utf-8-sig") as csvfile:
+        csvreader = csv.DictReader(csvfile)
+        for index, row in enumerate(csvreader, start=1):
+            provider_answer = provider_answers_dict.get(index)
+            if provider_answer is None:
+                continue
 
-            row = csvreader[sample_id - 1]
-            overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=row)
+            overall_sample_score, sample_data = _extract_sample_data(answer=provider_answer.answer, correct_answer=row)
             item = AIExperimentItem(
                 overall_sample_score=round(overall_sample_score, 2),
-                sample_id=sample_id,
-                output=answer,
+                sample_id=provider_answer.sample_id,
+                output=provider_answer.answer,
                 sample_data=sample_data,
             )
             experiment_data.append(item)
