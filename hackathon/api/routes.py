@@ -142,7 +142,10 @@ def _validate_body_model(provider: AIProvider, body: AIBaseBody) -> bool:
 
 def _correct_answer_for_sample(experiment_name: str, sample_id: int):
     experiment_file_path = Path(__file__).parents[2].joinpath(f"data/{experiment_name}.csv")
-    correct_answer = pd.read_csv(experiment_file_path, header=0).iloc[sample_id - 1]
+    if not experiment_name.endswith("Custom"):
+        correct_answer = pd.read_csv(experiment_file_path, header=0).iloc[sample_id - 1]
+    else:
+        correct_answer = pd.read_csv(experiment_file_path, header=0).iloc[0]
     return correct_answer
 
 
