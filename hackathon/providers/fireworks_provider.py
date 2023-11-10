@@ -12,27 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import asyncio
-import logging
-
 import fireworks.client
 from fireworks.client.error import FireworksError
 
 from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, ProviderParam
 
-logger = logging.getLogger(__name__)
-
 
 class FireworksProvider(BaseProvider):
-    async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
-        coroutines = [self._run(param) for param in params]
-        if coroutines:
-            results = await asyncio.gather(*coroutines)
-        else:
-            results = list()
-        return results
-
-    async def _run(self, param: ProviderParam) -> ProviderAnswer:
+    async def get_answer(self, param: ProviderParam) -> ProviderAnswer:
         question = self.build_question(prompt=param.prompt, context=param.context)
         formatted_question = self.add_llama_formatting(question)
         fireworks.client.api_key = self.api_key

@@ -12,27 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import asyncio
-import logging
-
 import openai
 from openai import OpenAIError
 
 from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, ProviderParam
 
-logger = logging.getLogger(__name__)
-
 
 class OpenAIProvider(BaseProvider):
-    async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
-        coroutines = [self._run(param) for param in params]
-        if coroutines:
-            results = await asyncio.gather(*coroutines)
-        else:
-            results = list()
-        return results
-
-    async def _run(self, param: ProviderParam) -> ProviderAnswer:
+    async def get_answer(self, param: ProviderParam) -> ProviderAnswer:
         question = self.build_question(prompt=param.prompt, context=param.context)
         openai.api_key = self.api_key
         messages = [{"role": "user", "content": question}]

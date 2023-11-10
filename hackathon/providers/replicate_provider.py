@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import asyncio
-import logging
 import os
 
 import replicate
@@ -21,23 +19,15 @@ from replicate.exceptions import ReplicateException
 
 from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, ProviderParam
 
-logger = logging.getLogger(__name__)
-
 
 class ReplicateProvider(BaseProvider):
-    model_token_dict = {"llama-2-7b-chat": "13c3cdee13ee059ab779f0291d29054dab00a47dad8261375654de5540165fb0",
-                        "llama-2-13b-chat": "f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d",
-                        "llama-2-70b-chat": "02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3"}
-    
-    async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
-        coroutines = [self._run(param) for param in params]
-        if coroutines:
-            results = await asyncio.gather(*coroutines)
-        else:
-            results = list()
-        return results
+    model_token_dict = {
+        "llama-2-7b-chat": "13c3cdee13ee059ab779f0291d29054dab00a47dad8261375654de5540165fb0",
+        "llama-2-13b-chat": "f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d",
+        "llama-2-70b-chat": "02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
+    }
 
-    async def _run(self, param: ProviderParam) -> ProviderAnswer:
+    async def get_answer(self, param: ProviderParam) -> ProviderAnswer:
         question = self.build_question(prompt=param.prompt, context=param.context)
         formatted_question = self.add_llama_formatting(question)
         os.environ["REPLICATE_API_TOKEN"] = self.api_key

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import abc
+import asyncio
 from dataclasses import dataclass
 from typing import Optional
 
@@ -40,8 +41,16 @@ class BaseProvider(abc.ABC):
         self.api_key = api_key
 
     @abc.abstractmethod
-    async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
+    async def get_answer(self, param: ProviderParam) -> ProviderAnswer:
         ...
+
+    async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
+        coroutines = [self.get_answer(param) for param in params]
+        if coroutines:
+            results = await asyncio.gather(*coroutines)
+        else:
+            results = list()
+        return results
 
     @staticmethod
     def get_error_answer(msg: str) -> str:
@@ -64,5 +73,3 @@ class BaseProvider(abc.ABC):
             question = question + "[/INST]"
 
         return question
-
-
