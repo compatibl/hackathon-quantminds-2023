@@ -190,7 +190,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     total_score = 0.0
 
     if 'InstrumentType' in json_answer.keys() and correct_answer['InstrumentType'] == json_answer['InstrumentType']:
-        max_item_score = 100*round(1 / len(json_answer.keys()), 2)
+        max_item_score = 100*round(1 / len(correct_answer.keys()), 2)
         sample_items.append(
             AISampleItem(
                 field='InstrumentType',
