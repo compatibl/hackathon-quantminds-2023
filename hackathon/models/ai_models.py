@@ -13,9 +13,13 @@
 # limitations under the License.
 
 import enum
-from typing import Optional, Union
+from typing import Annotated, Any, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, BeforeValidator, Field
+
+
+def empty_str_as_none(v: Any) -> Optional[Any]:
+    return None if v == "" else v
 
 
 class AIModelParam(str, enum.Enum):
@@ -72,22 +76,26 @@ class AIProvider(str, enum.Enum):
 
 class AIBaseBody(BaseModel):
     provider_model: str = Field(description="Provider model.")
-    seed: Optional[int] = Field(
-        default=None,
-        description="Model seed (use the same seed to reproduce the answer).",
-    )
-    temperature: Optional[float] = Field(
-        default=None,
-        description="Model temperature (lower is deterministic, higher more creative).",
-    )
-    top_p: Optional[float] = Field(
-        default=None,
-        description="Cumulative probability of tokens to sample from.",
-    )
-    top_k: Optional[int] = Field(
-        default=None,
-        description="Num tokens to sample from.",
-    )
+    seed: Annotated[
+        Optional[int],
+        BeforeValidator(empty_str_as_none),
+        Field(description="Model seed (use the same seed to reproduce the answer)."),
+    ] = None
+    temperature: Annotated[
+        Optional[float],
+        BeforeValidator(empty_str_as_none),
+        Field(description="Model temperature (lower is deterministic, higher more creative)."),
+    ] = None
+    top_p: Annotated[
+        Optional[float],
+        BeforeValidator(empty_str_as_none),
+        Field(description="Cumulative probability of tokens to sample from."),
+    ] = None
+    top_k: Annotated[
+        Optional[int],
+        BeforeValidator(empty_str_as_none),
+        Field(description="Num tokens to sample from."),
+    ] = None
 
 
 class AIRunBody(AIBaseBody):

@@ -121,16 +121,6 @@ async def get_ai_providers():
     return response_providers
 
 
-def _validate_body_model_params(provider: AIProvider, body: AIBaseBody) -> bool:
-    for param in provider.available_params:
-        if getattr(body, param.value, None) is None:
-            raise AppException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=f"For {provider.value} provider the next field should be specified: {param.value}",
-            )
-    return True
-
-
 def _validate_body_model(provider: AIProvider, body: AIBaseBody) -> bool:
     if body.provider_model not in provider.models:
         raise AppException(
@@ -237,7 +227,6 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     response_model=AIRunResponse,
 )
 async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(default=None)):
-    _validate_body_model_params(ai_provider, body)
     _validate_body_model(ai_provider, body)
 
     param = ProviderParam(
@@ -274,7 +263,6 @@ async def score(
     settings: Annotated[Settings, Depends(get_settings)],
     api_key: Annotated[Optional[str], Header()] = None,
 ):
-    _validate_body_model_params(ai_provider, body)
     _validate_body_model(ai_provider, body)
 
     experiment_file_path = Path(settings.data_path, f"{body.experiment_name}.csv")
