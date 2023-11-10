@@ -64,7 +64,7 @@ def get_experiments(settings: Annotated[Settings, Depends(get_settings)]):
                 field=col,
                 model="",
                 correct="",
-                score=0.0,
+                score="0%",
             )
             for col in df_columns
         ]
