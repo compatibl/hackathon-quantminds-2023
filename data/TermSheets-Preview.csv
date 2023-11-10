@@ -1,8 +1,8 @@
-﻿Input,InstrumentType,MaturityDate,SettlementDate
-"Aggregate Principal Amount:[·]
+﻿Input,InstrumentType,Principal,PrincipalCurrency,MaturityDate,SettlementDate
+"Aggregate Principal Amount: USD 100m
 Denomination: $1,000 principal amount per Note
 Minimum Investment: $1,000 (1 Note). Purchases must be in integral multiples of $1,000.
 Issue Price: Variable price reoffer
 Expected Settlement Date: February 3, 2011
 Maturity Date: February 3, 2018
-Interest Payment Amount: The amount of interest to be paid on the Notes for an Interest Period is equal to the product of (a) the principal amount of the Notes, (b) the Applicable Interest Rate for that Interest Period and (c) a fraction, the numerator of which is the number of days in the Interest Period (calculated on the basis of a 360-day year of twelve 30-day months) and the denominator of which is 360.",Interest Rate Swap,2/3/2018,2/3/2011
+Interest Payment Amount: The amount of interest to be paid on the Notes for an Interest Period is equal to the product of (a) the principal amount of the Notes, (b) the Applicable Interest Rate for that Interest Period and (c) a fraction, the numerator of which is the number of days in the Interest Period (calculated on the basis of a 360-day year of twelve 30-day months) and the denominator of which is 360.",Interest Rate Swap,100000000,USD,2018-02-03,2011-02-03

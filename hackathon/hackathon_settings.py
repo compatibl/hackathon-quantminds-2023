@@ -29,8 +29,9 @@ class Settings(BaseSettings):
         "BarrierOption)\nSource code:\n```\n{input}\n```",
         "TermSheets": "Pay attention and remember information below.\nContext:\n```\n{input}\n```\nAccording to the "
         "information in the context above, return only JSON with keys:\n"
-        "InstrumentType - enum with values Vanilla Swap, Amortizing Swap, Cross-Currency Swap,\n"
-        "MaturityDate: date,\nSettlementDate: date",
+        "InstrumentType - enum with values Vanilla Swap, Amortizing Swap, Cross-Currency Swap\n"
+        "Principal: Amount with no decimal places,\nPrincipalCurrency: Currency in ISO 4217 format,\n"
+        "MaturityDate: Date in ISO-8601 format,\nSettlementDate: Date in ISO-8601 format\n"
     }
     allow_origins: list[str] = ["http://localhost:3000"]
     static_path: Path = Path(__file__).parents[1].joinpath("./wwwroot")
