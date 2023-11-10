@@ -42,3 +42,7 @@ class BaseProvider(abc.ABC):
     @abc.abstractmethod
     async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
         ...
+
+    @staticmethod
+    def get_error_answer(msg: str) -> str:
+        return f"An error has occurred: {msg}"

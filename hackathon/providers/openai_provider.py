@@ -44,8 +44,8 @@ class OpenAIProvider(BaseProvider):
             )
             answer = response["choices"][0]["message"]["content"]
         except OpenAIError as err:
-            answer = str(err)
+            answer = self.get_error_answer(str(err))
         except:
-            answer = "OpenAI is not available for now. Please try again later."
+            answer = self.get_error_answer("OpenAI is not available for now. Please try again later.")
 
         return ProviderAnswer(sample_id=param.sample_id, answer=answer)

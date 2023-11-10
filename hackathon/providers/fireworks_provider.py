@@ -47,10 +47,10 @@ class FireworksProvider(BaseProvider):
             answer = response.choices[0].text
         except FireworksError as err:
             try:
-                answer = err.args[0]["fault"]["faultstring"]
+                answer = self.get_error_answer(err.args[0]["fault"]["faultstring"])
             except:
-                answer = str(err)
+                answer = self.get_error_answer(str(err))
         except:
-            answer = "Fireworks is not available for now. Please try again later."
+            answer = self.get_error_answer("Fireworks is not available for now. Please try again later.")
 
         return ProviderAnswer(sample_id=param.sample_id, answer=answer)

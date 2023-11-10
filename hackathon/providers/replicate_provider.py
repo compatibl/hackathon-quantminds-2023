@@ -49,8 +49,8 @@ class ReplicateProvider(BaseProvider):
             )
             answer = "".join(output)
         except ReplicateException as err:
-            answer = str(err)
+            answer = self.get_error_answer(str(err))
         except:
-            answer = "Replicate is not available for now. Please try again later."
+            answer = self.get_error_answer("Replicate is not available for now. Please try again later.")
 
         return ProviderAnswer(sample_id=param.sample_id, answer=answer)
