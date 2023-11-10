@@ -38,7 +38,6 @@ class AIModel(str, enum.Enum):
     LLAMA_V2_34B_CODE_INSTRUCT = "llama-v2-34b-code-instruct"
     LLAMA_2_70B_CHAT = "llama-2-70b-chat"
     LLAMA_2_13B_CHAT = "llama-2-13b-chat"
-    LLAMA_2_7B_CHAT = "llama-2-7b-chat"
     GPT_3_5_TURBO = "gpt-3.5-turbo"
     GPT_4 = "gpt-4"
 
@@ -55,7 +54,7 @@ class AIProvider(str, enum.Enum):
 
     REPLICATE = (
         "replicate",
-        [AIModel.LLAMA_2_70B_CHAT, AIModel.LLAMA_2_13B_CHAT, AIModel.LLAMA_2_7B_CHAT],
+        [AIModel.LLAMA_2_70B_CHAT, AIModel.LLAMA_2_13B_CHAT],
         [AIModelParam.SEED, AIModelParam.TEMP, AIModelParam.TOP_P, AIModelParam.TOP_K],
     )
     OPENAI = (
