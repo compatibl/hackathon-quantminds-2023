@@ -27,8 +27,8 @@ class Settings(BaseSettings):
         "and call\ndf - discount factor\nstrike - strike price\nbarrier - barrier price (use this key only for "
         "barrier_option)\nCode:\n```\n{input}\n```",
         "text": "Pay attention and remember information below.\nContext:\n```\n{input}\n```\nAccording to the "
-        "information in the  context above, fill following fields:\ninstrument_type: string,\ninitial_date: date,"
-        "\nend_date: date",
+        "information in the context above, return only JSON with keys:\ninstrument_type: string,\nmaturity_date: date,"
+        "\nsettlement_date: date",
     }
     allow_origins: list[str] = ["http://localhost:3000"]
     static_path: Path = Path(__file__).parents[1].joinpath("./wwwroot")
