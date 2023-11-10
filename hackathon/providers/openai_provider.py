@@ -12,9 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
+
 import openai
+from fastapi import status
 
 from hackathon.exception import AppException
+
+logger = logging.getLogger(__name__)
 
 
 def run_openai(prompt: str, context: str, temperature: float, api_key: str):
@@ -27,8 +32,11 @@ def run_openai(prompt: str, context: str, temperature: float, api_key: str):
             messages=messages,
             temperature=temperature,
         )
-    except openai.error.APIError as err:
-        raise AppException(500, "")
+    except openai.error.AuthenticationError:
+        raise AppException(status.HTTP_400_BAD_REQUEST, "Invalid OpenAI API key.")
+    except openai.error.OpenAIError as err:
+        logger.exception("Somthing go wrong with OpenAI.")
+        raise AppException(status.HTTP_503_SERVICE_UNAVAILABLE, str(err))
 
     answer = response["choices"][0]["message"]["content"]
     return answer

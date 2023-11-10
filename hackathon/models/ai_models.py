@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import enum
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -86,7 +86,6 @@ class AIBaseBody(BaseModel):
 
 
 class AIRunBody(AIBaseBody):
-    # TODO: Add experiment_name and sample_id (return empty table for custom experiment)
     input: str = Field(description="AI request input")
     prompt: Optional[str] = Field(default=None, description="AI request prompt.")
 
@@ -112,15 +111,11 @@ class AIExperimentItem(BaseModel):
 
 class AIScoreResponse(BaseModel):
     overall_experiment_score: float
-    average_experiment_score: float
     experiment_data: list[AIExperimentItem]
-    answers: List[str] = Field(description="Model output for each sample.")
-    scores: List[float] = Field(description="Score for each sample.")
-    overall_score: float = Field(description="Overall score.")
 
 
 class SampleInputResponse(BaseModel):
-    index: int = Field(description="Index.")
+    sample_id: int = Field(description="Sample Id.")
     value: str = Field(description="Value.")
 
 

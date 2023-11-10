@@ -22,7 +22,7 @@ python -m pip install --upgrade pip
 
 echo.
 echo Install requirements (excludes linter and build requirements)
-pip install -r requirements.txt
+pip install -r requirements.dev.txt
 
 echo.
 echo Exit without deactivating virtual environment

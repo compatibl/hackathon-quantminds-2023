@@ -1,2 +1,10 @@
+.git/
+.gitignore
+.gitattributes
+.flake8
+.isort.cfg
+.python-version
+docker-compose.yml
+Dockerfile
 .idea/
 venv/

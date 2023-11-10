@@ -32,8 +32,8 @@ class AppException(HTTPException):
         super().__init__(status_code=status_code, detail=detail, headers=headers)
 
         info = self.http_status_info.get(status_code)
-        name_info = info.phrase if info else str(status_code)
-        description_info = info.description if info else str(status_code)
+        name_info = info.phrase if info and info.phrase else str(status_code)
+        description_info = info.description if info and info.description else str(status_code)
 
         self.name = name if name is not None else name_info
         self.description = description if description is not None else description_info

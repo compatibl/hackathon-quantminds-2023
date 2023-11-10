@@ -14,18 +14,21 @@
 
 import os
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings
 
 
-@lru_cache
-def get_settings():
-    return Settings()
-
-
 class Settings(BaseSettings):
-    data_path: str = os.getenv("DATA_PATH", "./data")
-    log_level: str = os.getenv("LOG_LEVEL", "INFO")
-    host: str = os.getenv("HOST", "localhost")
-    port: int = os.getenv("PORT", 8000)
-    workers: int = os.getenv("WORKERS", 1)
+    allow_origins: list[str] = ["http://localhost:3000"]
+    static_path: Path = Path(__file__).parents[1].joinpath("./wwwroot")
+    data_path: Path = Path(__file__).parents[1].joinpath("./data")
+    log_level: str = os.getenv("LOG_LEVEL", "DEBUG")
+    host: str = os.getenv("UVICORN_HOST", "localhost")
+    port: int = os.getenv("UVICORN_PORT", 8000)
+    workers: int = os.getenv("UVICORN_WORKERS", 1)
+
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()

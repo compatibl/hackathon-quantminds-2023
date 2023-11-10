@@ -66,7 +66,7 @@ instead to submit the entry.
 2. Checkout from GitHub:
 [https://github.com/compatibl/hackathon-quantminds-2023](https://github.com/compatibl/hackathon-quantminds-2023)
 3. Create and activate venv or conda environment
-4. Run `pip install -r requirements.txt`
+4. Run `pip install -r requirements.dev.txt`
 5. Run `python -m hackathon`
 6. Click on the URL in text output to open the UI
 

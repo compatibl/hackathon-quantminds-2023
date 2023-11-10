@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pathlib import Path
-
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -29,20 +27,14 @@ app = FastAPI()
 
 app.include_router(routes.router)
 
-trusted_origins = ["*"]
-
-# FIXME: Mikita
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=trusted_origins,
-    allow_credentials=True,
+    allow_origins=get_settings().allow_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-static_files_dir = Path(__file__).parents[1].joinpath("wwwroot")
-app.mount("/", StaticFiles(directory=static_files_dir, html=True), name="static")
+app.mount("/", StaticFiles(directory=get_settings().static_path, html=True), name="static")
 
 
 @app.exception_handler(AppException)
@@ -59,6 +51,12 @@ async def app_exception_handler(_, exc: AppException):
 async def http_exception_handler(_, exc):
     headers = getattr(exc, "headers", None)
     app_exception = AppException(status_code=exc.status_code, detail=exc.detail, headers=headers)
+    return await app_exception_handler(_, app_exception)
+
+
+@app.exception_handler(status.HTTP_500_INTERNAL_SERVER_ERROR)
+async def http_internal_server_error_handler(_, __):
+    app_exception = AppException(status.HTTP_500_INTERNAL_SERVER_ERROR)
     return await app_exception_handler(_, app_exception)
 
 

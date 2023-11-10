@@ -12,10 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
+
 import fireworks.client
 import httpx
 
+from fastapi import status
 from hackathon.exception import AppException
+
+logger = logging.getLogger(__name__)
 
 
 def run_fireworks(
@@ -37,7 +42,8 @@ def run_fireworks(
             top_p=top_p,
         )
     except httpx.HTTPStatusError as err:
-        raise AppException(500, "")
+        logger.exception("Somthing go wrong with Fireworks.")
+        raise AppException(status.HTTP_503_SERVICE_UNAVAILABLE, str(err))
 
     answer = response.choices[0].text
     return answer
