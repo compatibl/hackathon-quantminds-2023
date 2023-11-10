@@ -190,35 +190,34 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     total_score = 0.0
 
     if 'InstrumentType' in json_answer.keys() and correct_answer['InstrumentType'] == json_answer['InstrumentType']:
-        item_score = round(1 / len(json_answer.keys()), 2)
+        max_item_score = 100*round(1 / len(json_answer.keys()), 2)
         sample_items.append(
             AISampleItem(
                 field='InstrumentType',
                 model=json_answer[
                     'InstrumentType'] if 'InstrumentType' in json_answer.keys() else "Not found in response",
                 correct=correct_answer['InstrumentType'],
-                score=item_score,
+                score=max_item_score,
             )
         )
-        total_score += item_score
+        total_score += max_item_score
         for key in set(correct_answer.keys()) - {'InstrumentType'}:
             model_value = str(json_answer.get(key, '-'))
             correct_value = str(correct_answer[key])
             # TODO: softer
-            score = item_score if model_value == correct_value else 0.0
+            score = max_item_score if model_value == correct_value else 0.0
             total_score += score
             sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value, score=score))
 
         return total_score, sample_items
     else:
-        item_score = 0
         sample_items.append(
             AISampleItem(
                 field='InstrumentType',
                 model=json_answer[
                     'InstrumentType'] if 'InstrumentType' in json_answer.keys() else "Not found in response",
                 correct=correct_answer['InstrumentType'] + " (no score - mismatch)",
-                score=item_score,
+                score=0,
             )
         )
         for key in set(correct_answer.keys()) - {'InstrumentType'}:
