@@ -186,14 +186,16 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
 
     logger.debug(json_answer)
 
-    item_score = round(1 / len(json_answer.keys()),2)
     sample_items = []
     total_score = 0.0
+
     if 'InstrumentType' in json_answer.keys() and correct_answer['InstrumentType'] == json_answer['InstrumentType']:
+        item_score = round(1 / len(json_answer.keys()), 2)
         sample_items.append(
             AISampleItem(
                 field='InstrumentType',
-                model=json_answer['InstrumentType'],
+                model=json_answer[
+                    'InstrumentType'] if 'InstrumentType' in json_answer.keys() else "Not found in response",
                 correct=correct_answer['InstrumentType'],
                 score=item_score,
             )
@@ -208,16 +210,25 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
             sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value, score=score))
 
         return total_score, sample_items
-
-    return 0.0, [
-        AISampleItem(
-            field=k,
-            model=str(json_answer.get(k, '-')),
-            correct=str(v),
-            score=0.0,
+    else:
+        item_score = 0
+        sample_items.append(
+            AISampleItem(
+                field='InstrumentType',
+                model=json_answer[
+                    'InstrumentType'] if 'InstrumentType' in json_answer.keys() else "Not found in response",
+                correct=correct_answer['InstrumentType'] + " (no score - mismatch)",
+                score=item_score,
+            )
         )
-        for k, v in correct_answer.items()
-    ]
+        for key in set(correct_answer.keys()) - {'InstrumentType'}:
+            model_value = str(json_answer.get(key, '-'))
+            correct_value = str(correct_answer[key]) + " (no score - instrument type mismatch)"
+            # TODO: softer
+            sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value, score=0))
+
+        total_score = 0
+        return total_score, sample_items
 
 
 @router.post(
