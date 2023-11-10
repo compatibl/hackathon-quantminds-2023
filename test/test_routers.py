@@ -81,7 +81,7 @@ def test_run_sample_ok(client: Client, test_case: dict):
             "payoff(underlying.size());\nfor (size_t i = 0; i < underlying.size(); i++) {\n   payoff[i] = param1 * "
             "param2 * (param4 - underlying[i] > 0 ? 1 : 0) * param3;\n}\n \ndouble average = "
             "std::accumulate(payoff.begin(), payoff.end(), 0.0) / payoff.size();\nreturn average;\n}",
-            "prompt": get_settings().default_prompts["code"],
+            "prompt": get_settings().default_prompts["PricingModels"],
         },
     )
     assert response.is_success
@@ -118,7 +118,7 @@ def test_score_experiment_ok(client: Client, test_case: dict):
             **test_case["params"],
             "provider_model": test_case["model"],
             "experiment_name": test_case["experiment_name"],
-            "prompt": get_settings().default_prompts["code"],
+            "prompt": get_settings().default_prompts["PricingModels"],
         },
     )
     assert response.is_success
