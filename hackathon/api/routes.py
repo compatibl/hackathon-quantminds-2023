@@ -307,6 +307,8 @@ async def score(
 
     with open(experiment_file_path, newline="", encoding="utf-8-sig") as csvfile:
         csvreader = csv.DictReader(csvfile)
+
+        sample_count = 0.0
         for index, row in enumerate(csvreader, start=1):
             provider_answer = provider_answers_dict.get(index)
             if provider_answer is None:
@@ -320,9 +322,12 @@ async def score(
                 sample_data=sample_data,
             )
             experiment_data.append(item)
+            sample_count += 1
             overall_experiment_score += overall_sample_score
 
+        average_experiment_score = overall_experiment_score / sample_count
+
     return AIScoreResponse(
-        overall_experiment_score=round(overall_experiment_score, 2),
+        overall_experiment_score=round(average_experiment_score, 2),
         experiment_data=experiment_data,
     )
