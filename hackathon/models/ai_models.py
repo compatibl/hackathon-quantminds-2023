@@ -106,18 +106,18 @@ class AISampleItem(BaseModel):
     field: str
     model: str
     correct: str
-    score: float
+    score: str
 
 
 class AIExperimentItem(BaseModel):
-    overall_sample_score: float
+    overall_sample_score: str
     sample_id: int
     output: str
     sample_data: list[AISampleItem]
 
 
 class AIScoreResponse(BaseModel):
-    overall_experiment_score: float
+    overall_experiment_score: str
     experiment_data: list[AIExperimentItem]
 
 
@@ -127,7 +127,7 @@ class SampleInputResponse(BaseModel):
 
 
 class AIRunResponse(BaseModel):
-    overall_sample_score: float
+    overall_sample_score: str
     output: str = Field(description="AI response.")
     sample_data: list[AISampleItem]
 

@@ -165,7 +165,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
                 field=k,
                 model="-",
                 correct=str(v),
-                score=0.0,
+                score="0%",
             )
             for k, v in correct_answer.items()
         ]
@@ -179,7 +179,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
                 field=k,
                 model="-",
                 correct=str(v),
-                score=0.0,
+                score="0%",
             )
             for k, v in correct_answer.items()
         ]
@@ -197,7 +197,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
                 model=json_answer[
                     'InstrumentType'] if 'InstrumentType' in json_answer.keys() else "Not found in response",
                 correct=correct_answer['InstrumentType'],
-                score=max_item_score,
+                score=str(round(max_item_score, 2)) + "%"
             )
         )
         total_score += max_item_score
@@ -207,7 +207,8 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
             # TODO: softer
             score = max_item_score if model_value == correct_value else 0.0
             total_score += score
-            sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value, score=score))
+            sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value,
+                                             score=str(round(score, 2)) + "%"))
 
         return total_score, sample_items
     else:
@@ -216,15 +217,15 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
                 field='InstrumentType',
                 model=json_answer[
                     'InstrumentType'] if 'InstrumentType' in json_answer.keys() else "Not found in response",
-                correct=correct_answer['InstrumentType'] + " (no score - mismatch)",
-                score=0,
+                correct=correct_answer['InstrumentType'],
+                score="No score - mismatch",
             )
         )
         for key in set(correct_answer.keys()) - {'InstrumentType'}:
             model_value = str(json_answer.get(key, '-'))
-            correct_value = str(correct_answer[key]) + " (no score - instrument type mismatch)"
+            correct_value = str(correct_answer[key])
             # TODO: softer
-            sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value, score=0))
+            sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value, score="Instrument type mismatch"))
 
         total_score = 0
         return total_score, sample_items
@@ -256,7 +257,7 @@ async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(de
     overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=correct_answer)
 
     return AIRunResponse(
-        overall_sample_score=round(overall_sample_score, 2),
+        overall_sample_score=str(round(overall_sample_score, 2)) + "%",
         output=answer,
         sample_data=sample_data,
     )
@@ -316,7 +317,7 @@ async def score(
 
             overall_sample_score, sample_data = _extract_sample_data(answer=provider_answer.answer, correct_answer=row)
             item = AIExperimentItem(
-                overall_sample_score=round(overall_sample_score, 2),
+                overall_sample_score=str(round(overall_sample_score, 2)) + "%",
                 sample_id=provider_answer.sample_id,
                 output=provider_answer.answer,
                 sample_data=sample_data,
@@ -328,6 +329,6 @@ async def score(
         average_experiment_score = overall_experiment_score / sample_count
 
     return AIScoreResponse(
-        overall_experiment_score=round(average_experiment_score, 2),
+        overall_experiment_score=str(round(average_experiment_score, 2)) + "%",
         experiment_data=experiment_data,
     )
