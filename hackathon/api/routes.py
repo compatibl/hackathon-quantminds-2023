@@ -50,7 +50,7 @@ DATE_FIELD_END_WITH: Final[str] = "Date"
 
 router = APIRouter(prefix="", tags=["AI"])
 
-normalize_string_regex = re.compile(r"[\s\-]+")
+normalize_string_regex = re.compile(r"[\s\-_]+")
 
 
 @router.get(
