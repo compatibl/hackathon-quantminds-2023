@@ -45,7 +45,7 @@ from hackathon.providers.base_provider import ProviderParam
 from hackathon.providers.manager import get_provider
 
 INSTRUMENT_TYPE_FIELD: Final[str] = "InstrumentType"
-PLACE_HOLDER: Final[str] = "-"
+PLACE_HOLDER: Final[str] = "nan"
 INPUT_FIELD: Final[str] = "Input"
 DATE_FIELD_END_WITH: Final[str] = "Date"
 NONE_FIELDS: Final[List[str]] = ["None", "Null", "NaN", "Empty", "Undefined", "Not Defined", "Unspecified", "Not Specified"]
