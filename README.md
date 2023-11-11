@@ -132,7 +132,7 @@ only the first one will be used.
 
 ## Model Versions
 
-- When using GPT models, either GPT-4 or GPT-3.4-Turbo models are permitted. GPT-4-Turbo
+- When using GPT models, either GPT-4 or GPT-3.5-Turbo models are permitted. GPT-4-Turbo
 model is not permitted.
 - When using LLAMA models, any model from the LLAMA 2 family is permitted, including
 LLAMA-2-70B and CodeLlama-34B.
