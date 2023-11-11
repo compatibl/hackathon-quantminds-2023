@@ -248,7 +248,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
             correct_value=correct_answer[INSTRUMENT_TYPE_FIELD],
         )
     ):
-        max_item_score = 100*round(1 / len(correct_answer.keys()), 2)
+        max_item_score = 1 / len(correct_answer.keys())
         sample_items.append(
             AISampleItem(
                 field=INSTRUMENT_TYPE_FIELD,
@@ -256,7 +256,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
                     if INSTRUMENT_TYPE_FIELD in json_answer.keys()
                     else "Not found in response",
                 correct=str(correct_answer[INSTRUMENT_TYPE_FIELD]),
-                score=str(round(max_item_score, 2)) + "%"
+                score=str(round(100 * max_item_score, 2)) + "%"
             )
         )
         total_score += max_item_score
@@ -276,10 +276,11 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
                     field=key,
                     model=str(model_value) if model_value is not None else PLACE_HOLDER,
                     correct=str(correct_value),
-                    score=str(round(score, 2)) + "%",
+                    score=str(round(100 * score, 2)) + "%",
                 )
             )
 
+        total_score *= 100
         return total_score, sample_items
     else:
         sample_items.append(
@@ -304,6 +305,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
                     score="Instrument type mismatch",
                 )
             )
+        total_score *= 100
         return total_score, sample_items
 
 
