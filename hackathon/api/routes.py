@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import csv
 import glob
 import json
-import logging
+import re
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated, Any, Final, Optional
 
+import dateutil
 import pandas as pd
+from dateutil.parser import parse
 from fastapi import APIRouter, Depends, status
 from fastapi.params import Header
 
@@ -42,9 +43,14 @@ from hackathon.models.ai_models import (
 from hackathon.providers.base_provider import ProviderParam
 from hackathon.providers.manager import get_provider
 
-logger = logging.getLogger(__name__)
+INSTRUMENT_TYPE_FIELD: Final[str] = "InstrumentType"
+PLACE_HOLDER: Final[str] = "-"
+INPUT_FIELD: Final[str] = "Input"
+DATE_FIELD_END_WITH: Final[str] = "Date"
 
 router = APIRouter(prefix="", tags=["AI"])
+
+normalize_string_regex = re.compile(r"[\s\-]+")
 
 
 @router.get(
@@ -56,7 +62,7 @@ def get_experiments(settings: Annotated[Settings, Depends(get_settings)]):
     path = Path(settings.data_path, "*.csv")
     experiments = []
     for file in glob.glob(str(path)):
-        df_columns = set(pd.read_csv(file).columns) - {'input'}
+        df_columns = set(pd.read_csv(file).columns) - {INPUT_FIELD}
         experiment_name = Path(file).stem
         default_prompt = settings.default_prompts[experiment_name.split('-')[0]]
         default_table = [
@@ -86,7 +92,7 @@ def get_experiment_inputs(
 ) -> list[SampleInputResponse]:
     file_path = Path(settings.data_path, f"{experiment_name}.csv")
     try:
-        inputs = pd.read_csv(file_path, usecols=["Input"]).T.values.tolist()[0]
+        inputs = pd.read_csv(file_path, usecols=[INPUT_FIELD]).T.values.tolist()[0]
         result = [SampleInputResponse(index=index, value=value) for index, value in enumerate(inputs, start=1)]
     except FileNotFoundError:
         raise AppException(status.HTTP_400_BAD_REQUEST, f"Experiment {experiment_name} not exists.")
@@ -139,85 +145,152 @@ def _correct_answer_for_sample(experiment_name: str, sample_id: int):
     return correct_answer
 
 
-def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISampleItem]]:
+def compare_as_strings(model_value: Any, correct_value: Any) -> bool:
+    try:
+        model_value = str(model_value).strip().lower()
+        correct_value = str(correct_value).strip().lower()
+        model_value = normalize_string_regex.sub("", model_value)
+        correct_value = normalize_string_regex.sub("", correct_value)
+        return model_value == correct_value
+    except:
+        return False
 
-    del correct_answer["Input"]
+
+def compare_as_dates(model_value: Any, correct_value: Any) -> bool:
+    try:
+        model_value = str(model_value)
+        correct_value = str(correct_value)
+        return dateutil.parser.parse(model_value) == dateutil.parser.parse(correct_value)
+    except:
+        return compare_as_strings(model_value=model_value, correct_value=correct_value)
+
+
+def compare_as_booleans(model_value: Any, correct_value: Any) -> bool:
+    try:
+        model_value = bool(model_value)
+        correct_value = bool(correct_value)
+        return model_value == correct_value
+    except:
+        return compare_as_strings(model_value=model_value, correct_value=correct_value)
+
+
+def compare_as_floats(model_value: Any, correct_value: Any) -> bool:
+    try:
+        model_value = round(float(model_value), 5)
+        correct_value = round(float(correct_value), 5)
+        return model_value == correct_value
+    except:
+        return compare_as_strings(model_value=model_value, correct_value=correct_value)
+
+
+def compare_as_integers(model_value: Any, correct_value: Any) -> bool:
+    try:
+        model_value = int(model_value)
+        correct_value = int(correct_value)
+        return model_value == correct_value
+    except:
+        return compare_as_strings(model_value=model_value, correct_value=correct_value)
+
+
+def soft_comparison(model_value: Any, correct_value: Any) -> bool:
+    if pd.api.types.is_integer(correct_value):
+        return compare_as_integers(model_value=model_value, correct_value=correct_value)
+    elif pd.api.types.is_float(correct_value):
+        return compare_as_floats(model_value=model_value, correct_value=correct_value)
+    elif pd.api.types.is_bool(correct_value):
+        return compare_as_booleans(model_value=model_value, correct_value=correct_value)
+    else:
+        return compare_as_strings(model_value=model_value, correct_value=correct_value)
+
+
+def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISampleItem]]:
+    del correct_answer[INPUT_FIELD]
+
+    empty_samples = list()
+    for key, value in correct_answer.items():
+        empty_samples.append(AISampleItem(field=key, model=PLACE_HOLDER, correct=str(value), score="0%"))
+    empty_result = (0.0, empty_samples)
 
     opening_brace = answer.find("{")
     closing_brace = answer.find("}")
 
     if opening_brace != -1 and closing_brace != -1:
         json_only = answer[opening_brace: closing_brace + 1]
-
     else:
-        return 0.0, [
-            AISampleItem(
-                field=k,
-                model="-",
-                correct=str(v),
-                score="0%",
-            )
-            for k, v in correct_answer.items()
-        ]
+        return empty_result
 
     # TODO: Make this stage softer
     try:
         json_answer = json.loads(json_only)
     except ValueError:  # JSONDecodeError
-        return 0.0, [
-            AISampleItem(
-                field=k,
-                model="-",
-                correct=str(v),
-                score="0%",
-            )
-            for k, v in correct_answer.items()
-        ]
-
-    logger.debug(json_answer)
+        return empty_result
 
     sample_items = []
     total_score = 0.0
 
-    if 'InstrumentType' in json_answer.keys() and correct_answer['InstrumentType'] == json_answer['InstrumentType']:
+    if (
+        INSTRUMENT_TYPE_FIELD in json_answer.keys()
+        and compare_as_strings(
+            model_value=json_answer[INSTRUMENT_TYPE_FIELD],
+            correct_value=correct_answer[INSTRUMENT_TYPE_FIELD],
+        )
+    ):
         max_item_score = 100*round(1 / len(correct_answer.keys()), 2)
         sample_items.append(
             AISampleItem(
-                field='InstrumentType',
-                model=json_answer[
-                    'InstrumentType'] if 'InstrumentType' in json_answer.keys() else "Not found in response",
-                correct=correct_answer['InstrumentType'],
+                field=INSTRUMENT_TYPE_FIELD,
+                model=str(json_answer[INSTRUMENT_TYPE_FIELD])
+                    if INSTRUMENT_TYPE_FIELD in json_answer.keys()
+                    else "Not found in response",
+                correct=str(correct_answer[INSTRUMENT_TYPE_FIELD]),
                 score=str(round(max_item_score, 2)) + "%"
             )
         )
         total_score += max_item_score
-        for key in set(correct_answer.keys()) - {'InstrumentType'}:
-            model_value = str(json_answer.get(key, '-'))
-            correct_value = str(correct_answer[key])
-            # TODO: softer
-            score = max_item_score if model_value == correct_value else 0.0
+        for key in set(correct_answer.keys()) - {INSTRUMENT_TYPE_FIELD}:
+            model_value = json_answer.get(key)
+            correct_value = correct_answer[key]
+
+            if key.endswith(DATE_FIELD_END_WITH):
+                are_values_equal = compare_as_dates(model_value=model_value, correct_value=correct_value)
+            else:
+                are_values_equal = soft_comparison(model_value=model_value, correct_value=correct_value)
+
+            score = max_item_score if are_values_equal else 0.0
             total_score += score
-            sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value,
-                                             score=str(round(score, 2)) + "%"))
+            sample_items.append(
+                AISampleItem(
+                    field=key,
+                    model=str(model_value) if model_value is not None else PLACE_HOLDER,
+                    correct=str(correct_value),
+                    score=str(round(score, 2)) + "%",
+                )
+            )
 
         return total_score, sample_items
     else:
         sample_items.append(
             AISampleItem(
-                field='InstrumentType',
-                model=json_answer[
-                    'InstrumentType'] if 'InstrumentType' in json_answer.keys() else "Not found in response",
-                correct=correct_answer['InstrumentType'],
+                field=INSTRUMENT_TYPE_FIELD,
+                model=str(json_answer[INSTRUMENT_TYPE_FIELD])
+                    if INSTRUMENT_TYPE_FIELD in json_answer.keys()
+                    else "Not found in response",
+                correct=str(correct_answer[INSTRUMENT_TYPE_FIELD]),
                 score="No score - mismatch",
             )
         )
-        for key in set(correct_answer.keys()) - {'InstrumentType'}:
-            model_value = str(json_answer.get(key, '-'))
-            correct_value = str(correct_answer[key])
+        for key in set(correct_answer.keys()) - {INSTRUMENT_TYPE_FIELD}:
+            model_value = json_answer.get(key)
+            correct_value = correct_answer[key]
             # TODO: softer
-            sample_items.append(AISampleItem(field=key, model=model_value, correct=correct_value, score="Instrument type mismatch"))
-
-        total_score = 0
+            sample_items.append(
+                AISampleItem(
+                    field=key,
+                    model=str(model_value) if model_value is not None else PLACE_HOLDER,
+                    correct=str(correct_value),
+                    score="Instrument type mismatch",
+                )
+            )
         return total_score, sample_items
 
 
@@ -226,7 +299,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     description="Run the sample.",
     response_model=AIRunResponse,
 )
-async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(default=None)):
+async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(default=None)):
     _validate_body_model(ai_provider, body)
 
     param = ProviderParam(
@@ -257,7 +330,7 @@ async def run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(de
     description="Score all samples of the experiment.",
     response_model=AIScoreResponse,
 )
-async def score(
+async def provider_score(
     ai_provider: AIProvider,
     body: AIScoreBody,
     settings: Annotated[Settings, Depends(get_settings)],
@@ -272,49 +345,43 @@ async def score(
             detail=f"Experiment name {body.experiment_name} is invalid.",
         )
 
-    provider = get_provider(ai_provider, api_key)
-    experiment_data: list[AIExperimentItem] = []
-    overall_experiment_score: float = 0.0
     provider_params = list()
-    with open(experiment_file_path, newline="", encoding="utf-8-sig") as csvfile:
-        csvreader = csv.DictReader(csvfile)
-        for index, row in enumerate(csvreader, start=1):
-            param = ProviderParam(
-                sample_id=index,
-                provider_model=body.provider_model,
-                prompt=body.prompt,
-                context=row["Input"],
-                seed=body.seed,
-                temperature=body.temperature,
-                top_p=body.top_p,
-                top_k=body.top_k,
-            )
-            provider_params.append(param)
+    for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
+        param = ProviderParam(
+            sample_id=int(index) + 1,
+            provider_model=body.provider_model,
+            prompt=body.prompt,
+            context=row[INPUT_FIELD],
+            seed=body.seed,
+            temperature=body.temperature,
+            top_p=body.top_p,
+            top_k=body.top_k,
+        )
+        provider_params.append(param)
 
-    provider_answers = await provider.run(provider_params)
+    provider_answers = await get_provider(ai_provider, api_key).run(provider_params)
     provider_answers_dict = {p_answer.sample_id: p_answer for p_answer in provider_answers}
 
-    with open(experiment_file_path, newline="", encoding="utf-8-sig") as csvfile:
-        csvreader = csv.DictReader(csvfile)
+    experiment_data: list[AIExperimentItem] = []
+    overall_experiment_score: float = 0.0
+    sample_count = 0.0
+    for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
+        provider_answer = provider_answers_dict.get(int(index) + 1)
+        if provider_answer is None:
+            continue
 
-        sample_count = 0.0
-        for index, row in enumerate(csvreader, start=1):
-            provider_answer = provider_answers_dict.get(index)
-            if provider_answer is None:
-                continue
+        overall_sample_score, sample_data = _extract_sample_data(answer=provider_answer.answer, correct_answer=row)
+        item = AIExperimentItem(
+            overall_sample_score=str(round(overall_sample_score, 2)) + "%",
+            sample_id=provider_answer.sample_id,
+            output=provider_answer.answer,
+            sample_data=sample_data,
+        )
+        experiment_data.append(item)
+        sample_count += 1
+        overall_experiment_score += overall_sample_score
 
-            overall_sample_score, sample_data = _extract_sample_data(answer=provider_answer.answer, correct_answer=row)
-            item = AIExperimentItem(
-                overall_sample_score=str(round(overall_sample_score, 2)) + "%",
-                sample_id=provider_answer.sample_id,
-                output=provider_answer.answer,
-                sample_data=sample_data,
-            )
-            experiment_data.append(item)
-            sample_count += 1
-            overall_experiment_score += overall_sample_score
-
-        average_experiment_score = overall_experiment_score / sample_count
+    average_experiment_score = overall_experiment_score / sample_count
 
     return AIScoreResponse(
         overall_experiment_score=str(round(average_experiment_score, 2)) + "%",
