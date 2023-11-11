@@ -16,9 +16,10 @@ import glob
 import json
 import re
 from pathlib import Path
-from typing import Annotated, Any, Final, Optional
+from typing import Annotated, Any, Final, Optional, List
 
 import dateutil
+import numpy as np
 import pandas as pd
 from dateutil.parser import parse
 from fastapi import APIRouter, Depends, status
@@ -47,6 +48,7 @@ INSTRUMENT_TYPE_FIELD: Final[str] = "InstrumentType"
 PLACE_HOLDER: Final[str] = "-"
 INPUT_FIELD: Final[str] = "Input"
 DATE_FIELD_END_WITH: Final[str] = "Date"
+NONE_FIELDS: Final[List[str]] = ["None", "Null", "NaN", "Empty", "Undefined", "Not Defined", "Unspecified", "Not Specified"]
 
 router = APIRouter(prefix="", tags=["AI"])
 
@@ -192,7 +194,18 @@ def compare_as_integers(model_value: Any, correct_value: Any) -> bool:
         return compare_as_strings(model_value=model_value, correct_value=correct_value)
 
 
+def compare_as_nan(model_value: Any, correct_value: Any) -> bool:
+    return is_nan(model_value) and is_nan(correct_value)
+
+
+def is_nan(value: Any):
+    # Looks for basic NaN values and then proceed with specific ones
+    return pd.isna(value) or (isinstance(value, str) and value in NONE_FIELDS)
+
+
 def soft_comparison(model_value: Any, correct_value: Any) -> bool:
+    if is_nan(correct_value) or is_nan(model_value):
+        return compare_as_nan(model_value=model_value, correct_value=correct_value)
     if pd.api.types.is_integer(correct_value):
         return compare_as_integers(model_value=model_value, correct_value=correct_value)
     elif pd.api.types.is_float(correct_value):
