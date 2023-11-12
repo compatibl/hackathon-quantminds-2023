@@ -2,14 +2,14 @@ You will be given the input below in the form of a pricing function code for som
 Return only JSON with these keys:
 * InstrumentType - enum with values EuropeanVanillaOption, AmericanVanillaOption, AsianOption, LookbackOption, FadeInOption, OneTouchOption, DoubleNoTouchOption, ForwardRateAgreement
 * BuyOrSellOption - enum with values Buy, Sell for the entire instrument or its embedded option
-* PayOrReceiveFixed - PayFixed, ReceiveFixed for the fixed leg of a fixed for floating interest rate instrument
+* PayOrReceiveFixed - enum with values PayFixed, ReceiveFixed for a fixed for floating interest rate instrument
 * PutOrCall - enum with values Put, Call
 * LookbackType - enum with values FixedStrike, FloatingStrike
 * AsianType - enum with values AverageStrike, AveragePrice
 * AveragingType - enum with values Arithmetic, Geometric
-* Notional - floating number for the notional or principal amount without currency
-* Strike - floating number for the strike price of the option underlying
-* FixedRate - floating number for the fixed rate of a fixed for floating interest rate instrument
-* UpperBarrier - floating number for the upper barrier level
-* LowerBarrier - floating number for the lower barrier level
+* Notional - absolute value (not in percent) for the notional or principal amount without currency
+* Strike - absolute value (not in percent) for the strike price
+* FixedRate - absolute value (not in percent) for the fixed rate
+* UpperBarrier - absolute value (not in percent) for the upper barrier level
+* LowerBarrier - absolute value (not in percent) for the lower barrier level
 Source code: ```{input}```
