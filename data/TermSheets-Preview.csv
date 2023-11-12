@@ -87,4 +87,5 @@ Floating Rate Spread:	  	0.0%
 Floating Rate Day Count Fraction:	  	Actual/360
 Reset Dates:	  	First day or each Floating Rate Payer Calculation Period
 Business Days for Floating Rate Payments: New York, Sao Paolo and London
-Business Day Convention:	  	Modified Following Business Day Convention",NonCallableFixedForFloatingSwap,2008-11-10,2013-11-10,"119,500,000.00",BRL,"50,000,000.00",USD,PayFloating,,12.1,3-month USD-LIBOR-BBA,0,Upfront,Quarterly,Quarterly,
+Business Day Convention:	  	Modified Following Business Day Convention
+",NonCallableFixedForFloatingSwap,2008-11-10,2013-11-10,119500000,BRL,50000000,USD,PayFloating,,12.1,3-month USD-LIBOR-BBA,0,Upfront,Quarterly,Quarterly,
