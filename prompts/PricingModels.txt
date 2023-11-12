@@ -1,10 +1,15 @@
 You will be given the input below in the form of a pricing function code for some financial instrument.
 Return only JSON with these keys:
-* InstrumentType - enum with values EuropeanOption, AmericanOption, DigitalOption, BarrierOption, DoubleNoTouchOption
-* BuyOrSell - enum with values Buy and Sell
-* PutOrCall - enum with values Put and Call
+* InstrumentType - enum with values EuropeanVanillaOption, AmericanVanillaOption, AsianOption, LookbackOption, FadeInOption, OneTouchOption, DoubleNoTouchOption, ForwardRateAgreement
+* BuyOrSellOption - enum with values Buy, Sell for the entire instrument or its embedded option
+* PayOrReceiveFixed - PayFixed, ReceiveFixed for the fixed leg of a fixed for floating interest rate instrument
+* PutOrCall - enum with values Put, Call
+* LookbackType - enum with values FixedStrike, FloatingStrike
+* AsianType - enum with values AverageStrike, AveragePrice
+* AveragingType - enum with values Arithmetic, Geometric
 * Notional - floating number for the notional or principal amount without currency
-* Strike - floating number for the strike price
+* Strike - floating number for the strike price of the option underlying
+* FixedRate - floating number for the fixed rate of a fixed for floating interest rate instrument
 * UpperBarrier - floating number for the upper barrier level
 * LowerBarrier - floating number for the lower barrier level
 Source code: ```{input}```

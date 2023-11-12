@@ -1,27 +1,112 @@
-﻿Input,InstrumentType,BuySell,PutCall,Notional,Strike
-"double param1 = -1;
-double param2 = 100000;
-double param3 = 0.9;
-double param4 = 100.0;
+﻿ID,Input,InstrumentType,Notional,BuyOrSellOption,PayOrReceiveFixed,PutOrCall,LookbackType,AsianType,AveragingType,Strike,UpperBarrier,LowerBarrier,FixedRate
+EuropeanVanillaOption.1,"double n = 100000.0;
+int expiry_step = 50;
+int side = 1;
+double s = 1.5;
 
-std::vector<double> price(const std::vector<double>& underlying) {
+std::vector<double> underlying = model.get_underlying_path(expiry_step);
+double payoff = side * n * std::max(s - underlying[expiry_step], 0.0);
+return payoff;",EuropeanVanillaOption,100000,Long,,Put,,,,1.5,,,
+AmericanOption.1,"double n = 100000.0;
+int expiry_step = 50;
+int side = 1;
+double s = 1.5;
 
- std::vector<double> payoff(underlying.size());
- for (size_t i = 0; i < underlying.size(); i++) {
-   payoff[i] = param1 * param2 * (param4 - underlying[i] > 0 ? 1 : 0) * param3;
- }",DigitalOption,Sell,Put,100000,100
-"float param1 = 1;
-float param2 = 100000;
-float param3 = 0.9;
-float param4 = 100.0;
+TimeSlice option = model.get_const_time_slice(expiry_step, 0.0);
+for (int i = expiry_step; i >= 0; --i)
+{
+	TimeSlice u = model.get_underlying_time_slice(expiry_step);
+	TimeSlice payoff = s - u;
+	option = max(payoff, option);
+	option.discounted_rollback(i);
+}
+return side * n * option;",AmericanVanillaOption,100000,Long,,Put,,,,1.5,,,
+AsianOption.1,"double n = 100000.0;
+int expiry_step = 50;
+int side = -1;
+double s = 1.5;
 
-float price() {
-  float sum = 0.0;
-  int path_count = 1000;
-  for (int path_index = 0; path_index < path_count; path_index++) {
-    float underlying = simulate(path_index);
-    sum += param1 * param2 * max(param4 - underlying, 0.) * param3;
-  }
-  sum /= path_count;
-  return sum;
-}",EuropeanOption,Buy,Put,100000,100
+std::vector<double> underlying = model.get_underlying_path(expiry_step);
+double avg = 0.0;
+for (int i = 0; i < expiry_step; ++i)
+{
+	avg += underlying[i];
+}
+avg /= expiry_step;
+
+double payoff = side * n * std::max(avg - s, 0.0);
+return payoff;",AsianOption,100000,Short,,Call,,AveragePrice,Arithmetic,1.5,,,
+LookbackOption.1,"double n = 100000.0;
+int expiry_step = 50;
+int side = 1;
+double s = 1.5;
+
+std::vector<double> underlying = model.get_underlying_path(expiry_step);
+double m = underlying[0];
+for (int i = 1; i < expiry_step; ++i)
+{
+	double u = underlying[i];
+	if (u > m) u = m;
+}
+
+double payoff = side * n * std::max(m - s, 0.0);
+return payoff;",LookbackOption,100000,Long,,Call,FixedStrike,,,1.5,,,
+FadeInOption.1,"double n = 100000.0;
+int expiry_step = 50;
+int side = 1;
+double s = 1.5;
+double b = 1.5;
+
+std::vector<double> underlying = model.get_underlying_path(expiry_step);
+double mult = 0.0;
+for (int i = 0; i < expiry_step; ++i)
+{
+	double u = underlying[i];
+	if (u >= b) mult += 1.0;
+}
+mult /= expiry_step;
+
+double payoff = side * mult * n * std::max(underlying[expiry_step] - s, 0.0);
+return payoff;",FadeInOption,100000,Long,,Call,,,,1.5,,,
+OneTouchOption.1,"double n = 100000.0;
+int expiry_step = 50;
+int side = -1;
+double b = 1.5;
+
+std::vector<double> underlying = model.get_underlying_path(expiry_step);
+int alive = 1;
+for (int i = 0; i <= expiry_step; ++i)
+{
+	double u = underlying[i];
+	if (u >= b) alive = 0;
+}
+double payoff = side * n * alive;
+return payoff;",OneTouchOption,100000,Short,,,,,,,1.5,,
+DoubleNoTouchOption.1,"double n = 100000.0;
+int expiry_step = 50;
+int side = -1;
+double b1 = 1.3;
+double b2 = 1.5;
+
+std::vector<double> underlying = model.get_underlying_path(expiry_step);
+int alive = 1;
+for (int i = 0; i <= expiry_step; ++i)
+{
+	double u = underlying[i];
+	if (u <= b1) alive = 0;
+	if (u >= b2) alive = 0;
+}
+double payoff = side * n * alive;
+return payoff;",DoubleNoTouchOption,100000,Short,,,,,,,1.5,1.3,
+ForwardRateAgreement.1,"double n = 100000.0;
+int start_step = 50;
+int end_step = 50;
+int side = 1;
+double f = 0.05;
+double dcf = 0.25;
+
+TimeSlice s = model.get_const_time_slice(start_step, 0.0);
+TimeSlice e = model.get_const_time_slice(end_step, 0.0);
+e.discounted_rollback(start_step);
+TimeSlice p = s - e * (1 + dcf * f);
+return (side * n) * p;",ForwardRateAgreement,100000,,PayFixed,,,,,,,,0.05
