@@ -1,5 +1,5 @@
 You will be given the input below in the form of a term sheet describing
-some financial instrument. Return only JSON with these keys:
+some financial instrument. Return only JSON with these keys (omit those keys that do not apply):
 * InstrumentType - enum with values NonCallableFixedForFloatingSwap, CallableFixedForFloatingSwap
 * FixedLegNotional - number for the notional or principal amount of the first or only fixed leg
 * FixedLegCurrency - currency of payments in ISO-4217 format of the first or only floating leg
@@ -15,5 +15,5 @@ some financial instrument. Return only JSON with these keys:
 * FixedFrequency - frequency of the fixed leg, enum with values Annual, Semiannual, Quarterly, Monthly
 * FloatingFrequency - frequency of the floating leg, enum with values Annual, Semiannual, Quarterly, Monthly
 * FloatingReset - floating rate reset relative to calculation period, enum with values Upfront, InArrears
-* ExerciseFrequency - exercise frequency of an embedded option, enum with values Annual, Semiannual, Quarterly, Monthly
+* ExerciseFrequency - exercise frequency of an embedded option, enum with values Annual, Semiannual, Quarterly, Monthly, or Daily. Daily refers to every business day.
 Term sheet: ```{input}```
