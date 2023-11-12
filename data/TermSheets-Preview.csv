@@ -60,4 +60,4 @@ FIXED RATE PAYMENT BUSINESS
 DAY CONVENTION:               Modified Following
 
 FIXED RATE PAYMENT DAY COUNT: 30/360
-",CallableFixedForFloatingSwap,2004-01-15,2014-01-15,100000000,USD,PayFixed,Buy,7,6 Month USD-LIBOR-BBA,283,InArrears,Semiannual,Semiannual,Semiannual
+",CallableSwap,2004-01-15,2014-01-15,100000000,USD,PayFixed,Buy,7,6 Month USD-LIBOR-BBA,283,InArrears,Semiannual,Semiannual,Semiannual
