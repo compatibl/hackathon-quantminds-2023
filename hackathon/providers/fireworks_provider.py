@@ -46,7 +46,7 @@ class FireworksProvider(BaseProvider):
         return await fireworks.client.Completion.acreate(
             model=f"accounts/fireworks/models/{param.provider_model}",
             prompt=formatted_question,
-            max_tokens=1024,
+            max_tokens=4096,
             temperature=param.temperature,
             top_p=param.top_p,
             request_timeout=self.REQUEST_TIMEOUT,

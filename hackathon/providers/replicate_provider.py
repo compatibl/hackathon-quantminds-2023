@@ -59,5 +59,6 @@ class ReplicateProvider(BaseProvider):
                 "temperature": param.temperature,
                 "top_p": param.top_p,
                 "top_k": param.top_k,
+                "max_new_tokens": 512
             },
         )
