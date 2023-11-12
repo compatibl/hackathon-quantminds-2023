@@ -241,6 +241,10 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     try:
         json_answer = json.loads(json_only)
     except ValueError:  # JSONDecodeError
+        empty_samples = list()
+        for key, value in correct_answer.items():
+            empty_samples.append(AISampleItem(field=key, model="Malformed JSON", correct=str(value), score="No score - malformed JSON"))
+        empty_result = (0.0, empty_samples)
         return empty_result
 
     sample_items = []
