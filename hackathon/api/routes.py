@@ -67,7 +67,10 @@ def get_experiments(settings: Annotated[Settings, Depends(get_settings)]):
     for file in glob.glob(str(path)):
         df_columns = set(pd.read_csv(file).columns) - {INPUT_FIELD} - set(ADDITIONAL_FIELDS)
         experiment_name = Path(file).stem
-        default_prompt = settings.default_prompts[experiment_name.split('-')[0]]
+        stream_name = experiment_name.split('-')[0]
+        prompt_file_path = Path(settings.prompts_path, stream_name + ".txt")
+        with open(prompt_file_path, 'r') as prompt_file:
+            default_prompt = prompt_file.read()
         default_table = [
             AISampleItem(
                 field=col,

@@ -1,0 +1,8 @@
+You will be given the input below in the form of a term sheet describing
+some financial instrument. Return only JSON with these keys:
+* InstrumentType - enum with values Interest Rate Swap, Amortizing Swap, Cross-Currency Swap 
+* Principal - floating number for the notional or principal amount without currency
+* PrincipalCurrency - currency in ISO-4217 format
+* MaturityDate - date in ISO-8601 format
+* SettlementDate - date in ISO-8601 format
+Term sheet: ```{input}```

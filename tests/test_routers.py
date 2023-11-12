@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+from pathlib import Path
 
 import pytest
 from httpx import Client
@@ -68,6 +70,11 @@ run_test_cases = [
     ids=[str(item) for item in run_test_cases],
 )
 def test_run_sample_ok(client: Client, test_case: dict):
+    project_root_dir = Path(__file__).parent.parent
+    stream_name = "PricingModels"
+    prompt_file_path = Path(project_root_dir, "prompts", stream_name + ".txt")
+    with open(prompt_file_path, 'r') as prompt_file:
+        default_prompt = prompt_file.read()
     response = client.post(
         url=f"/{test_case['provider']}/run",
         headers={"api-key": test_case["api_key"]},
@@ -81,7 +88,7 @@ def test_run_sample_ok(client: Client, test_case: dict):
             "payoff(underlying.size());\nfor (size_t i = 0; i < underlying.size(); i++) {\n   payoff[i] = param1 * "
             "param2 * (param4 - underlying[i] > 0 ? 1 : 0) * param3;\n}\n \ndouble average = "
             "std::accumulate(payoff.begin(), payoff.end(), 0.0) / payoff.size();\nreturn average;\n}",
-            "prompt": get_settings().default_prompts["PricingModels"],
+            "prompt": default_prompt,
         },
     )
     assert response.is_success
@@ -111,6 +118,11 @@ score_test_cases = [
     ids=[str(item) for item in score_test_cases],
 )
 def test_score_experiment_ok(client: Client, test_case: dict):
+    project_root_dir = Path(__file__).parent.parent
+    stream_name = "PricingModels"
+    prompt_file_path = Path(project_root_dir, "prompts", stream_name + ".txt")
+    with open(prompt_file_path, 'r') as prompt_file:
+        default_prompt = prompt_file.read()
     response = client.post(
         url=f"/{test_case['provider']}/score",
         headers={"api-key": test_case["api_key"]},
@@ -118,7 +130,7 @@ def test_score_experiment_ok(client: Client, test_case: dict):
             **test_case["params"],
             "provider_model": test_case["model"],
             "experiment_name": test_case["experiment_name"],
-            "prompt": get_settings().default_prompts["PricingModels"],
+            "prompt": default_prompt,
         },
     )
     assert response.is_success
