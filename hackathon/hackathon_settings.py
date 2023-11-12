@@ -21,18 +21,24 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     default_prompts: dict[str, str] = {
-        "PricingModels": "You will be given the context below in the form of code "
-                         "that is the pricing function of some financial"
-        " instrument.\nReturn only JSON with keys:\nInstrumentType - enum with values EuropeanOption, AmericanOption"
-        ", DigitalOption, BarrierOption\nBuySell - Enum with values Buy and Sell\nPutCall - Enum with values Put "
-        "and Call\nNotional - notional amount with no decimal places\n"
-        "Strike - Strike price with no decimal places\nBarrier - barrier level with no decimal places (use this key only for "
-        "BarrierOption)\nSource code:\n```\n{input}\n```",
-        "TermSheets": "Pay attention and remember information below.\nContext:\n```\n{input}\n```\nAccording to the "
-        "information in the context above, return only JSON with keys:\n"
-        "InstrumentType - enum with values Vanilla Swap, Amortizing Swap, Cross-Currency Swap\n"
-        "Principal: Amount with no decimal places,\nPrincipalCurrency: Currency in ISO 4217 format,\n"
-        "MaturityDate: Date in ISO-8601 format,\nSettlementDate: Date in ISO-8601 format\n"
+
+        "PricingModels":  """You will be given the input below in the form of code
+that is the pricing function of some financial instrument. Return only JSON with these keys:
+InstrumentType - enum with values EuropeanOption, AmericanOption, DigitalOption, BarrierOption
+BuySell - Enum with values Buy and Sell
+PutCall - Enum with values Put and Call
+Notional - notional amount with no decimal places 
+Strike - Strike price with no decimal places
+Barrier - barrier level with no decimal places (use this key only for BarrierOption)
+Source code: ```{input}```""",
+
+        "TermSheets": """Pay attention and remember information below. Context: ``` {input} ```
+According to the information in the context above, return only JSON with keys: 
+InstrumentType - enum with values Vanilla Swap, Amortizing Swap, Cross-Currency Swap 
+Principal - amount with no decimal places
+PrincipalCurrency - currency in ISO-4217 format
+MaturityDate - date in ISO-8601 format
+SettlementDate - date in ISO-8601 format"""
     }
     allow_origins: list[str] = ["http://localhost:3000"]
     static_path: Path = Path(__file__).parents[1].joinpath("./wwwroot")
