@@ -44,6 +44,7 @@ class AIModel(str, enum.Enum):
     LLAMA_2_13B_CHAT = "llama-2-13b-chat"
     GPT_3_5_TURBO = "gpt-3.5-turbo"
     GPT_4 = "gpt-4"
+    GPT_4_TURBO = "gpt-4-1106-preview"
 
 
 class AIProvider(str, enum.Enum):
@@ -63,7 +64,7 @@ class AIProvider(str, enum.Enum):
     )
     OPENAI = (
         "openai",
-        [AIModel.GPT_3_5_TURBO, AIModel.GPT_4],
+        [AIModel.GPT_3_5_TURBO, AIModel.GPT_4, AIModel.GPT_4_TURBO],
         [AIModelParam.TEMP],
     )
     FIREWORKS = (
