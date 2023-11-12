@@ -48,6 +48,7 @@ INSTRUMENT_TYPE_FIELD: Final[str] = "InstrumentType"
 PLACE_HOLDER: Final[str] = "nan"
 INPUT_FIELD: Final[str] = "Input"
 DATE_FIELD_END_WITH: Final[str] = "Date"
+ADDITIONAL_FIELDS: Final[list[str]] = ["ID"]
 NONE_FIELDS: Final[List[str]] = ["None", "Null", "NaN", "Empty", "Undefined", "Not Defined", "Unspecified", "Not Specified"]
 
 router = APIRouter(prefix="", tags=["AI"])
@@ -64,7 +65,7 @@ def get_experiments(settings: Annotated[Settings, Depends(get_settings)]):
     path = Path(settings.data_path, "*.csv")
     experiments = []
     for file in glob.glob(str(path)):
-        df_columns = set(pd.read_csv(file).columns) - {INPUT_FIELD}
+        df_columns = set(pd.read_csv(file).columns) - {INPUT_FIELD} - set(ADDITIONAL_FIELDS)
         experiment_name = Path(file).stem
         default_prompt = settings.default_prompts[experiment_name.split('-')[0]]
         default_table = [
@@ -217,7 +218,8 @@ def soft_comparison(model_value: Any, correct_value: Any) -> bool:
 
 
 def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISampleItem]]:
-    del correct_answer[INPUT_FIELD]
+    correct_answer = {key: correct_answer[key] for key in correct_answer.keys()
+                      if key not in ADDITIONAL_FIELDS and key != INPUT_FIELD}
 
     empty_samples = list()
     for key, value in correct_answer.items():
