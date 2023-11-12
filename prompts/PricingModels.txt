@@ -1,8 +1,8 @@
-You will be given the input below in the form of code that is the pricing function of some financial instrument.
+You will be given the input below in the form of a pricing function code for some financial instrument.
 Return only JSON with these keys:
 * InstrumentType - enum with values EuropeanOption, AmericanOption, DigitalOption, BarrierOption, DoubleNoTouchOption
-* BuyOrSell - Enum with values Buy and Sell
-* PutOrCall - Enum with values Put and Call
+* BuyOrSell - enum with values Buy and Sell
+* PutOrCall - enum with values Put and Call
 * Notional - floating number for the notional or principal amount without currency
 * Strike - floating number for the strike price
 * UpperBarrier - floating number for the upper barrier level
