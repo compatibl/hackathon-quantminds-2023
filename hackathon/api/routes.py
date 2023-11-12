@@ -49,7 +49,7 @@ PLACE_HOLDER: Final[str] = "nan"
 INPUT_FIELD: Final[str] = "Input"
 DATE_FIELD_END_WITH: Final[str] = "Date"
 ADDITIONAL_FIELDS: Final[list[str]] = ["ID"]
-NONE_FIELDS: Final[List[str]] = ["None", "Null", "NaN", "Empty", "Undefined", "Not Defined", "Unspecified", "Not Specified"]
+NONE_FIELDS: Final[List[str]] = ["None", "Null", "NaN", "Empty", "Unknown", "Undefined", "Not Defined", "Unspecified", "Not Specified"]
 
 router = APIRouter(prefix="", tags=["AI"])
 
@@ -241,11 +241,11 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     try:
         json_answer = json.loads(json_only)
     except ValueError:  # JSONDecodeError
-        empty_samples = list()
+        malformed_json_samples = list()
         for key, value in correct_answer.items():
             empty_samples.append(AISampleItem(field=key, model="Malformed JSON", correct=str(value), score="No score - malformed JSON"))
-        empty_result = (0.0, empty_samples)
-        return empty_result
+        malformed_json_samples = (0.0, empty_samples)
+        return malformed_json_samples
 
     sample_items = []
     total_score = 0.0
