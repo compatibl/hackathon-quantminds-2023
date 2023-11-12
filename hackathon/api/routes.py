@@ -53,7 +53,7 @@ NONE_FIELDS: Final[List[str]] = ["None", "Null", "NaN", "Empty", "Undefined", "N
 
 router = APIRouter(prefix="", tags=["AI"])
 
-normalize_string_regex = re.compile(r"[\s\-_]+")
+normalize_string_regex = re.compile(r"[\s\-_d]+")
 
 
 @router.get(
