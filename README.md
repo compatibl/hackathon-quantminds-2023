@@ -132,11 +132,13 @@ only the first one will be used.
 
 ## Model Versions
 
-- When using GPT models, either GPT-4 or GPT-3.5-Turbo models are permitted. GPT-4-Turbo
-model is not permitted.
+- When using GPT models, GPT-4-Turbo (model identifier gpt-4-1106-preview), GPT-4 and GPT-3.5-Turbo
+models are permitted. Due to its higher rate limits, GPT-4-Turbo model is preferable to GPT-4.
 - When using LLAMA models, any model from the LLAMA 2 family is permitted, including
-LLAMA-2-70B and CodeLlama-34B.
+LLAMA-2-70B and CodeLlama-34B. The list of available models varies by provider.
 - Model settings such as seed, temperature, top-p, top-k and others may be specified with the entry.
+- Among the two LLAMA model hosting providers, Fireworks offers higher performance than Replicate and
+is recommended.
 
 ## Use of ChatGPT and Third-Party Playgrounds
 
