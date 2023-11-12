@@ -1,8 +1,63 @@
-﻿Input,InstrumentType,Principal,PrincipalCurrency,MaturityDate,SettlementDate
-"Aggregate Principal Amount: USD 100m
-Denomination: $1,000 principal amount per Note
-Minimum Investment: $1,000 (1 Note). Purchases must be in integral multiples of $1,000.
-Issue Price: Variable price reoffer
-Expected Settlement Date: February 3, 2011
-Maturity Date: February 3, 2018
-Interest Payment Amount: The amount of interest to be paid on the Notes for an Interest Period is equal to the product of (a) the principal amount of the Notes, (b) the Applicable Interest Rate for that Interest Period and (c) a fraction, the numerator of which is the number of days in the Interest Period (calculated on the basis of a 360-day year of twelve 30-day months) and the denominator of which is 360.",Interest Rate Swap,100000000,USD,2018-02-03,2011-02-03
+﻿ID,Input,InstrumentType,EffectiveDate,MaturityDate,Notional,NotionalCurrency,PayOrReceiveFixed,BuyOrSellOption,FixedRate,FloatingIndex,FixedFrequency,FloatingFrequency,FloatingSpread,FloatingReset,ExerciseFrequency
+https://www.sec.gov/Archives/edgar/data/1051848/000095015304000851/p69027exv10w57.txt,"EFFECTIVE DATE:               January 15, 2004
+
+TERMINATION DATE:             The earlier of (i) January 15, 2014 and (ii) the
+                              Optional Termination Date (as specified below)
+                              subject to adjustment in accordance with the
+                              Modified Following Business Day Convention
+
+OPTIONAL TERMINATION DATE:    Party A has the option to terminate this Swap
+                              Transaction effective January 15, 2009 and any
+                              Business Day thereafter (the ""Optional Termination
+                              Date""), no later than 30 calendar days prior to
+                              such Optional Termination Date. Payment with
+                              respect to the Optional Termination Date will be
+                              made by Party A to Party B in accordance with the
+                              following schedule
+
+                             Optional Termination Date
+                             -------------------------
+                            From and including:        To But Excluding:      Payment:
+                            1/15/09                     1/15/10               3.500%
+                            1/15/10                     1/15/11               2.333%
+                            1/15/11                     1/15/12               1.167%
+                            1/15/12                     1/15/14               0.000%
+
+NOTIONAL AMOUNT:              $100,000,000
+
+FLOATING RATE PAYER:          CSK Auto Inc.  (""Party B"")
+
+FLOATING RATE INDEX:          6 Month USD-LIBOR-BBA (Telerate page 3750)
+
+FLOATING RATE SPREAD:         283 bps
+
+FLOATING RATE PAYMENT DATES:  Payable semi-annually on the 15th of each January
+                              and July, beginning on July 15, 2004 to and
+                              including the Termination Date subject to
+                              adjustment in accordance with the Modified
+                              Following Business Day Convention
+
+FLOATING RATE PAYMENT
+BUSINESS DAY CONVENTION:      Modified Following
+
+FLOATING RATE PAYMENT DAY
+COUNT:                        Actual/360
+
+FLOATING RATE RESET DATES:    The last day of each Calculation Period
+
+FLOATING RATE PAYMENT
+BUSINESS DAYS:                New York and London
+
+FIXED RATE PAYER:             Lehman Commerical Paper Inc.  (""LCPI""; ""Party A"")
+
+FIXED RATE:                   7.00%
+
+FIXED RATE PAYMENT DATES:     Payable semi-annually on the 15th of each January
+                              and July, beginning on July 15, 2004 to and
+                              including the Termination Date
+
+FIXED RATE PAYMENT BUSINESS
+DAY CONVENTION:               Modified Following
+
+FIXED RATE PAYMENT DAY COUNT: 30/360
+",CallableFixedForFloatingSwap,2004-01-15,2014-01-15,100000000,USD,PayFixed,Buy,7,6 Month USD-LIBOR-BBA,Semiannual,Semiannual,0.0283,InArrears,Semiannual
