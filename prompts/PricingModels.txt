@@ -7,9 +7,9 @@ Return only JSON with these keys:
 * LookbackType - enum with values FixedStrike, FloatingStrike
 * AsianType - enum with values AverageStrike, AveragePrice
 * AveragingType - enum with values Arithmetic, Geometric
-* Notional - absolute value (not in percent) for the notional or principal amount without currency
-* Strike - absolute value (not in percent) for the strike price
-* FixedRate - absolute value (not in percent) for the fixed rate
-* UpperBarrier - absolute value (not in percent) for the upper barrier level
-* LowerBarrier - absolute value (not in percent) for the lower barrier level
+* Notional - number (not in percent) for the notional or principal amount without currency
+* Strike - number (not in percent) for the strike price
+* FixedRatePercent - number (in percent) for the fixed rate
+* UpperBarrier - number (not in percent) for the upper barrier level
+* LowerBarrier - number (not in percent) for the lower barrier level
 Source code: ```{input}```

@@ -1,4 +1,4 @@
-﻿ID,Input,InstrumentType,Notional,BuyOrSellOption,PayOrReceiveFixed,PutOrCall,LookbackType,AsianType,AveragingType,Strike,UpperBarrier,LowerBarrier,FixedRate
+﻿ID,Input,InstrumentType,Notional,BuyOrSellOption,PayOrReceiveFixed,PutOrCall,LookbackType,AsianType,AveragingType,Strike,UpperBarrier,LowerBarrier,FixedRatePercent
 EuropeanVanillaOption.1,"double n = 300000.0;
 int expiry_step = 50;
 int side = 1;
@@ -111,4 +111,4 @@ e.discounted_rollback(start_step);
 TimeSlice time_slice = s - e * (1 + dcf * f);
 time_slice.discounted_rollback(0);
 double v = time_slice.value();
-return (side * n) * v;",ForwardRateAgreement,500000,,PayFixed,,,,,,,,0.05
+return (side * n) * v;",ForwardRateAgreement,500000,,PayFixed,,,,,,,,5

@@ -1,4 +1,4 @@
-﻿ID,Input,InstrumentType,EffectiveDate,MaturityDate,Notional,NotionalCurrency,PayOrReceiveFixed,BuyOrSellOption,FixedRate,FloatingIndex,FixedFrequency,FloatingFrequency,FloatingSpread,FloatingReset,ExerciseFrequency
+﻿ID,Input,InstrumentType,EffectiveDate,MaturityDate,Notional,NotionalCurrency,PayOrReceiveFixed,BuyOrSellOption,FixedRatePercent,FloatingIndex,FloatingSpreadBp,FloatingReset,FixedFrequency,FloatingFrequency,ExerciseFrequency
 https://www.sec.gov/Archives/edgar/data/1051848/000095015304000851/p69027exv10w57.txt,"EFFECTIVE DATE:               January 15, 2004
 
 TERMINATION DATE:             The earlier of (i) January 15, 2014 and (ii) the
@@ -60,4 +60,4 @@ FIXED RATE PAYMENT BUSINESS
 DAY CONVENTION:               Modified Following
 
 FIXED RATE PAYMENT DAY COUNT: 30/360
-",CallableFixedForFloatingSwap,2004-01-15,2014-01-15,100000000,USD,PayFixed,Buy,7,6 Month USD-LIBOR-BBA,Semiannual,Semiannual,0.0283,InArrears,Semiannual
+",CallableFixedForFloatingSwap,2004-01-15,2014-01-15,100000000,USD,PayFixed,Buy,7,6 Month USD-LIBOR-BBA,283,InArrears,Semiannual,Semiannual,Semiannual

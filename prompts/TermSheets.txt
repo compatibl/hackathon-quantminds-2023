@@ -1,15 +1,15 @@
 You will be given the input below in the form of a term sheet describing
 some financial instrument. Return only JSON with these keys:
 * InstrumentType - enum with values NonCallableFixedForFloatingSwap, CallableFixedForFloatingSwap
-* Notional - absolute value (not in percent) for the notional or principal amount without currency
+* Notional - number for the notional or principal amount without currency
 * NotionalCurrency - currency of notional in ISO-4217 format
 * EffectiveDate - date in yyyy-mm-dd format
 * MaturityDate - date in yyyy-mm-dd format
 * BuyOrSellOption - enum with values Buy, Sell for the entire instrument or its embedded option
 * PayOrReceiveFixed - enum with values PayFixed, ReceiveFixed for a fixed for floating interest rate instrument
-* FixedRate - absolute value (not in percent) for the fixed rate
+* FixedRatePercent - number (in percent) for the fixed rate
 * FloatingIndex - identifier of the interest rate index for the floating leg, exactly as specified
-* FloatingSpread - absolute value (not in percent) for the spread over the floating index
+* FloatingSpreadBp - number in basis points (convert from percent if necessary) for the spread over the floating index.
 * FixedFrequency - frequency of the fixed leg, enum with values Annual, Semiannual, Quarterly, Monthly
 * FloatingFrequency - frequency of the floating leg, enum with values Annual, Semiannual, Quarterly, Monthly
 * FloatingReset - floating rate reset relative to calculation period, enum with values Upfront, InArrears
