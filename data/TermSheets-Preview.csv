@@ -1,4 +1,4 @@
-﻿ID,Input,InstrumentType,EffectiveDate,MaturityDate,Notional,NotionalCurrency,PayOrReceiveFixed,BuyOrSellOption,FixedRatePercent,FloatingIndex,FloatingSpreadBp,FloatingReset,FixedFrequency,FloatingFrequency,ExerciseFrequency
+﻿ID,Input,InstrumentType,EffectiveDate,MaturityDate,FixedLegNotional,FixedLegCurrency,FloatingLegNotional,FloatingLegCurrency,PayOrReceiveFixed,BuyOrSellOption,FixedRatePercent,FloatingIndex,FloatingSpreadBp,FloatingReset,FixedFrequency,FloatingFrequency,ExerciseFrequency
 https://www.sec.gov/Archives/edgar/data/1051848/000095015304000851/p69027exv10w57.txt,"EFFECTIVE DATE:               January 15, 2004
 
 TERMINATION DATE:             The earlier of (i) January 15, 2014 and (ii) the
@@ -60,4 +60,31 @@ FIXED RATE PAYMENT BUSINESS
 DAY CONVENTION:               Modified Following
 
 FIXED RATE PAYMENT DAY COUNT: 30/360
-",CallableSwap,2004-01-15,2014-01-15,100000000,USD,PayFixed,Buy,7,6 Month USD-LIBOR-BBA,283,InArrears,Semiannual,Semiannual,Semiannual
+",CallableFixedForFloatingSwap,2004-01-15,2014-01-15,100000000,USD,100000000,USD,PayFixed,Buy,7,6 Month USD-LIBOR-BBA,283,InArrears,Semiannual,Semiannual,Daily
+https://www.sec.gov/Archives/edgar/data/1508478/000119312511077213/dex1015.htm,"Party A: This firm
+Party B: ARCOS DORADOS BV
+
+Effective Date:	  	November 10, 2008
+Termination Date:	  	November 10, 2013, subject to adjustment in accordance with the Modified Following Business Day Convention.
+
+Fixed Rate Notional:	  	BRL 119,500,000.00
+Fixed Rate Payer:	  	Party B
+Fixed Rate Payer Currency Amount:	  	Refer to attached Notional Amount Schedule “B”
+Fixed Rate Payer Payment Dates:	  	The 10th of each February, May, August, November commencing on May 11, 2009 to and including the Termination Date, subject to adjustment in accordance with the Modified Following Business Day Convention
+Fixed Rate Period End Dates: The 10th of each February, May, August, November commencing on May 11, 2009 to and including the Termination Date with the Modified Following Business Day Convention
+Fixed Rate:	  	12.1%
+Fixed Rate Day Count Fraction:	  	Actual/360
+Business Days for Fixed Rate Payments: New York, Sao Paolo and London
+Business Day Convention:	  	Modified Following Business Day Convention
+
+Floating Rate Notional:	  	USD 50,000,000.00
+Floating Rate Payer:	  	Party A
+Floating Rate Payer Currency Amount:	  	Refer to attached Notional Amount Schedule “A”
+Floating Rate Payer Payment Dates:	  	The 10th of each February, May, August, November commencing on May 11, 2009 to and including the Termination Date, subject to adjustment in accordance with the Modified Following Business Day Convention
+Floating Rate Period End Dates:	  	The 10th of each February, May, August, November commencing on May 11, 2009 to and including the Termination Date with the Modified Following Business Day Convention
+Floating Rate:	  	3-month USD-LIBOR-BBA	  	
+Floating Rate Spread:	  	0.0%
+Floating Rate Day Count Fraction:	  	Actual/360
+Reset Dates:	  	First day or each Floating Rate Payer Calculation Period
+Business Days for Floating Rate Payments: New York, Sao Paolo and London
+Business Day Convention:	  	Modified Following Business Day Convention",NonCallableFixedForFloatingSwap,2008-11-10,2013-11-10,"119,500,000.00",BRL,"50,000,000.00",USD,PayFloating,,12.1,3-month USD-LIBOR-BBA,0,Upfront,Quarterly,Quarterly,

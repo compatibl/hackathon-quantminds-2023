@@ -1,8 +1,10 @@
 You will be given the input below in the form of a term sheet describing
 some financial instrument. Return only JSON with these keys:
-* InstrumentType - enum with values VanillaSwap, CallableSwap
-* Notional - number for the notional or principal amount without currency
-* NotionalCurrency - currency of notional in ISO-4217 format
+* InstrumentType - enum with values NonCallableFixedForFloatingSwap, CallableFixedForFloatingSwap
+* FixedLegNotional - number for the notional or principal amount of the first or only fixed leg
+* FixedLegCurrency - currency of payments in ISO-4217 format of the first or only floating leg
+* FloatingLegNotional - number for the notional or principal amount of the first or only fixed leg
+* FloatingLegCurrency - currency of payments in ISO-4217 format of the first or only floating leg
 * EffectiveDate - date in yyyy-mm-dd format
 * MaturityDate - date in yyyy-mm-dd format
 * BuyOrSellOption - enum with values Buy, Sell for the entire instrument or its embedded option
