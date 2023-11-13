@@ -46,8 +46,15 @@ can provide valuable experience with practical applications of AI in a collabora
 - For non-coding entries, you can use an online playground provided by the organizers or any other
 playground (however see the note below about third-party playgrounds).
 - For coding entries, you can clone this GitHub repo and work using Python 3.9 or later, or use your own tools.
-- Instructions for registering and getting API keys for online model hosting services will be provided.
 - The cost of model hosting service use during the hackathon is expected to be less than GBP 50.
+
+## API Keys
+
+Use the links below for getting API keys for online model hosting services:
+
+- OpenAI: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+- Fireworks.ai [https://readme.fireworks.ai/docs/quickstart](https://readme.fireworks.ai/docs/quickstart)
+- Replicate.com [https://replicate.com/account/api-tokens](https://replicate.com/account/api-tokens)
 
 ## Scoring Software Package
 
