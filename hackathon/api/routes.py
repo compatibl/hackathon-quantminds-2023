@@ -23,7 +23,7 @@ import json
 import re
 from pathlib import Path
 from typing import Annotated, Any, Final, Optional, List
-
+from string import Formatter
 import dateutil
 import numpy as np
 import pandas as pd
@@ -348,11 +348,13 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     provider_answers = await get_provider(ai_provider, api_key).run([param_0])
     answer_raw_0 = provider_answers[0].answer if provider_answers else ""
 
-    keys_to_extract = ["InstrumentType"]
+    # load in the second prompt and replace eys e.g. "InstrumentType" with the output from answer_0
+    prompt_1_unformatted = read_prompt_from_file(name, idx=1)
+    keys_to_extract = [i[1] for i in Formatter().parse(prompt_1_unformatted) if i[1] is not None]
     _, sample_data = _extract_sample_data(answer=answer_raw_0, correct_answer=correct_answer)
     keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract}
-    keys_extracted.update({"input": "{input}"})
-    prompt_1 = read_prompt_from_file(name, idx=1).format(**keys_extracted)
+    keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
+    prompt_1 = prompt_1_unformatted.format(**keys_extracted)
 
     param_1 = ProviderParam(
         sample_id=body.sample_id,
