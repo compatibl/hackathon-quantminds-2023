@@ -363,10 +363,12 @@ def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, ans
     }
     if "InstrumentType" in keys_extracted:
         keys_extracted["InstrumentType"] = keys_extracted["InstrumentType"].replace(" ", "").replace("-", "")
+        keys_extracted = manual_fix_instrument_type(keys_extracted, answer_1)
     if "input" in keys_to_extract:
         keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
     if "answer_1" in keys_to_extract:
         keys_extracted.update({"answer_1": answer_1})
+
     prompt_2 = prompt_2_unformatted.format(**keys_extracted)
     return prompt_2
 
@@ -486,7 +488,8 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     )
 
 
-def manual_fix_instrument_type(keys_extracted, raw_answer):
+def manual_fix_instrument_type(keys_extracted_original: dict, raw_answer: str) -> dict:
+    keys_extracted = keys_extracted_original.copy()
     if "InstrumentType" in keys_extracted:
         keys_extracted["InstrumentType"] = normalize_string_regex.sub("", keys_extracted["InstrumentType"])
         if keys_extracted["InstrumentType"] is None or keys_extracted["InstrumentType"] == 'None':
@@ -543,24 +546,13 @@ async def provider_score(
     # setup and execute the second prompt
     provider_params_2 = list()
     prompt_2_unformatted = read_prompt_from_file(name, idx=2)
-    answer_1_dict = {}
-    for id, answer_1 in provider_answers_dict_1.items():
-        keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
-        _, sample_data = _extract_sample_data(answer=answer_1.answer, correct_answer={'InstrumentType': None})
-        keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if
-                          datapoint.field in keys_to_extract}
-        keys_extracted = manual_fix_instrument_type(keys_extracted, answer_1.answer)
-        answer_1_dict[id] = '{"InstrumentType": "' + keys_extracted['InstrumentType'] + '"}'
-
-
     for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
         sample_id = int(index) + 1
         answer_1 = provider_answers_dict_1[sample_id].answer
         _, answer_1_parsed = _extract_sample_data(answer=answer_1, correct_answer=blank_answer)
         prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, answer_1_parsed)
-        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1_dict[sample_id], row)
         input_2 = (
-            answer_1_dict[sample_id] if name == "PricingModels" else row[INPUT_FIELD]
+            answer_1 if name == "PricingModels" else row[INPUT_FIELD]
         )  # in use first-stage output as second stage input for PricingModels only
         param_2 = ProviderParam(
             sample_id=sample_id,
