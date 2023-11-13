@@ -1,4 +1,4 @@
-﻿ID,Input,InstrumentType,Notional,BuyOrSellOption,PayOrReceiveFixed,PutOrCall,LookbackType,AsianType,AveragingType,Strike,UpperBarrier,LowerBarrier,FixedRatePercent
+﻿ID,Input,InstrumentType,Notional,BuyOrSellOption,PayOrReceiveFixed,PutOrCall,LookbackType,AsianType,AveragingType,Strike,UpperBarrier,LowerBarrier,FixedRatePct,FloatingSpreadBp,Basis,FixedRateBasis,FloatingRateBasis
 EuropeanVanillaOption.1,"double n = 300000.0;
 int expiry_step = 50;
 int side = 1;
@@ -6,7 +6,7 @@ double s = 1.5;
 
 std::vector<double> underlying = model.get_underlying_path(expiry_step);
 double payoff = side * n * std::max(s - underlying[expiry_step], 0.0);
-return payoff;",EuropeanVanillaOption,300000,Buy,,Put,,,,1.5,,,
+return payoff;",EuropeanVanillaOption,300000,Buy,,Put,,,,1.5,,,,,,,
 AmericanOption.1,"double n = 200000.0;
 int expiry_step = 50;
 int side = 1;
@@ -20,7 +20,7 @@ for (int i = expiry_step; i >= 0; --i)
     option = max(payoff, option);
     option.discounted_rollback(i);
 }
-return side * n * option;",AmericanVanillaOption,200000,Buy,,Put,,,,1.5,,,
+return side * n * option;",AmericanVanillaOption,200000,Buy,,Put,,,,1.5,,,,,,,
 AsianOption.1,"double n = 20000.0;
 int expiry_step = 50;
 int side = -1;
@@ -35,7 +35,7 @@ for (int i = 0; i < expiry_step; ++i)
 avg /= expiry_step;
 
 double payoff = side * n * std::max(avg - s, 0.0);
-return payoff;",AsianOption,20000,Sell,,Call,,AveragePrice,Arithmetic,1.5,,,
+return payoff;",AsianOption,20000,Sell,,Call,,AveragePrice,Arithmetic,1.5,,,,,,,
 LookbackOption.1,"double n = 150000.0;
 int expiry_step = 50;
 int side = 1;
@@ -50,7 +50,7 @@ for (int i = 1; i < expiry_step; ++i)
 }
 
 double payoff = side * n * std::max(m - s, 0.0);
-return payoff;",LookbackOption,150000,Buy,,Call,FixedStrike,,,3.5,,,
+return payoff;",LookbackOption,150000,Buy,,Call,FixedStrike,,,3.5,,,,,,,
 FadeInOption.1,"double n = 50000.0;
 int expiry_step = 50;
 int side = 1;
@@ -67,7 +67,7 @@ for (int i = 0; i < expiry_step; ++i)
 mult /= expiry_step;
 
 double payoff = side * mult * n * std::max(underlying[expiry_step] - s, 0.0);
-return payoff;",FadeInOption,50000,Buy,,Call,,,,1.5,2.5,,
+return payoff;",FadeInOption,50000,Buy,,Call,,,,1.5,2.5,,,,,,
 OneTouchOption.1,"double n = 300000.0;
 int expiry_step = 50;
 int side = -1;
@@ -81,7 +81,7 @@ for (int i = 0; i <= expiry_step; ++i)
     if (u >= b) alive = 0;
 }
 double payoff = side * n * alive;
-return payoff;",OneTouchOption,300000,Sell,,,,,,,1.5,,
+return payoff;",OneTouchOption,300000,Sell,,,,,,,1.5,,,,,,
 DoubleNoTouchOption.1,"double n = 250000.0;
 int expiry_step = 50;
 int side = -1;
@@ -97,18 +97,71 @@ for (int i = 0; i <= expiry_step; ++i)
     if (u >= b2) alive = 0;
 }
 double payoff = side * n * alive;
-return payoff;",DoubleNoTouchOption,250000,Sell,,,,,,,1.5,1.3,
+return payoff;",DoubleNoTouchOption,250000,Sell,,,,,,,1.5,1.3,,,,,
 ForwardRateAgreement.1,"double n = 500000.0;
-int start_step = 45;
-int end_step = 50;
+int start_step = 48;
+int end_step = 60;
 int side = 1;
 double f = 0.05;
-double dcf = 0.25;
 
-TimeSlice s = model.get_const_time_slice(start_step, 0.0);
-TimeSlice e = model.get_const_time_slice(end_step, 0.0);
+double dcf = model.get_dcf(""30/365"", start_step, end_step);
+TimeSlice s = model.get_const_time_slice(start_step, 1.0);
+TimeSlice e = model.get_const_time_slice(end_step, 1.0);
 e.discounted_rollback(start_step);
 TimeSlice time_slice = s - e * (1 + dcf * f);
 time_slice.discounted_rollback(0);
 double v = time_slice.value();
-return (side * n) * v;",ForwardRateAgreement,500000,,PayFixed,,,,,,,,5
+return (side * n) * v;",ForwardRateAgreement,500000,,PayFixed,,,,,,,,5,,ACT/365,,
+NonCallableFixedForFloatingSwap.1,"double n = 1200000.0;
+int start_step = 0;
+int end_step = 60;
+int freq_step = 6;
+int side = -1;
+double f = 0.03;
+double s = 0.002;
+
+TimeSlice result = model.get_const_time_slice(end_step, 0.0);
+for (int step = end_step; step >= start_step; step -= freq_step)
+{
+    if (step < end_step) result.discounted_rollback(step);
+
+    double dcf1 = model.get_dcf(""30/360"", step - freq_step, step);
+    double dcf2 = model.get_dcf(""ACT/365"", step - freq_step, step);
+    TimeSlice unit = model.get_const_time_slice(step, 1.0);
+        
+    if (step == end_step) result = -unit;
+    if (step == start_step) result = result + unit;
+    if (step > start_step) result = result - (dcf1 * f - dcf2 * s) * unit;
+}
+result.discounted_rollback(0);
+double v = result.value();
+return (side * n) * v;",NonCallableFixedForFloatingSwap,1200000,,ReceiveFixed,,,,,,,,3,20,,30/360,ACT/365
+NonCallableFixedRateNote.1,"double n = 750000.0;
+int start_step = 0;
+int end_step = 60;
+int freq_step = 6;
+int side = -1;
+double f = 0.02;
+
+TimeSlice result = model.get_const_time_slice(end_step, 0.0);
+for (int step = end_step; step > start_step; step -= freq_step)
+{
+    if (step < end_step) result.discounted_rollback(step);
+
+    double dcf = model.get_dcf(""30/360"", step - freq_step, step);
+    TimeSlice unit = model.get_const_time_slice(step, 1.0);
+
+    if (step == end_step) result = unit;
+    result = result + (dcf * f) * unit;
+}
+result.discounted_rollback(0);
+double v = result.value();
+return (side * n) * v;",NonCallableFixedRateNote,750000,,,,,,,,,,2,,30/360,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
