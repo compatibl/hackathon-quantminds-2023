@@ -1,5 +1,0 @@
-You will be given the input below in the form of a pricing function code for some financial instrument.
-Return only JSON with these keys (omit those keys that do not apply):
-* InstrumentType - enum with values EuropeanVanillaOption, AmericanVanillaOption, AsianOption, LookbackOption, FadeInOption, OneTouchOption, DoubleNoTouchOption, BestOfOption, ForwardRateAgreement, NonCallableFixedForFloatingSwap, NonCallableFixedRateNote, CallableFixedForFloatingSwap, NonCallableCrossCurrencySwap
-
-Source code: ```{input}```

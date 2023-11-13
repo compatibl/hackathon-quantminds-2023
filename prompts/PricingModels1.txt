@@ -1,24 +1,5 @@
 You will be given the input below in the form of a pricing function code for some financial instrument.
-The product is instrument type {InstrumentType}.
 Return only JSON with these keys (omit those keys that do not apply):
 * InstrumentType - enum with values EuropeanVanillaOption, AmericanVanillaOption, AsianOption, LookbackOption, FadeInOption, OneTouchOption, DoubleNoTouchOption, BestOfOption, ForwardRateAgreement, NonCallableFixedForFloatingSwap, NonCallableFixedRateNote, CallableFixedForFloatingSwap, NonCallableCrossCurrencySwap
-* Notional - number (not in percent) for the notional or principal amount without currency
-* BuyOrSellOption - enum with values Buy, Sell for the entire instrument or its embedded option
-* PayOrReceiveFixed - enum with values PayFixed, ReceiveFixed for a fixed for floating interest rate instrument
-* PutOrCall - enum with values Put, Call
-* LookbackType - enum with values FixedStrike, FloatingStrike
-* AsianType - enum with values AverageStrike, AveragePrice
-* AveragingType - enum with values Arithmetic, Geometric
-* Strike - number (not in percent) for the strike price
-* UpperBarrier - number (not in percent) for the upper barrier level
-* LowerBarrier - number (not in percent) for the lower barrier level
-* FixedRatePercent - number (in percent) for the fixed rate
-* FloatingSpreadBp - number in basis points (convert from percent if necessary) for the spread over the floating index (use for the fixed leg or the entire note)
-* FloatingRateMultiplier - multiplier of the floating rate used in the calculation of interest
-* FloatingRateCapPct - number in percent for the floating rate cap
-* FloatingRateFloorPct - number in percent for the floating rate floor
-* FixedRateBasis - daycount basis when there is only one leg, enum with values ACT/ACT, ACT/360, ACT/365, 30/360 US, 30/360 European, 30/360 Italian, 30/365, 30/Actual
-* FixedRateBasis - daycount basis used for the fixed rate when there are two legs, enum with values ACT/ACT, ACT/360, ACT/365, 30/360U, 30/360E, 30/360I, 30/365, 30/Actual
-* FloatingRateBasis - daycount basis used for the floating rate when there are two legs, enum with values ACT/ACT, ACT/360, ACT/365, 30/360U, 30/360E, 30/360I, 30/365, 30/Actual
 
 Source code: ```{input}```

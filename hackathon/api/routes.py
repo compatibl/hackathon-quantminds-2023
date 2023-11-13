@@ -74,7 +74,7 @@ def get_experiments(settings: Annotated[Settings, Depends(get_settings)]):
         df_columns = set(pd.read_csv(file).columns) - {INPUT_FIELD} - set(ADDITIONAL_FIELDS)
         experiment_name = Path(file).stem
         stream_name = experiment_name.split('-')[0]
-        prompt_file_path = Path(settings.prompts_path, stream_name + "0.txt")
+        prompt_file_path = Path(settings.prompts_path, stream_name + "1.txt")
         with open(prompt_file_path, 'r') as prompt_file:
             default_prompt = prompt_file.read()
         default_table = [
@@ -334,33 +334,13 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
 
     name = body.experiment_name.split("-")[0]
-    prompt_0 = read_prompt_from_file(name, idx=0)
-    param_0 = ProviderParam(
-        sample_id=body.sample_id,
-        provider_model=body.provider_model,
-        prompt=prompt_0,
-        context=body.input,
-        seed=body.seed,
-        temperature=body.temperature,
-        top_p=body.top_p,
-        top_k=body.top_k,
-    )
-    provider_answers = await get_provider(ai_provider, api_key).run([param_0])
-    answer_raw_0 = provider_answers[0].answer if provider_answers else ""
-
-    # load in the second prompt and replace eys e.g. "InstrumentType" with the output from answer_0
-    prompt_1_unformatted = read_prompt_from_file(name, idx=1)
-    keys_to_extract = [i[1] for i in Formatter().parse(prompt_1_unformatted) if i[1] is not None]
-    _, sample_data = _extract_sample_data(answer=answer_raw_0, correct_answer=correct_answer)
-    keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract}
-    keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
-    prompt_1 = prompt_1_unformatted.format(**keys_extracted)
-
+    prompt_1 = read_prompt_from_file(name, idx=1)
+    input_1 = body.input
     param_1 = ProviderParam(
         sample_id=body.sample_id,
         provider_model=body.provider_model,
         prompt=prompt_1,
-        context=body.input,
+        context=input_1,
         seed=body.seed,
         temperature=body.temperature,
         top_p=body.top_p,
@@ -369,12 +349,41 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     provider_answers = await get_provider(ai_provider, api_key).run([param_1])
     answer_1 = provider_answers[0].answer if provider_answers else ""
 
+    # load in the second prompt and replace eys e.g. "InstrumentType" with the output from answer_0
+    prompt_2_unformatted = read_prompt_from_file(name, idx=2)
+    keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
+    _, sample_data = _extract_sample_data(answer=answer_1, correct_answer=correct_answer)
+    keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract}
+    if "InstrumentType" in keys_extracted:
+        keys_extracted["InstrumentType"] = keys_extracted["InstrumentType"].replace(" ", "").replace("-", "")
+    if "input" in keys_to_extract:
+        keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
+    if "answer_1" in keys_to_extract:
+        keys_extracted.update({"answer_1": answer_1})
+    prompt_2 = prompt_2_unformatted.format(**keys_extracted)
+
+    # in use first-stage output as second stage input for PricingModels only
+    input_2 = answer_1 if name == "PricingModels" else body.input
+
+    param_2 = ProviderParam(
+        sample_id=body.sample_id,
+        provider_model=body.provider_model,
+        prompt=prompt_2,
+        context=input_2,
+        seed=body.seed,
+        temperature=body.temperature,
+        top_p=body.top_p,
+        top_k=body.top_k,
+    )
+    provider_answers = await get_provider(ai_provider, api_key).run([param_2])
+    answer_2 = provider_answers[0].answer if provider_answers else ""
+
     correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
-    overall_sample_score, sample_data = _extract_sample_data(answer=answer_1, correct_answer=correct_answer)
+    overall_sample_score, sample_data = _extract_sample_data(answer=answer_2, correct_answer=correct_answer)
 
     return AIRunResponse(
         overall_sample_score=str(round(overall_sample_score, 2)) + "%",
-        output=answer_1,
+        output=answer_2,
         sample_data=sample_data,
     )
 
