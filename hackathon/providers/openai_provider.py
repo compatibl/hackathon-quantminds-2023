@@ -23,7 +23,7 @@ from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, Prov
 
 
 class OpenAIProvider(BaseProvider):
-    REQUEST_TIMEOUT: Final[int] = 30
+    REQUEST_TIMEOUT: Final[int] = 60
 
     async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
         async with aiohttp.ClientSession() as session:

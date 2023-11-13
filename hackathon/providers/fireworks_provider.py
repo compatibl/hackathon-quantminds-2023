@@ -22,7 +22,7 @@ from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, Prov
 
 
 class FireworksProvider(BaseProvider):
-    REQUEST_TIMEOUT: Final[int] = 30
+    REQUEST_TIMEOUT: Final[int] = 60
 
     async def get_answer(self, param: ProviderParam) -> ProviderAnswer:
         fireworks.client.api_key = self.api_key
