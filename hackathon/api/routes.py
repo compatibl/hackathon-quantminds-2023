@@ -22,8 +22,9 @@ import glob
 import json
 import re
 from pathlib import Path
-from typing import Annotated, Any, Final, Optional, List
 from string import Formatter
+from typing import Annotated, Any, Final, List, Optional
+
 import dateutil
 import numpy as np
 import pandas as pd
@@ -268,10 +269,10 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
             AISampleItem(
                 field=INSTRUMENT_TYPE_FIELD,
                 model=str(json_answer[INSTRUMENT_TYPE_FIELD])
-                    if INSTRUMENT_TYPE_FIELD in json_answer.keys()
-                    else "Not found in response",
+                if INSTRUMENT_TYPE_FIELD in json_answer.keys()
+                else "Not found in response",
                 correct=str(correct_answer[INSTRUMENT_TYPE_FIELD]),
-                score=str(round(100 * max_item_score, 2)) + "%"
+                score=str(round(100 * max_item_score, 2)) + "%",
             )
         )
         total_score += max_item_score
@@ -302,8 +303,8 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
             AISampleItem(
                 field=INSTRUMENT_TYPE_FIELD,
                 model=str(json_answer[INSTRUMENT_TYPE_FIELD])
-                    if INSTRUMENT_TYPE_FIELD in json_answer.keys()
-                    else "Not found in response",
+                if INSTRUMENT_TYPE_FIELD in json_answer.keys()
+                else "Not found in response",
                 correct=str(correct_answer[INSTRUMENT_TYPE_FIELD]),
                 score="No score - mismatch",
             )
@@ -322,6 +323,23 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
             )
         total_score *= 100
         return total_score, sample_items
+
+
+def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, correct_answer: dict) -> str:
+    # replace keys e.g. "InstrumentType" with the output from answer_1
+    keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
+    _, sample_data = _extract_sample_data(answer=answer_1, correct_answer=correct_answer)
+    keys_extracted = {
+        datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract
+    }
+    if "InstrumentType" in keys_extracted:
+        keys_extracted["InstrumentType"] = keys_extracted["InstrumentType"].replace(" ", "").replace("-", "")
+    if "input" in keys_to_extract:
+        keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
+    if "answer_1" in keys_to_extract:
+        keys_extracted.update({"answer_1": answer_1})
+    prompt_2 = prompt_2_unformatted.format(**keys_extracted)
+    return prompt_2
 
 
 @router.post(
@@ -349,22 +367,11 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     provider_answers = await get_provider(ai_provider, api_key).run([param_1])
     answer_1 = provider_answers[0].answer if provider_answers else ""
 
-    # load in the second prompt and replace eys e.g. "InstrumentType" with the output from answer_0
     prompt_2_unformatted = read_prompt_from_file(name, idx=2)
-    keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
-    _, sample_data = _extract_sample_data(answer=answer_1, correct_answer=correct_answer)
-    keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract}
-    if "InstrumentType" in keys_extracted:
-        keys_extracted["InstrumentType"] = keys_extracted["InstrumentType"].replace(" ", "").replace("-", "")
-    if "input" in keys_to_extract:
-        keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
-    if "answer_1" in keys_to_extract:
-        keys_extracted.update({"answer_1": answer_1})
-    prompt_2 = prompt_2_unformatted.format(**keys_extracted)
-
-    # in use first-stage output as second stage input for PricingModels only
-    input_2 = answer_1 if name == "PricingModels" else body.input
-
+    prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, correct_answer)
+    input_2 = (
+        answer_1 if name == "PricingModels" else body.input
+    )  # in use first-stage output as second stage input for PricingModels only
     param_2 = ProviderParam(
         sample_id=body.sample_id,
         provider_model=body.provider_model,
@@ -408,28 +415,54 @@ async def provider_score(
             detail=f"Experiment name {body.experiment_name} is invalid.",
         )
 
-    provider_params = list()
+    name = body.experiment_name.split("-")[0]
+    prompt_1 = read_prompt_from_file(name, idx=1)
+
+    provider_params_1 = list()
     for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
-        param = ProviderParam(
+        param_1 = ProviderParam(
             sample_id=int(index) + 1,
             provider_model=body.provider_model,
-            prompt=body.prompt,
+            prompt=prompt_1,
             context=row[INPUT_FIELD],
             seed=body.seed,
             temperature=body.temperature,
             top_p=body.top_p,
             top_k=body.top_k,
         )
-        provider_params.append(param)
+        provider_params_1.append(param_1)
 
-    provider_answers = await get_provider(ai_provider, api_key).run(provider_params)
-    provider_answers_dict = {p_answer.sample_id: p_answer for p_answer in provider_answers}
+    provider_answers_1 = await get_provider(ai_provider, api_key).run(provider_params_1)
+    provider_answers_dict_1 = {p_answer.sample_id: p_answer for p_answer in provider_answers_1}
+
+    provider_params_2 = list()
+    prompt_2_unformatted = read_prompt_from_file(name, idx=2)
+    for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
+        sample_id = int(index) + 1
+        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, provider_answers_dict_1[sample_id].answer, row)
+        input_2 = (
+            provider_answers_dict_1[sample_id].answer if name == "PricingModels" else row[INPUT_FIELD]
+        )  # in use first-stage output as second stage input for PricingModels only
+        param_2 = ProviderParam(
+            sample_id=sample_id,
+            provider_model=body.provider_model,
+            prompt=prompt_2,
+            context=input_2,
+            seed=body.seed,
+            temperature=body.temperature,
+            top_p=body.top_p,
+            top_k=body.top_k,
+        )
+        provider_params_2.append(param_2)
+
+    provider_answers_2 = await get_provider(ai_provider, api_key).run(provider_params_2)
+    provider_answers_dict_2 = {p_answer.sample_id: p_answer for p_answer in provider_answers_2}
 
     experiment_data: list[AIExperimentItem] = []
     overall_experiment_score: float = 0.0
     sample_count = 0.0
     for index, row in pd.read_csv(experiment_file_path, header=0).fillna('None').iterrows():
-        provider_answer = provider_answers_dict.get(int(index) + 1)
+        provider_answer = provider_answers_dict_2.get(int(index) + 1)
         if provider_answer is None:
             continue
 
