@@ -402,8 +402,8 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     blank_answer = pd.Series(index=_get_keys_for_experiment(experiment_name=body.experiment_name))
 
     name = body.experiment_name.split("-")[0]  ## PricingModels or TermSheets
+
     # setup and execute the first prompt
-    name = body.experiment_name.split("-")[0]
     prompt_1 = read_prompt_from_file(name, idx=1)
     input_1 = body.input
     param_1 = ProviderParam(
@@ -442,11 +442,7 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     # setup and execute the second prompt
     prompt_2_unformatted = read_prompt_from_file(name, idx=2)
     prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, answer_1_parsed)
-    input_2 = (
-        answer_1 if name == "PricingModels" else body.input
-    )  # in use first-stage output as second stage input for PricingModels only
-
-
+    input_2 = body.input
     param_2 = ProviderParam(
         sample_id=body.sample_id,
         provider_model=body.provider_model,
@@ -551,9 +547,7 @@ async def provider_score(
         answer_1 = provider_answers_dict_1[sample_id].answer
         _, answer_1_parsed = _extract_sample_data(answer=answer_1, correct_answer=blank_answer)
         prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, answer_1_parsed)
-        input_2 = (
-            answer_1 if name == "PricingModels" else row[INPUT_FIELD]
-        )  # in use first-stage output as second stage input for PricingModels only
+        input_2 = row[INPUT_FIELD]
         param_2 = ProviderParam(
             sample_id=sample_id,
             provider_model=body.provider_model,
