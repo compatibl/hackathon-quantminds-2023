@@ -23,12 +23,12 @@ from hackathon.providers.base_provider import BaseProvider, ProviderAnswer, Prov
 
 
 class OpenAIProvider(BaseProvider):
-    REQUEST_TIMEOUT: Final[int] = 30
+    REQUEST_TIMEOUT: Final[int] = 120
 
     async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
         async with aiohttp.ClientSession() as session:
             openai.aiosession.set(session)
-            openai.api_key = self.api_key
+            openai.api_key = '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' # self.api_key
             return await super().run(params)
 
     async def get_answer(self, param: ProviderParam) -> ProviderAnswer:
@@ -43,7 +43,10 @@ class OpenAIProvider(BaseProvider):
 
     @retry(reraise=True, stop=stop_after_attempt(BaseProvider.RETRY_ATTEMPT))
     async def _openai_create(self, param: ProviderParam):
-        question = self.build_question(prompt=param.prompt, context=param.context)
+        if not param.question:
+            question = self.build_question(prompt=param.prompt, context=param.context)
+        else:
+            question = param.question
         messages = [{"role": "user", "content": question}]
         return await openai.ChatCompletion.acreate(
             model=param.provider_model,
