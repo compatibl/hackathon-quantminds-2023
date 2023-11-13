@@ -1,0 +1,5 @@
+You will be given the input below in the form of a term sheet describing
+some financial instrument. Return only JSON with these keys (omit those keys that do not apply):
+* InstrumentType - enum with values AcceleratedReturnEquityLinkedNote, AutocallableEquityLinkedNote, AutocallableEquityLinkedRangeAccrualNote, AutocallableFixedRateNote, CallableEquityLinkedNote, CallableFixedForFloatingSwap, CallableFixedRateNote, CallableFloatingSpreadNote, KnockOutCommodityLinkedNote, KnockOutEquityLinkedNote, NonCallableCommodityLinkedNote, NonCallableCurrencyLinkedNote, NonCallableEquityLinkedNote, NonCallableFixedForFloatingSwap, NonCallableFixedToFloatingNote, NonCallableFloatingSpreadNote, NonCallableInflationLinkedNote
+
+Term sheet: ```{input}```

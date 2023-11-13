@@ -11,6 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+def read_prompt_from_file(name: str, idx):
+    filepath = fr"../prompts/{name}{str(idx)}.txt"
+    with open(filepath) as f:
+        prompt = f.read()
+    return prompt
+
 
 import glob
 import json
@@ -68,7 +74,7 @@ def get_experiments(settings: Annotated[Settings, Depends(get_settings)]):
         df_columns = set(pd.read_csv(file).columns) - {INPUT_FIELD} - set(ADDITIONAL_FIELDS)
         experiment_name = Path(file).stem
         stream_name = experiment_name.split('-')[0]
-        prompt_file_path = Path(settings.prompts_path, stream_name + ".txt")
+        prompt_file_path = Path(settings.prompts_path, stream_name + "0.txt")
         with open(prompt_file_path, 'r') as prompt_file:
             default_prompt = prompt_file.read()
         default_table = [
@@ -325,26 +331,48 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
 )
 async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(default=None)):
     _validate_body_model(ai_provider, body)
+    correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
 
-    param = ProviderParam(
+    name = body.experiment_name.split("-")[0]
+    prompt_0 = read_prompt_from_file(name, idx=0)
+    param_0 = ProviderParam(
         sample_id=body.sample_id,
         provider_model=body.provider_model,
-        prompt=body.prompt,
+        prompt=prompt_0,
         context=body.input,
         seed=body.seed,
         temperature=body.temperature,
         top_p=body.top_p,
         top_k=body.top_k,
     )
-    provider_answers = await get_provider(ai_provider, api_key).run([param])
-    answer = provider_answers[0].answer if provider_answers else ""
+    provider_answers = await get_provider(ai_provider, api_key).run([param_0])
+    answer_raw_0 = provider_answers[0].answer if provider_answers else ""
+
+    keys_to_extract = ["InstrumentType"]
+    _, sample_data = _extract_sample_data(answer=answer_raw_0, correct_answer=correct_answer)
+    keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract}
+    keys_extracted.update({"input": "{input}"})
+    prompt_1 = read_prompt_from_file(name, idx=1).format(**keys_extracted)
+
+    param_1 = ProviderParam(
+        sample_id=body.sample_id,
+        provider_model=body.provider_model,
+        prompt=prompt_1,
+        context=body.input,
+        seed=body.seed,
+        temperature=body.temperature,
+        top_p=body.top_p,
+        top_k=body.top_k,
+    )
+    provider_answers = await get_provider(ai_provider, api_key).run([param_1])
+    answer_1 = provider_answers[0].answer if provider_answers else ""
 
     correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
-    overall_sample_score, sample_data = _extract_sample_data(answer=answer, correct_answer=correct_answer)
+    overall_sample_score, sample_data = _extract_sample_data(answer=answer_1, correct_answer=correct_answer)
 
     return AIRunResponse(
         overall_sample_score=str(round(overall_sample_score, 2)) + "%",
-        output=answer,
+        output=answer_1,
         sample_data=sample_data,
     )
 
