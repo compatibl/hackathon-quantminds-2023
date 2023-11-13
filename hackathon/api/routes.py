@@ -576,6 +576,8 @@ async def provider_score(
         provider_answer = provider_answers_dict_2.get(int(index) + 1)
         if provider_answer is None:
             continue
+        provider_answer.answer = provider_answer.answer.replace(": 0,", ': "None",')
+
         answer_2 = provider_answer.answer
         _, answer_2_parsed = _extract_sample_data(answer=answer_2, correct_answer=blank_answer)
         # check if output was parsed a json: if not, call LLM and ask to convert to JSON
