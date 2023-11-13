@@ -389,7 +389,7 @@ async def provider_score(
     experiment_data: list[AIExperimentItem] = []
     overall_experiment_score: float = 0.0
     sample_count = 0.0
-    for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
+    for index, row in pd.read_csv(experiment_file_path, header=0).fillna('None').iterrows():
         provider_answer = provider_answers_dict.get(int(index) + 1)
         if provider_answer is None:
             continue
