@@ -278,7 +278,7 @@ KnockOutCommodityLinkedNote.1,"- **The notes offered are:**
 - **Commodity price:**
   - For any trading day, the afternoon gold fixing price per troy ounce of gold
   - Price stated in U.S. dollars
-  - Calculated by the London Gold Market and published by the LBMA on such day",KnockOutCommodityLinkedNote,,2020-11-16,2025-11-16,1000,,,USD,,,,,Gold,,,,,,,,,,,,,,,,,,,1885.6,3582.64,190,18,,
+  - Calculated by the London Gold Market and published by the LBMA on such day",KnockOutCommodityLinkedNote,,2020-11-16,2025-11-16,1000,,,USD,,,,,Gold,,,,,,,,,,,,100,,,,,,,1885.6,3582.64,190,18,,
 NonCallableFixedToFloatingNote.1,"- Summary:
   - 42,531 Units
   - Due June 15, 2016
