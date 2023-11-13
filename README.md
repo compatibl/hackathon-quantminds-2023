@@ -1,7 +1,7 @@
 # QuantMinds-CompatibL Hackathon (2023)
 ![GitHub](https://img.shields.io/github/license/compatibl/hackathon)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/compatibl/hackathon/pulls)
-## The inaugural QuantMinds-CompatibL Hackathon is under way! 
+## Deadline extended to 6pm London time!
 
 - The hackathon samples and parameters lists for scoring are available below
 - Online application at [hackathon.compatibl.com](hackathon.compatibl.com) was updated with the same examples and default prompt
