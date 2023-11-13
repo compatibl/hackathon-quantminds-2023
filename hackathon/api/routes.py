@@ -31,6 +31,7 @@ import pandas as pd
 from dateutil.parser import parse
 from fastapi import APIRouter, Depends, status
 from fastapi.params import Header
+import Levenshtein
 
 from hackathon.exception import AppException
 from hackathon.hackathon_settings import Settings, get_settings
@@ -61,6 +62,28 @@ NONE_FIELDS: Final[List[str]] = ["None", "Null", "NaN", "Empty", "Unknown", "Und
 router = APIRouter(prefix="", tags=["AI"])
 
 normalize_string_regex = re.compile(r"[\s\-_d]+")
+
+INSTRUMENTS_LIST_TERM = [
+"AcceleratedReturnEquityLinkedNote",
+    "AutocallableEquityLinkedNote",
+    "AutocallableEquityLinkedRangeAccrualNote",
+    "AutocallableFixedRateNote",
+    "CallableEquityLinkedNote",
+    "CallableFixedForFloatingSwap",
+    "CallableFixedRateNote",
+    "CallableFloatingSpreadNote",
+    "KnockOutCommodityLinkedNote",
+    "KnockOutEquityLinkedNote",
+    "NonCallableCommodityLinkedNote",
+    "NonCallableCurrencyLinkedNote",
+    "NonCallableEquityLinkedNote",
+    "NonCallableFixedForFloatingSwap",
+    "NonCallableFixedToFloatingNote",
+    "NonCallableFloatingSpreadNote",
+    "NonCallableInflationLinkedNote"
+]
+INSTRUMENTS_LIST_TERM = [normalize_string_regex.sub("", x) for x in INSTRUMENTS_LIST_TERM]
+
 
 
 @router.get(
@@ -324,6 +347,9 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
         total_score *= 100
         return total_score, sample_items
 
+def find_closest_instrument_term(instrument):
+    distances = [Levenshtein.ratio(instrument, candidate) for candidate in INSTRUMENTS_LIST_TERM]
+    return INSTRUMENTS_LIST_TERM[np.argmax(distances)]
 
 def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, correct_answer: dict) -> str:
     # replace keys e.g. "InstrumentType" with the output from answer_1
@@ -351,7 +377,7 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     _validate_body_model(ai_provider, body)
     correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
 
-    name = body.experiment_name.split("-")[0]
+    name = body.experiment_name.split("-")[0]  ## PricingModels or TermSheets
     prompt_1 = read_prompt_from_file(name, idx=1)
     input_1 = body.input
     param_1 = ProviderParam(
@@ -367,11 +393,31 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     provider_answers = await get_provider(ai_provider, api_key).run([param_1])
     answer_1 = provider_answers[0].answer if provider_answers else ""
 
+    # load in the second prompt and replace eys e.g. "InstrumentType" with the output from answer_0
     prompt_2_unformatted = read_prompt_from_file(name, idx=2)
+    keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
+    _, sample_data = _extract_sample_data(answer=answer_1, correct_answer=correct_answer)
+    keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract}
+    if "InstrumentType" in keys_extracted:
+        keys_extracted["InstrumentType"] = normalize_string_regex.sub("", keys_extracted["InstrumentType"])
+        if keys_extracted["InstrumentType"] not in INSTRUMENTS_LIST_TERM:
+            keys_extracted["InstrumentType"] = find_closest_instrument_term(keys_extracted["InstrumentType"])
+    elif name == "TermSheets":
+        for instrument in INSTRUMENTS_LIST_TERM:
+            if instrument in normalize_string_regex.sub("", prompt_2_unformatted):
+                keys_extracted["InstrumentType"] = instrument
+            print(f"Guessing {instrument}")
+    if "input" in keys_to_extract:
+        keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
+    if "answer_1" in keys_to_extract:
+        keys_extracted.update({"answer_1": answer_1})
+
     prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, correct_answer)
     input_2 = (
         answer_1 if name == "PricingModels" else body.input
     )  # in use first-stage output as second stage input for PricingModels only
+
+
     param_2 = ProviderParam(
         sample_id=body.sample_id,
         provider_model=body.provider_model,
