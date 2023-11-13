@@ -157,11 +157,3 @@ for (int step = end_step; step > start_step; step -= freq_step)
 result.discounted_rollback(0);
 double v = result.value();
 return (side * n) * v;",NonCallableFixedRateNote,750000,,,,,,,,,,2,,30/360,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
