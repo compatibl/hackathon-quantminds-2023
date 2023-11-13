@@ -215,7 +215,7 @@ Maturity Date: June 15, 2038
 Interest Rate: 6.00% per annum
 Interest Payment Dates:Semi-annually, on June 15th and December 15th of each year, commencing on December 15, 2023, and ending on the maturity date. If an Interest Payment Date is not a New York business day, interest will be paid on the next New York business day, without adjustment for period end dates and no interest will be paid in respect of the delay.
 Redemption: Redeemable at our option. If we redeem the Notes, we will pay you the principal amount, together with the applicable interest payment.
-Call Dates: The Notes are callable, in whole, but not in part, beginning on June 15, 2025, and on each Interest Payment Date thereafter upon 10 business days’ prior written notice.",CallableFixedRateNote,,2023-06-15,2038-06-15,,1000,,USD,,,PayFixed,6,,,,,,,,,Semiannual,,Semiannual,,,,,,,,,,,,
+Call Dates: The Notes are callable, in whole, but not in part, beginning on June 15, 2025, and on each Interest Payment Date thereafter upon 10 business days’ prior written notice.",CallableFixedRateNote,,2023-06-15,2038-06-15,,1000,,USD,,,PayFixed,6,,,,,,,,Semiannual,,,Semiannual,,,,,,,,,,,,
 KnockOutCommodityLinkedNote.1,"- **The notes offered are:**
   - Senior unsecured obligations of Morgan Stanley
   - Will pay no interest
