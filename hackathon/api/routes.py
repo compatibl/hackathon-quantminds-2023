@@ -494,14 +494,14 @@ async def provider_score(
         keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if
                           datapoint.field in keys_to_extract}
         keys_extracted = manual_fix_instrument_type(keys_extracted, answer_1.answer)
-        answer_1_dict[id] = keys_extracted['InstrumentType']
+        answer_1_dict[id] = '{"InstrumentType": "' + keys_extracted['InstrumentType'] + '"}'
 
 
     for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
         sample_id = int(index) + 1
-        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted,answer_1_dict[sample_id], row)
+        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1_dict[sample_id], row)
         input_2 = (
-            provider_answers_dict_1[sample_id].answer if name == "PricingModels" else row[INPUT_FIELD]
+            answer_1_dict[sample_id] if name == "PricingModels" else row[INPUT_FIELD]
         )  # in use first-stage output as second stage input for PricingModels only
         param_2 = ProviderParam(
             sample_id=sample_id,
