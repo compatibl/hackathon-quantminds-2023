@@ -45,7 +45,7 @@ from hackathon.providers.base_provider import ProviderParam
 from hackathon.providers.manager import get_provider
 
 INSTRUMENT_TYPE_FIELD: Final[str] = "InstrumentType"
-PLACE_HOLDER: Final[str] = "nan"
+PLACE_HOLDER: Final[str] = "None"
 INPUT_FIELD: Final[str] = "Input"
 DATE_FIELD_END_WITH: Final[str] = "Date"
 ADDITIONAL_FIELDS: Final[list[str]] = ["ID"]
@@ -145,9 +145,9 @@ def _validate_body_model(provider: AIProvider, body: AIBaseBody) -> bool:
 def _correct_answer_for_sample(experiment_name: str, sample_id: int):
     experiment_file_path = Path(__file__).parents[2].joinpath(f"data/{experiment_name}.csv")
     if not experiment_name.endswith("Custom"):
-        correct_answer = pd.read_csv(experiment_file_path, header=0).iloc[sample_id - 1]
+        correct_answer = pd.read_csv(experiment_file_path, header=0).fillna('None').iloc[sample_id - 1]
     else:
-        correct_answer = pd.read_csv(experiment_file_path, header=0).iloc[0]
+        correct_answer = pd.read_csv(experiment_file_path, header=0).fillna('None').iloc[0]
     return correct_answer
 
 
