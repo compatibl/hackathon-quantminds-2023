@@ -1,21 +1,20 @@
 # QuantMinds-CompatibL Hackathon (2023)
 ![GitHub](https://img.shields.io/github/license/compatibl/hackathon)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/compatibl/hackathon/pulls)
-## Overview
+## The inaugural QuantMinds-CompatibL Hackathon is under way! 
 
-The theme of the inaugural QuantMinds-CompatibL Hackathon is Quantitative Finance AI.
+- The hackathon samples and parameters lists for scoring are available below
+- Online application at [hackathon.compatibl.com](hackathon.compatibl.com) was updated with the same examples and default prompt
 
-**QuantMinds conference pass is not required and participation is possible with or without coding.**
+### TermSheets Stream
 
-- Entering the hackathon requires physical presence at the QuantMinds
-conference venue during registration (in case of a team entry, by at least one team member).
-- During the hackathon, participants can work onsite or offsite. Limited space will be available at the venue 
-on a first come, first served basis.
-- Register in advance by emailing [Martina.DeGrassi@informa.com](mailto:Martina.DeGrassi@informa.com)
-or on-site at the start of the hackathon (time and venue details are provided below).
+- Samples: [data/TermSheets-Hackathon.csv](https://github.com/compatibl/hackathon-quantminds-2023/blob/main/data/TermSheets-Hackathon.csv)
+- Default prompt (includes parameters for scoring): [prompts/TermSheets.txt](https://github.com/compatibl/hackathon-quantminds-2023/blob/main/prompts/TermSheets.txt)
 
-This package provides guidelines and competition rules. The source
-code samples will be pushed to GitHub prior to competition start.
+### PricingModels Stream
+
+- Samples: [data/PricingModels-Hackathon.csv](https://github.com/compatibl/hackathon-quantminds-2023/blob/main/data/PricingModels-Hackathon.csv)
+- Default prompt (includes parameters for scoring): [prompts/PricingModels.txt](https://github.com/compatibl/hackathon-quantminds-2023/blob/main/prompts/PricingModels.txt)
 
 ## Technical Support
 
@@ -47,8 +46,15 @@ can provide valuable experience with practical applications of AI in a collabora
 - For non-coding entries, you can use an online playground provided by the organizers or any other
 playground (however see the note below about third-party playgrounds).
 - For coding entries, you can clone this GitHub repo and work using Python 3.9 or later, or use your own tools.
-- Instructions for registering and getting API keys for online model hosting services will be provided.
 - The cost of model hosting service use during the hackathon is expected to be less than GBP 50.
+
+## API Keys
+
+Use the links below for getting API keys for online model hosting services:
+
+- OpenAI: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+- Fireworks.ai [https://readme.fireworks.ai/docs/quickstart](https://readme.fireworks.ai/docs/quickstart)
+- Replicate.com [https://replicate.com/account/api-tokens](https://replicate.com/account/api-tokens)
 
 ## Scoring Software Package
 

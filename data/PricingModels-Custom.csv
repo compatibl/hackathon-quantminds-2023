@@ -1,2 +1,2 @@
-﻿Input,InstrumentType,BuySell,PutCall,Notional,Strike
-Not provided,Not provided,Not provided,Not provided,Not provided,Not provided
+﻿ID,Input,InstrumentType,Notional,BuyOrSellOption,PayOrReceiveFixed,PutOrCall,LookbackType,AsianType,AveragingType,Strike,UpperBarrier,LowerBarrier,FixedRatePct,FloatingSpreadBp,Basis,FixedRateBasis,FloatingRateBasis
+Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided,Not provided
