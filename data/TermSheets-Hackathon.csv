@@ -1,4 +1,4 @@
-﻿ID,Input,InstrumentType,CUSIP,EffectiveDate,MaturityDate,Notional,FixedLegNotional,FloatingLegNotional,Currency,FixedLegCurrency,FloatingLegCurrency,PayOrReceiveFixed,FixedRatePercent,Underlying,Underlying2,FloatingSpreadBp,FloatingRateMultiplier,FloatingRateCapPct,FloatingRateFloorPct,ResetType,PaymentFrequency,FixedLegPaymentFrequency,FloatingLegPaymentFrequency,ExerciseFrequency,ParticipationRatePct,CappedValueOfUnderlying,CappedReturnPct,BufferAmountPct,UpperRangeAccrualLevelPct,LowerRangeAccrualLevelPct,PrincipalProtected,InitialPrice,TriggerLevel,TriggerLevelPct,RateUponTriggerPct,CpiLagMonths,WorstOf
+﻿ID,Input,InstrumentType,CUSIP,EffectiveDate,MaturityDate,Notional,FixedLegNotional,FloatingLegNotional,Currency,FixedLegCurrency,FloatingLegCurrency,PayOrReceiveFixed,FixedRatePercent,Underlying,Underlying2,FloatingSpreadBp,FloatingRateMultiplier,FloatingRateCapPct,FloatingRateFloorPct,ResetType,PaymentFrequency,FixedLegPaymentFrequency,FloatingLegPaymentFrequency,ExerciseFrequency,ParticipationRatePct,CappedReturnPct,BufferAmountPct,UpperRangeAccrualLevelPct,LowerRangeAccrualLevelPct,PrincipalProtected,InitialPrice,TriggerLevel,TriggerLevelPct,RateUponTriggerPct,CpiLagMonths,WorstOf
 AcceleratedReturnEquityLinkedNote.1,"- **Summary:**
 
 - 2,293,946 Units
@@ -42,7 +42,7 @@ AcceleratedReturnEquityLinkedNote.1,"- **Summary:**
   - July 16, 2014, July 17, 2014, July 18, 2014, July 21, 2014, and July 22, 2014
 
 - **Participation Rate:**
-  - 300%",AcceleratedReturnEquityLinkedNote,,2012-09-27,2014-07-22,22939460,,,USD,,,,,SPX,,,,,,,,,,,300,,25.47,,,,,1360.02,,,,,
+  - 300%",AcceleratedReturnEquityLinkedNote,,9/27/2012,7/22/2014,22939460,,,USD,,,,,SPX,,,,,,,,,,,300,25.47,,,,,1360.02,,,,,
 AutocallableEquityLinkedNote.1,"- General
   - The Notes are designed for investors who seek a Contingent Interest Payment with respect to each Observation Date for which the closing price of one share of the Reference Stock is greater than or equal to 61% of the Initial Price, which we refer to as the Coupon Barrier Level. Investors should be willing to forgo fixed interest and dividend payments, in exchange for the opportunity to receive Contingent Interest Payments.
   - Investors in the Notes should be willing to accept the risk of losing some or all of their principal and the risk that no Contingent Interest Payment may be made with respect to some or all Observation Dates. Any payment on the Notes is subject to the credit risk of JPMorgan Chase & Co.
@@ -72,7 +72,7 @@ AutocallableEquityLinkedNote.1,"- General
   - Contingent Interest Payment Dates†: Notwithstanding anything to the contrary in the accompanying product supplement no. 20-I, the Contingent Interest Payment Dates will be September 25, 2014, October 27, 2014, November 28, 2014, December 26, 2014, January 27, 2015, February 26, 2015, March 26, 2015, April 27, 2015, May 28, 2015, June 25, 2015, July 27, 2015 and the Maturity Date
   - Call Settlement Date†: If the Notes are automatically called on any Observation Date (other than the first and final Observation Dates), the first Contingent Interest Payment Date immediately following that Observation Date
   - Maturity Date†: August 27, 2015
-  - CUSIP: 48127DXW3",AutocallableEquityLinkedNote,48127DXW3,2014-08-27,2015-08-21,,,,USD,,,,,GME,,,,,15,,,,,,,,,,,,,40.49,24.6989,,,,
+  - CUSIP: 48127DXW3",AutocallableEquityLinkedNote,48127DXW3,8/27/2014,8/21/2015,,,,USD,,,,,GME,,,,,15,,,,,,,,,,,,40.49,24.6989,,,,
 AutocallableEquityLinkedRangeAccrualNote.1,"**Issuer:**
 - Bank of America Corporation (“BAC”)
 
@@ -120,7 +120,7 @@ AutocallableEquityLinkedRangeAccrualNote.1,"**Issuer:**
 - 30/360
 
 **Market Measure Business Day:**
-- Any day that is a day on which (1) the New York Stock Exchange and The NASDAQ Stock Market, or their successors, are open for trading and (2) the S&P 500® Index or any successor thereto is calculated and published.",AutocallableEquityLinkedRangeAccrualNote,,2011-12-15,2026-12-15,,,,USD,,,,10,SPX,,,,,,,Quarterly,,,,,,,,,75,,,,120,,,
+- Any day that is a day on which (1) the New York Stock Exchange and The NASDAQ Stock Market, or their successors, are open for trading and (2) the S&P 500® Index or any successor thereto is calculated and published.",AutocallableEquityLinkedRangeAccrualNote,,12/15/2011,12/15/2026,,,,USD,,,,10,SPX,,,,,,,Quarterly,,,,,,,,75,,,,120,,,
 AutocallableFixedRateNote.1,"Principal Amount: $1,000 per security
 
 Term: 15 months
@@ -147,7 +147,7 @@ Original Issue Date: June 30, 2017
 
 Final Valuation Date: September 25, 2018
 
-Maturity Date: September 28, 2018",AutocallableFixedRateNote,,2017-06-28,2018-09-28,1000,,,USD,,,,6.25,SPX,RTY,,,,,,Monthly,,,,,,,,,,,,,70,,,Yes
+Maturity Date: September 28, 2018",AutocallableFixedRateNote,,6/28/2017,9/28/2018,1000,,,USD,,,,6.25,SPX,RTY,,,,,,Monthly,,,,,,,,,,,,70,,,Yes
 CallableFixedForFloatingSwap.1,"EFFECTIVE DATE:               January 15, 2004
 
 TERMINATION DATE:             The earlier of (i) January 15, 2014 and (ii) the
@@ -206,7 +206,7 @@ FIXED RATE PAYMENT DATES:     Payable semi-annually on the 15th of each January
 
 FIXED RATE PAYMENT BUSINESS DAY CONVENTION:               Modified Following
 
-FIXED RATE PAYMENT DAY COUNT: 30/360",CallableFixedForFloatingSwap,,2004-01-15,2014-01-15,,100000000,100000000,,USD,USD,PayFixed,7,6 Month USD-LIBOR-BBA,,283,,,,InArrears,,Semiannual,Semiannual,Daily,,,,,,,,,,,,,
+FIXED RATE PAYMENT DAY COUNT: 30/360",CallableFixedForFloatingSwap,,1/15/2004,1/15/2014,,100000000,100000000,,USD,USD,PayFixed,7,6 Month USD-LIBOR-BBA,,283,,,,InArrears,,Semiannual,Semiannual,Daily,,,,,,,,,,,,
 CallableFixedRateNote.1,"Issuer: This firm
 Currency: U.S. Dollars
 Denomination: $1,000
@@ -215,7 +215,7 @@ Maturity Date: June 15, 2038
 Interest Rate: 6.00% per annum
 Interest Payment Dates:Semi-annually, on June 15th and December 15th of each year, commencing on December 15, 2023, and ending on the maturity date. If an Interest Payment Date is not a New York business day, interest will be paid on the next New York business day, without adjustment for period end dates and no interest will be paid in respect of the delay.
 Redemption: Redeemable at our option. If we redeem the Notes, we will pay you the principal amount, together with the applicable interest payment.
-Call Dates: The Notes are callable, in whole, but not in part, beginning on June 15, 2025, and on each Interest Payment Date thereafter upon 10 business days’ prior written notice.",CallableFixedRateNote,,2023-06-15,2038-06-15,,1000,,USD,,,PayFixed,6,,,,,,,,,Semiannual,,Semiannual,,,,,,,,,,,,,
+Call Dates: The Notes are callable, in whole, but not in part, beginning on June 15, 2025, and on each Interest Payment Date thereafter upon 10 business days’ prior written notice.",CallableFixedRateNote,,6/15/2023,6/15/2038,,1000,,USD,,,PayFixed,6,,,,,,,,,Semiannual,,Semiannual,,,,,,,,,,,,
 KnockOutCommodityLinkedNote.1,"- **The notes offered are:**
   - Senior unsecured obligations of Morgan Stanley
   - Will pay no interest
@@ -278,7 +278,7 @@ KnockOutCommodityLinkedNote.1,"- **The notes offered are:**
 - **Commodity price:**
   - For any trading day, the afternoon gold fixing price per troy ounce of gold
   - Price stated in U.S. dollars
-  - Calculated by the London Gold Market and published by the LBMA on such day",KnockOutCommodityLinkedNote,,2020-11-16,2025-11-16,1000,,,USD,,,,,Gold,,,,,,,,,,,100,,,,,,,1885.6,3582.64,190,18,,
+  - Calculated by the London Gold Market and published by the LBMA on such day",KnockOutCommodityLinkedNote,,11/16/2020,11/16/2025,1000,,,USD,,,,,Gold,,,,,,,,,,,100,,,,,,1885.6,3582.64,190,18,,
 NonCallableFixedToFloatingNote.1,"- Summary:
   - 42,531 Units
   - Due June 15, 2016
@@ -331,7 +331,7 @@ NonCallableFixedToFloatingNote.1,"- Summary:
   - 3-Month U.S. Dollar LIBOR that appears on Reuters page LIBOR01, or any page substituted for that page, as of 11:00 A.M., London time, on the applicable London Banking Day (as defined below), as determined by the calculation agent in the manner described in the section entitled “Other Terms of the Notes — Interest” on page TS-5 of this term sheet. The Reference Rate is more fully described beginning on page TS-7.
 
 - Day Count Fraction:
-  - 30/360",NonCallableFixedToFloatingNote,06048WMN7,2012-06-15,2016-06-15,42531000,,,USD,,,,5.48,3-month LIBOR,,175,,,1.75,,Quarterly,,,,,,,,,,,,,,,,
+  - 30/360",NonCallableFixedToFloatingNote,06048WMN7,6/15/2012,6/15/2016,42531000,,,USD,,,,5.48,3-month LIBOR,,175,,,1.75,,Quarterly,,,,,,,,,,,,,,,
 NonCallableFloatingSpreadNote.1,"Summary:
   - The notes offered by this pricing supplement are unsecured debt securities issued by Citigroup Global Markets Holdings Inc. and guaranteed by Citigroup Inc. The notes will pay interest at a floating rate based on 3-month U.S. dollar LIBOR during the LIBOR period specified below and based on the CMS spread (as described below) during the CMS spread period specified below. The notes will have characteristics of a conventional floating rate note based on 3-month U.S. dollar LIBOR during the LIBOR period. However, during the CMS spread period, the floating rate payable on the notes will vary not based on a single market interest rate, but rather based on the spread between two constant maturity swap rates of different maturities. This may result in a floating rate during the CMS spread period that is significantly less than it would have been had it continued to be based on 3-month U.S. dollar LIBOR. Interest payments on the notes will fluctuate and may be paid at a rate as low as 0% for one or more interest periods.
   - There is uncertainty about the future of 3-month U.S. dollar LIBOR as well as the Constant Maturity Swap (CMS) rates used to calculate the CMS spread, and such uncertainty may adversely affect the return on and value of the notes.. The amount of interest payable on the notes may be calculated using one or more substitute or successor rates selected by the issuer (or one of its affiliates), which may be subject to adjustment by the issuer or an affiliate of the issuer, if 3-month U.S. dollar LIBOR or a relevant CMS rate is discontinued. At this time, no consensus exists as to what rate or rates may become accepted alternatives, and it is impossible to predict the effect of any such alternatives on the value of securities, such as the notes, that are linked to such rates. See “Summary Risk Factors” and “Determination of 3-month U.S. Dollar LIBOR” and “Information About the CMS Spread” in this pricing supplement.
@@ -368,7 +368,7 @@ Interest determination date:
 
 Interest period: Each three-month period from and including an interest payment date (or the issue date, in the case of the first interest period) to but excluding the next interest payment date
 
-Interest payment dates: The 9th day of each February, May, August and November, beginning on November 9, 2018 and ending on the maturity date",NonCallableFloatingSpreadNote,,2018-08-09,2022-08-09,1000,,,USD,,,,,CMS10,CMS2,,6,,0,,Quarterly,,,,,,,,,,,,,,,,
+Interest payment dates: The 9th day of each February, May, August and November, beginning on November 9, 2018 and ending on the maturity date",NonCallableFloatingSpreadNote,,8/9/2018,8/9/2022,1000,,,USD,,,,,CMS10,CMS2,,6,,0,,Quarterly,,,,,,,,,,,,,,,
 NonCallableInflationLinkedNote.1,"- $14,878,000 Notes, due July 25, 2013
 - The notes are our unsecured senior notes.
 - The notes will mature on July 25, 2013. At maturity, you will receive the principal amount of the notes and any applicable final interest payment.
@@ -386,4 +386,4 @@ NonCallableInflationLinkedNote.1,"- $14,878,000 Notes, due July 25, 2013
     - If an interest payment is due for an interest period, it will be paid on the 25th day of the applicable month, beginning in August 2008.
     - Interest is computed on the basis of a 360-day year of twelve 30-day months.
     - If any interest payment date or the maturity date of the notes falls on a day that is not a business day, we will make the required payment on the next business day, and no additional interest will accrue in respect of the payment made on the next business day.
-    - However, if an interest payment date falls on a date that is not a business day, and the next business day is in the next calendar month, the interest payment date will be the immediately preceding business day.",NonCallableInflationLinkedNote,,,2013-07-25,14878000,,,USD,,,,,CPI,,,,,,,Monthly,,,,123,,,,,,,,,,,3,
+    - However, if an interest payment date falls on a date that is not a business day, and the next business day is in the next calendar month, the interest payment date will be the immediately preceding business day.",NonCallableInflationLinkedNote,,,7/25/2013,14878000,,,USD,,,,,CPI,,,,,,,Monthly,,,,123,,,,,,,,,,3,
