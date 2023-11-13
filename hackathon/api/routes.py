@@ -398,15 +398,7 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
     _, sample_data = _extract_sample_data(answer=answer_1, correct_answer=correct_answer)
     keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract}
-    if "InstrumentType" in keys_extracted:
-        keys_extracted["InstrumentType"] = normalize_string_regex.sub("", keys_extracted["InstrumentType"])
-        if keys_extracted["InstrumentType"] not in INSTRUMENTS_LIST_TERM:
-            keys_extracted["InstrumentType"] = find_closest_instrument_term(keys_extracted["InstrumentType"])
-    elif name == "TermSheets":
-        for instrument in INSTRUMENTS_LIST_TERM:
-            if instrument in normalize_string_regex.sub("", prompt_2_unformatted):
-                keys_extracted["InstrumentType"] = instrument
-            print(f"Guessing {instrument}")
+    keys_extracted = manual_fix_instrument_type(keys_extracted, prompt_2_unformatted)
     if "input" in keys_to_extract:
         keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
     if "answer_1" in keys_to_extract:
@@ -439,6 +431,18 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
         output=answer_2,
         sample_data=sample_data,
     )
+
+
+def manual_fix_instrument_type(keys_extracted, raw_answer):
+    if "InstrumentType" in keys_extracted:
+        keys_extracted["InstrumentType"] = normalize_string_regex.sub("", keys_extracted["InstrumentType"])
+        if keys_extracted["InstrumentType"] is None or keys_extracted["InstrumentType"] == 'None':
+            for instrument in INSTRUMENTS_LIST_TERM:
+                if instrument in normalize_string_regex.sub("", raw_answer):
+                    keys_extracted["InstrumentType"] = instrument
+        if keys_extracted["InstrumentType"] not in INSTRUMENTS_LIST_TERM:
+            keys_extracted["InstrumentType"] = find_closest_instrument_term(keys_extracted["InstrumentType"])
+    return keys_extracted
 
 
 @router.post(
@@ -483,9 +487,19 @@ async def provider_score(
 
     provider_params_2 = list()
     prompt_2_unformatted = read_prompt_from_file(name, idx=2)
+    answer_1_dict = {}
+    for id, answer_1 in provider_answers_dict_1.items():
+        keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
+        _, sample_data = _extract_sample_data(answer=answer_1.answer, correct_answer={'InstrumentType': None})
+        keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if
+                          datapoint.field in keys_to_extract}
+        keys_extracted = manual_fix_instrument_type(keys_extracted, answer_1.answer)
+        answer_1_dict[id] = keys_extracted['InstrumentType']
+
+
     for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
         sample_id = int(index) + 1
-        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, provider_answers_dict_1[sample_id].answer, row)
+        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted,answer_1_dict[sample_id], row)
         input_2 = (
             provider_answers_dict_1[sample_id].answer if name == "PricingModels" else row[INPUT_FIELD]
         )  # in use first-stage output as second stage input for PricingModels only
