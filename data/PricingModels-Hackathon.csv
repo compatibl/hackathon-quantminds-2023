@@ -104,7 +104,7 @@ int end_step = 60;
 int side = 1;
 double f = 0.05;
 
-double dcf = model.get_dcf(""30/365"", start_step, end_step);
+double dcf = model.get_dcf(""ACT/365"", start_step, end_step);
 TimeSlice s = model.get_const_time_slice(start_step, 1.0);
 TimeSlice e = model.get_const_time_slice(end_step, 1.0);
 e.discounted_rollback(start_step);
