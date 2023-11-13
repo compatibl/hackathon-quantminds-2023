@@ -57,33 +57,60 @@ PLACE_HOLDER: Final[str] = "None"
 INPUT_FIELD: Final[str] = "Input"
 DATE_FIELD_END_WITH: Final[str] = "Date"
 ADDITIONAL_FIELDS: Final[list[str]] = ["ID"]
-NONE_FIELDS: Final[List[str]] = ["None", "Null", "NaN", "Empty", "Unknown", "Undefined", "Not Defined", "Unspecified", "Not Specified"]
+NONE_FIELDS: Final[List[str]] = [
+    "None",
+    "Null",
+    "NaN",
+    "Empty",
+    "Unknown",
+    "Undefined",
+    "Not Defined",
+    "Unspecified",
+    "Not Specified",
+]
 
 router = APIRouter(prefix="", tags=["AI"])
 
 normalize_string_regex = re.compile(r"[\s\-_d]+")
 
-INSTRUMENTS_LIST_TERM = [
-"AcceleratedReturnEquityLinkedNote",
-    "AutocallableEquityLinkedNote",
-    "AutocallableEquityLinkedRangeAccrualNote",
-    "AutocallableFixedRateNote",
-    "CallableEquityLinkedNote",
-    "CallableFixedForFloatingSwap",
-    "CallableFixedRateNote",
-    "CallableFloatingSpreadNote",
-    "KnockOutCommodityLinkedNote",
-    "KnockOutEquityLinkedNote",
-    "NonCallableCommodityLinkedNote",
-    "NonCallableCurrencyLinkedNote",
-    "NonCallableEquityLinkedNote",
-    "NonCallableFixedForFloatingSwap",
-    "NonCallableFixedToFloatingNote",
-    "NonCallableFloatingSpreadNote",
-    "NonCallableInflationLinkedNote"
-]
-INSTRUMENTS_LIST_TERM = [normalize_string_regex.sub("", x) for x in INSTRUMENTS_LIST_TERM]
-
+INSTRUMENTS_LIST_TERM = {
+    "TermSheets": [
+        "AcceleratedReturnEquityLinkedNote",
+        "AutocallableEquityLinkedNote",
+        "AutocallableEquityLinkedRangeAccrualNote",
+        "AutocallableFixedRateNote",
+        "CallableEquityLinkedNote",
+        "CallableFixedForFloatingSwap",
+        "CallableFixedRateNote",
+        "CallableFloatingSpreadNote",
+        "KnockOutCommodityLinkedNote",
+        "KnockOutEquityLinkedNote",
+        "NonCallableCommodityLinkedNote",
+        "NonCallableCurrencyLinkedNote",
+        "NonCallableEquityLinkedNote",
+        "NonCallableFixedForFloatingSwap",
+        "NonCallableFixedToFloatingNote",
+        "NonCallableFloatingSpreadNote",
+        "NonCallableInflationLinkedNote",
+    ],
+    "PricingModels": [
+        "EuropeanVanillaOption",
+        "AmericanVanillaOption",
+        "AsianOption",
+        "LookbackOption",
+        "FadeInOption",
+        "OneTouchOption",
+        "DoubleNoTouchOption",
+        "BestOfOption",
+        "ForwardRateAgreement",
+        "NonCallableFixedForFloatingSwap",
+        "NonCallableFixedRateNote",
+        "CallableFixedForFloatingSwap",
+        "NonCallableCrossCurrencySwap",
+    ],
+}
+INSTRUMENTS_LIST_TERM["TermSheets"] = [normalize_string_regex.sub("", x) for x in INSTRUMENTS_LIST_TERM["TermSheets"]]
+INSTRUMENTS_LIST_TERM["PricingModels"] = [normalize_string_regex.sub("", x) for x in INSTRUMENTS_LIST_TERM["PricingModels"]]
 
 
 @router.get(
@@ -180,10 +207,12 @@ def _correct_answer_for_sample(experiment_name: str, sample_id: int):
         correct_answer = pd.read_csv(experiment_file_path, header=0).fillna('None').iloc[0]
     return correct_answer
 
+
 def _get_keys_for_experiment(experiment_name: str):
     experiment_file_path = Path(__file__).parents[2].joinpath(f"data/{experiment_name}.csv")
     df = pd.read_csv(experiment_file_path, header=0, nrows=0)
     return list(df.columns)
+
 
 def compare_as_strings(model_value: Any, correct_value: Any) -> bool:
     try:
@@ -255,8 +284,9 @@ def soft_comparison(model_value: Any, correct_value: Any) -> bool:
 
 
 def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISampleItem]]:
-    correct_answer = {key: correct_answer[key] for key in correct_answer.keys()
-                      if key not in ADDITIONAL_FIELDS and key != INPUT_FIELD}
+    correct_answer = {
+        key: correct_answer[key] for key in correct_answer.keys() if key not in ADDITIONAL_FIELDS and key != INPUT_FIELD
+    }
 
     empty_samples = list()
     for key, value in correct_answer.items():
@@ -267,7 +297,7 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     closing_brace = answer.find("}")
 
     if opening_brace != -1 and closing_brace != -1:
-        json_only = answer[opening_brace: closing_brace + 1]
+        json_only = answer[opening_brace : closing_brace + 1]
     else:
         return empty_result
 
@@ -277,19 +307,18 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
     except ValueError:  # JSONDecodeError
         malformed_json_samples = list()
         for key, value in correct_answer.items():
-            malformed_json_samples.append(AISampleItem(field=key, model="Malformed JSON", correct=str(value), score="No score - malformed JSON"))
+            malformed_json_samples.append(
+                AISampleItem(field=key, model="Malformed JSON", correct=str(value), score="No score - malformed JSON")
+            )
         malformed_json_result = (0.0, malformed_json_samples)
         return malformed_json_result
 
     sample_items = []
     total_score = 0.0
 
-    if (
-        INSTRUMENT_TYPE_FIELD in json_answer.keys()
-        and compare_as_strings(
-            model_value=json_answer[INSTRUMENT_TYPE_FIELD],
-            correct_value=correct_answer[INSTRUMENT_TYPE_FIELD],
-        )
+    if INSTRUMENT_TYPE_FIELD in json_answer.keys() and compare_as_strings(
+        model_value=json_answer[INSTRUMENT_TYPE_FIELD],
+        correct_value=correct_answer[INSTRUMENT_TYPE_FIELD],
     ):
         max_item_score = 1 / len(correct_answer.keys())
         sample_items.append(
@@ -351,19 +380,19 @@ def _extract_sample_data(answer: str, correct_answer) -> tuple[float, list[AISam
         total_score *= 100
         return total_score, sample_items
 
-def find_closest_instrument_term(instrument):
-    distances = [Levenshtein.ratio(instrument, candidate) for candidate in INSTRUMENTS_LIST_TERM]
-    return INSTRUMENTS_LIST_TERM[np.argmax(distances)]
 
-def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, answer_1_parsed) -> str:
+def find_closest_instrument_term(instrument, name):
+    distances = [Levenshtein.ratio(instrument, candidate) for candidate in INSTRUMENTS_LIST_TERM[name]]
+    return INSTRUMENTS_LIST_TERM[name][np.argmax(distances)]
+
+
+def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, answer_1_parsed, name) -> str:
     # replace keys e.g. "InstrumentType" with the output from answer_1
     keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
-    keys_extracted = {
-        element.field: element.model for element in answer_1_parsed if element.field in keys_to_extract
-    }
+    keys_extracted = {element.field: element.model for element in answer_1_parsed if element.field in keys_to_extract}
     if "InstrumentType" in keys_extracted:
         keys_extracted["InstrumentType"] = keys_extracted["InstrumentType"].replace(" ", "").replace("-", "")
-        keys_extracted = manual_fix_instrument_type(keys_extracted, answer_1)
+        keys_extracted = manual_fix_instrument_type(keys_extracted, answer_1, name)
     if "input" in keys_to_extract:
         keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
     if "answer_1" in keys_to_extract:
@@ -371,6 +400,7 @@ def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, ans
 
     prompt_2 = prompt_2_unformatted.format(**keys_extracted)
     return prompt_2
+
 
 async def force_answer_to_json_format(answer, answer_parsed, body, ai_provider, api_key):
     answer_is_json = not all([element.model == "None" for element in answer_parsed])
@@ -391,6 +421,7 @@ async def force_answer_to_json_format(answer, answer_parsed, body, ai_provider, 
     provider_answers = await get_provider(ai_provider, api_key).run([param])
     answer = provider_answers[0].answer if provider_answers else ""
     return answer
+
 
 @router.post(
     path="/{ai_provider}/run",
@@ -421,7 +452,7 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     _, answer_1_parsed = _extract_sample_data(answer=answer_1, correct_answer=blank_answer)
 
     # check if output was parsed a json: if not, call LLM and ask to convert to JSON
-    answer_is_json = not all([element.model == "None" for element in answer_1_parsed])
+    answer_is_json = not all([element.model == "None" or element.model == "Malformed JSON" for element in answer_1_parsed])
     if not answer_is_json:
         param = ProviderParam(
             sample_id=body.sample_id,
@@ -441,7 +472,7 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
 
     # setup and execute the second prompt
     prompt_2_unformatted = read_prompt_from_file(name, idx=2)
-    prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, answer_1_parsed)
+    prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, answer_1_parsed, name)
     input_2 = body.input
     param_2 = ProviderParam(
         sample_id=body.sample_id,
@@ -484,16 +515,16 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     )
 
 
-def manual_fix_instrument_type(keys_extracted_original: dict, raw_answer: str) -> dict:
+def manual_fix_instrument_type(keys_extracted_original: dict, raw_answer: str, name: str) -> dict:
     keys_extracted = keys_extracted_original.copy()
     if "InstrumentType" in keys_extracted:
         keys_extracted["InstrumentType"] = normalize_string_regex.sub("", keys_extracted["InstrumentType"])
         if keys_extracted["InstrumentType"] is None or keys_extracted["InstrumentType"] == 'None':
-            for instrument in INSTRUMENTS_LIST_TERM:
+            for instrument in INSTRUMENTS_LIST_TERM[name]:
                 if instrument in normalize_string_regex.sub("", raw_answer):
                     keys_extracted["InstrumentType"] = instrument
-        if keys_extracted["InstrumentType"] not in INSTRUMENTS_LIST_TERM:
-            keys_extracted["InstrumentType"] = find_closest_instrument_term(keys_extracted["InstrumentType"])
+        if keys_extracted["InstrumentType"] not in INSTRUMENTS_LIST_TERM[name]:
+            keys_extracted["InstrumentType"] = find_closest_instrument_term(keys_extracted["InstrumentType"], name)
     return keys_extracted
 
 
@@ -546,7 +577,7 @@ async def provider_score(
         sample_id = int(index) + 1
         answer_1 = provider_answers_dict_1[sample_id].answer
         _, answer_1_parsed = _extract_sample_data(answer=answer_1, correct_answer=blank_answer)
-        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, answer_1_parsed)
+        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, answer_1_parsed, name)
         input_2 = row[INPUT_FIELD]
         param_2 = ProviderParam(
             sample_id=sample_id,
@@ -575,7 +606,7 @@ async def provider_score(
         answer_2 = provider_answer.answer
         _, answer_2_parsed = _extract_sample_data(answer=answer_2, correct_answer=blank_answer)
         # check if output was parsed a json: if not, call LLM and ask to convert to JSON
-        answer_is_json = not all([element.model == "None" for element in answer_2_parsed])
+        answer_is_json = not all([element.model == "None" or element.model == "Malformed JSON" for element in answer_2_parsed])
         if not answer_is_json:
             sample_id = int(index) + 1
             param = ProviderParam(
@@ -593,8 +624,9 @@ async def provider_score(
             provider_answers = await get_provider(ai_provider, api_key).run([param])
             answer_2 = provider_answers[0].answer if provider_answers else ""
             # trim answer
-            answer_2 = "{".join([""] + answer_2.split("{")[1:])
-            answer_2 = "}".join(answer_2.split("}")[:-1] + [""])
+            answer_2 = "{" + "".join(answer_2.split("{")[1:])
+            answer_2 = "".join(answer_2.split("}")[:-1]) + "}"
+            answer_2 = answer_2.replace("[", "'").replace("]", "'")
 
         overall_sample_score, sample_data = _extract_sample_data(answer=answer_2, correct_answer=row)
         item = AIExperimentItem(
