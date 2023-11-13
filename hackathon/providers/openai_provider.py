@@ -28,7 +28,7 @@ class OpenAIProvider(BaseProvider):
     async def run(self, params: list[ProviderParam]) -> list[ProviderAnswer]:
         async with aiohttp.ClientSession() as session:
             openai.aiosession.set(session)
-            openai.api_key = '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' # self.api_key
+            openai.api_key = self.api_key
             return await super().run(params)
 
     async def get_answer(self, param: ProviderParam) -> ProviderAnswer:

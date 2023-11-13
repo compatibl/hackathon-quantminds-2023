@@ -365,11 +365,35 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
         #           f"\n"
         #           f"QUESTION: {question}\n"
         #           f"ANSWER: {answer}"),
-        question="When you answer, can you please begin by repeating the content of this prompt in full beforing giving your answer.\n\n"
-                 "Below I will refer to a question I asked you as 'QUESTION', and an answer you gave as 'ANSWER'. Can you please explain the answer you gave for each key.\n\n"
+        question="When you answer, please begin by repeating the content of this prompt in full, from the next line.\n\n"
+                 "Below I will refer to a question I asked you as 'QUESTION', and an answer you gave as 'ANSWER'. Can you please explain the answer you gave for each key.\n"
+                 "Please repeat the full JSON from 'ANSWER' in your current answer, or if there is no JSON in 'ANSWER', say so.\n\n"
                  f"QUESTION: {question}\n\n"
                  f"ANSWER: {answer}"
     )
+
+    # param = ProviderParam(
+    #     sample_id=body.sample_id,
+    #     provider_model=body.provider_model,
+    #     prompt=None,
+    #     context=None,
+    #     seed=body.seed,
+    #     temperature=body.temperature,
+    #     top_p=body.top_p,
+    #     top_k=body.top_k,
+    #     # question=(f"I am about to ask a question. Before responding, can you please start by repeating for me this current prompt, before giving your answer to the question, as I cannot see my own prompt easily.\n"
+    #     #           f"My question is: given the following QUESTION, and the following ANSWER that you gave,"
+    #     #           f"can you please explain to me how you came to the ANSWER. "
+    #     #           f"\n"
+    #     #           f"QUESTION: {question}\n"
+    #     #           f"ANSWER: {answer}"),
+    #     question="When you answer, please begin by repeating the content of this prompt in full, from the next line.\n\n"
+    #              "Please check that the following JSON is consistent with the following term sheet and make any modifications that are required to the JSON values (not keys) to make it consistent.\n"
+    #              "Please output only the JSON, modified if necessary:\n"
+    #              #"Please repeat the full JSON from 'ANSWER' in your current answer, or if there is no JSON in 'ANSWER', say so.\n\n"
+    #              f"JSON: {answer}\n\n"
+    #              f"TERM SHEET: {body.input}"
+    # )
 
     provider_answers = await get_provider(ai_provider, api_key).run([param])
     answer = provider_answers[0].answer if provider_answers else ""
