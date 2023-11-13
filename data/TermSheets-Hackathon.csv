@@ -120,7 +120,7 @@ AutocallableEquityLinkedRangeAccrualNote.1,"**Issuer:**
 - 30/360
 
 **Market Measure Business Day:**
-- Any day that is a day on which (1) the New York Stock Exchange and The NASDAQ Stock Market, or their successors, are open for trading and (2) the S&P 500® Index or any successor thereto is calculated and published.",AutocallableEquityLinkedRangeAccrualNote,,2011-12-15,2026-12-15,,,,USD,,,,10,SPX,,,,,,,,,,,,,,,,,75,,,,120,,,
+- Any day that is a day on which (1) the New York Stock Exchange and The NASDAQ Stock Market, or their successors, are open for trading and (2) the S&P 500® Index or any successor thereto is calculated and published.",AutocallableEquityLinkedRangeAccrualNote,,2011-12-15,2026-12-15,,,,USD,,,,10,SPX,,,,,,,Quarterly,,,,,,,,,,75,,,,120,,,
 AutocallableFixedRateNote.1,"Principal Amount: $1,000 per security
 
 Term: 15 months
