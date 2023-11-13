@@ -180,6 +180,10 @@ def _correct_answer_for_sample(experiment_name: str, sample_id: int):
         correct_answer = pd.read_csv(experiment_file_path, header=0).fillna('None').iloc[0]
     return correct_answer
 
+def _get_keys_for_experiment(experiment_name: str):
+    experiment_file_path = Path(__file__).parents[2].joinpath(f"data/{experiment_name}.csv")
+    df = pd.read_csv(experiment_file_path, header=0, nrows=0)
+    return list(df.columns)
 
 def compare_as_strings(model_value: Any, correct_value: Any) -> bool:
     try:
@@ -351,12 +355,11 @@ def find_closest_instrument_term(instrument):
     distances = [Levenshtein.ratio(instrument, candidate) for candidate in INSTRUMENTS_LIST_TERM]
     return INSTRUMENTS_LIST_TERM[np.argmax(distances)]
 
-def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, correct_answer: dict) -> str:
+def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, answer_1_parsed) -> str:
     # replace keys e.g. "InstrumentType" with the output from answer_1
     keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
-    _, sample_data = _extract_sample_data(answer=answer_1, correct_answer=correct_answer)
     keys_extracted = {
-        datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract
+        element.field: element.model for element in answer_1_parsed if element.field in keys_to_extract
     }
     if "InstrumentType" in keys_extracted:
         keys_extracted["InstrumentType"] = keys_extracted["InstrumentType"].replace(" ", "").replace("-", "")
@@ -367,6 +370,25 @@ def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, cor
     prompt_2 = prompt_2_unformatted.format(**keys_extracted)
     return prompt_2
 
+async def force_answer_to_json_format(answer, answer_parsed, body, ai_provider, api_key):
+    answer_is_json = not all([element.model == "None" for element in answer_parsed])
+    if answer_is_json:
+        return None
+    param = ProviderParam(
+        sample_id=body.sample_id,
+        provider_model=body.provider_model,
+        prompt="""
+        Convert the following to JSON format: : ```{input}```
+        """,
+        context=answer,
+        seed=body.seed,
+        temperature=body.temperature,
+        top_p=body.top_p,
+        top_k=body.top_k,
+    )
+    provider_answers = await get_provider(ai_provider, api_key).run([param])
+    answer = provider_answers[0].answer if provider_answers else ""
+    return answer
 
 @router.post(
     path="/{ai_provider}/run",
@@ -375,9 +397,11 @@ def format_prompt_2_using_answer_1(prompt_2_unformatted: str, answer_1: str, cor
 )
 async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = Header(default=None)):
     _validate_body_model(ai_provider, body)
-    correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
+    blank_answer = pd.Series(index=_get_keys_for_experiment(experiment_name=body.experiment_name))
 
     name = body.experiment_name.split("-")[0]  ## PricingModels or TermSheets
+    # setup and execute the first prompt
+    name = body.experiment_name.split("-")[0]
     prompt_1 = read_prompt_from_file(name, idx=1)
     input_1 = body.input
     param_1 = ProviderParam(
@@ -392,19 +416,30 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     )
     provider_answers = await get_provider(ai_provider, api_key).run([param_1])
     answer_1 = provider_answers[0].answer if provider_answers else ""
+    _, answer_1_parsed = _extract_sample_data(answer=answer_1, correct_answer=blank_answer)
 
-    # load in the second prompt and replace eys e.g. "InstrumentType" with the output from answer_0
+    # check if output was parsed a json: if not, call LLM and ask to convert to JSON
+    answer_is_json = not all([element.model == "None" for element in answer_1_parsed])
+    if not answer_is_json:
+        param = ProviderParam(
+            sample_id=body.sample_id,
+            provider_model=body.provider_model,
+            prompt="""
+            Convert the following to JSON format: : ```{input}```
+            """,
+            context=answer_1,
+            seed=body.seed,
+            temperature=body.temperature,
+            top_p=body.top_p,
+            top_k=body.top_k,
+        )
+        provider_answers = await get_provider(ai_provider, api_key).run([param])
+        answer_1 = provider_answers[0].answer if provider_answers else ""
+        _, answer_1_parsed = _extract_sample_data(answer=answer_1, correct_answer=blank_answer)
+
+    # setup and execute the second prompt
     prompt_2_unformatted = read_prompt_from_file(name, idx=2)
-    keys_to_extract = [i[1] for i in Formatter().parse(prompt_2_unformatted) if i[1] is not None]
-    _, sample_data = _extract_sample_data(answer=answer_1, correct_answer=correct_answer)
-    keys_extracted = {datapoint.field: datapoint.model for datapoint in sample_data if datapoint.field in keys_to_extract}
-    keys_extracted = manual_fix_instrument_type(keys_extracted, prompt_2_unformatted)
-    if "input" in keys_to_extract:
-        keys_extracted.update({"input": "{input}"})  # make sure input remains as a key in the template
-    if "answer_1" in keys_to_extract:
-        keys_extracted.update({"answer_1": answer_1})
-
-    prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, correct_answer)
+    prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, answer_1_parsed)
     input_2 = (
         answer_1 if name == "PricingModels" else body.input
     )  # in use first-stage output as second stage input for PricingModels only
@@ -422,7 +457,25 @@ async def provider_run(ai_provider: AIProvider, body: AIRunBody, api_key: str = 
     )
     provider_answers = await get_provider(ai_provider, api_key).run([param_2])
     answer_2 = provider_answers[0].answer if provider_answers else ""
+    _, answer_2_parsed = _extract_sample_data(answer=answer_2, correct_answer=blank_answer)
 
+    # check if output was parsed a json: if not, call LLM and ask to convert to JSON
+    answer_is_json = not all([element.model == "None" for element in answer_2_parsed])
+    if not answer_is_json:
+        param = ProviderParam(
+            sample_id=body.sample_id,
+            provider_model=body.provider_model,
+            prompt="""
+            Convert the following to JSON format: : ```{input}```
+            """,
+            context=answer_2,
+            seed=body.seed,
+            temperature=body.temperature,
+            top_p=body.top_p,
+            top_k=body.top_k,
+        )
+        provider_answers = await get_provider(ai_provider, api_key).run([param])
+        answer_2 = provider_answers[0].answer if provider_answers else ""
     correct_answer = _correct_answer_for_sample(experiment_name=body.experiment_name, sample_id=body.sample_id)
     overall_sample_score, sample_data = _extract_sample_data(answer=answer_2, correct_answer=correct_answer)
 
@@ -457,6 +510,7 @@ async def provider_score(
     api_key: Annotated[Optional[str], Header()] = None,
 ):
     _validate_body_model(ai_provider, body)
+    blank_answer = pd.Series(index=_get_keys_for_experiment(experiment_name=body.experiment_name))
 
     experiment_file_path = Path(settings.data_path, f"{body.experiment_name}.csv")
     if not experiment_file_path.exists() or not experiment_file_path.is_file():
@@ -466,8 +520,9 @@ async def provider_score(
         )
 
     name = body.experiment_name.split("-")[0]
-    prompt_1 = read_prompt_from_file(name, idx=1)
 
+    # setup and execute the first prompt
+    prompt_1 = read_prompt_from_file(name, idx=1)
     provider_params_1 = list()
     for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
         param_1 = ProviderParam(
@@ -485,6 +540,7 @@ async def provider_score(
     provider_answers_1 = await get_provider(ai_provider, api_key).run(provider_params_1)
     provider_answers_dict_1 = {p_answer.sample_id: p_answer for p_answer in provider_answers_1}
 
+    # setup and execute the second prompt
     provider_params_2 = list()
     prompt_2_unformatted = read_prompt_from_file(name, idx=2)
     answer_1_dict = {}
@@ -499,7 +555,9 @@ async def provider_score(
 
     for index, row in pd.read_csv(experiment_file_path, header=0).iterrows():
         sample_id = int(index) + 1
-        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted,answer_1_dict[sample_id], row)
+        answer_1 = provider_answers_dict_1[sample_id].answer
+        _, answer_1_parsed = _extract_sample_data(answer=answer_1, correct_answer=blank_answer)
+        prompt_2 = format_prompt_2_using_answer_1(prompt_2_unformatted, answer_1, answer_1_parsed)
         input_2 = (
             provider_answers_dict_1[sample_id].answer if name == "PricingModels" else row[INPUT_FIELD]
         )  # in use first-stage output as second stage input for PricingModels only
@@ -525,8 +583,31 @@ async def provider_score(
         provider_answer = provider_answers_dict_2.get(int(index) + 1)
         if provider_answer is None:
             continue
+        answer_2 = provider_answer.answer
+        _, answer_2_parsed = _extract_sample_data(answer=answer_2, correct_answer=blank_answer)
+        # check if output was parsed a json: if not, call LLM and ask to convert to JSON
+        answer_is_json = not all([element.model == "None" for element in answer_2_parsed])
+        if not answer_is_json:
+            sample_id = int(index) + 1
+            param = ProviderParam(
+                sample_id=sample_id,
+                provider_model=body.provider_model,
+                prompt="""
+                Convert the following to JSON format: : ```{input}```
+                """,
+                context=answer_2,
+                seed=body.seed,
+                temperature=body.temperature,
+                top_p=body.top_p,
+                top_k=body.top_k,
+            )
+            provider_answers = await get_provider(ai_provider, api_key).run([param])
+            answer_2 = provider_answers[0].answer if provider_answers else ""
+            # trim answer
+            answer_2 = "{".join([""] + answer_2.split("{")[1:])
+            answer_2 = "}".join(answer_2.split("}")[:-1] + [""])
 
-        overall_sample_score, sample_data = _extract_sample_data(answer=provider_answer.answer, correct_answer=row)
+        overall_sample_score, sample_data = _extract_sample_data(answer=answer_2, correct_answer=row)
         item = AIExperimentItem(
             overall_sample_score=str(round(overall_sample_score, 2)) + "%",
             sample_id=provider_answer.sample_id,
