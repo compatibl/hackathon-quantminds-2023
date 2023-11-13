@@ -1,0 +1,389 @@
+﻿ID,Input,InstrumentType,CUSIP,EffectiveDate,MaturityDate,Notional,FixedLegNotional,FloatingLegNotional,Currency,FixedLegCurrency,FloatingLegCurrency,PayOrReceiveFixed,FixedRatePercent,Underlying,Underlying2,FloatingSpreadBp,FloatingRateMultiplier,FloatingRateCapPct,FloatingRateFloorPct,ResetType,PaymentFrequency,FixedLegPaymentFrequency,FloatingLegPaymentFrequency,ExerciseFrequency,StartingValue,ParticipationRatePct,CappedValueOfUnderlying,CappedReturnPct,BufferAmountPct,UpperRangeAccrualLevelPct,LowerRangeAccrualLevelPct,PrincipalProtected,InitialPrice,TriggerLevel,TriggerLevelPct,RateUponTriggerPct,CpiLagMonths,WorstOf
+AcceleratedReturnEquityLinkedNote.1,"- **Summary:**
+
+- 2,293,946 Units
+- $10 principal amount per unit
+- Maturity of approximately two years
+- The Starting Value will be the lowest closing level of the Index during a two month period beginning on the pricing date
+- 3-to-1 upside exposure to increases in the Index, subject to a capped return of 25.47%
+- 1-to-1 downside exposure to decreases in the Index, with 100% of your investment at risk
+- All payments occur at maturity and are subject to the credit risk of Bank of America Corporation
+- No periodic interest payments
+- Limited secondary market liquidity, with no exchange listing
+
+- **Issuer:**
+  - Bank of America Corporation (“BAC”)
+
+- **Original Offering Price:**
+  - $10.00 per unit
+
+- **Term:**
+  - Approximately two years
+
+- **Market Measure:**
+  - The S&P 500® Index (Bloomberg symbol: “SPX”), a price return index.
+
+- **Starting Value:**
+  - The lowest closing level of the Market Measure on any Market Measure Business Day (on which no Market Disruption Event has occurred) during the Starting Value Determination Period.
+  - The closing level of the Market Measure on the pricing date was 1,360.02.
+  - The actual Starting Value will be made available to investors in the notes after the Starting Value has been determined.
+
+- **Starting Value Determination Period:**
+  - The period from and including the pricing date to and including September 27, 2012 (or if that day is not a Market Measure Business Day, the immediately following Market Measure Business Day).
+
+- **Ending Value:**
+  - The average of the closing levels of the Market Measure on each scheduled calculation day occurring during the maturity valuation period.
+  - The calculation days are subject to postponement in the event of Market Disruption Events, as described on page S-25 of product supplement ARN-4.
+
+- **Capped Value:**
+  - $12.547 per unit of the notes, which represents a return of 25.47% over the Original Offering Price.
+
+- **Maturity Valuation Period:**
+  - July 16, 2014, July 17, 2014, July 18, 2014, July 21, 2014, and July 22, 2014
+
+- **Participation Rate:**
+  - 300%",AcceleratedReturnEquityLinkedNote,,2012-09-27,2014-07-22,22939460,,,USD,,,,,SPX,,,,,,,,,,,1360.02,300,,25.47,,,,,,,,,,
+AutocallableEquityLinkedNote.1,"- General
+  - The Notes are designed for investors who seek a Contingent Interest Payment with respect to each Observation Date for which the closing price of one share of the Reference Stock is greater than or equal to 61% of the Initial Price, which we refer to as the Coupon Barrier Level. Investors should be willing to forgo fixed interest and dividend payments, in exchange for the opportunity to receive Contingent Interest Payments.
+  - Investors in the Notes should be willing to accept the risk of losing some or all of their principal and the risk that no Contingent Interest Payment may be made with respect to some or all Observation Dates. Any payment on the Notes is subject to the credit risk of JPMorgan Chase & Co.
+  - The Notes will be automatically called if the closing price of one share of the Reference Stock on any Observation Date (other than the first and final Observation Dates) is greater than or equal to the Initial Price. The first Observation Date, and therefore the earliest date on which an automatic call may be initiated, is September 22, 2014.
+  - Unsecured and unsubordinated obligations of JPMorgan Chase & Co. maturing August 27, 2015†
+  - Minimum denominations of $1,000 and integral multiples thereof
+  - The Notes are expected to price on or about August 22, 2014 and are expected to settle on or about August 27, 2014. The Pricing Date, for purposes of the Notes, is the day that the terms of the Notes become final. The Initial Price has been determined by reference to the closing price of one share of the Reference Stock on August 21, 2014, subject to adjustments, and not by reference to the closing price of one share of the Reference Stock on the Pricing Date.
+
+- Key Terms
+  - Reference Stock: The Class A common stock, par value of $0.001 per share, of GameStop Corp. (Bloomberg ticker: “GME”). We refer to GameStop Corp. as “GameStop.”
+  - Contingent Interest Payments: If the Notes have not been automatically called and the closing price of one share of the Reference Stock on any Observation Date is greater than or equal to the Coupon Barrier Level, you will receive on the applicable Contingent Interest Payment Date for each $1,000 principal amount Note a Contingent Interest Payment equal to at least $12.50* (equivalent to an interest rate of at least 15.00%* per annum, payable at a rate of at least 1.25%* per month).
+    - If the closing price of one share of the Reference Stock on any Observation Date is less than the Coupon Barrier Level, no Contingent Interest Payment will be made with respect to that Observation Date.
+  - Coupon Barrier Level / Knock-In Level: $24.6989, which is 61% of the Initial Price (subject to adjustments)
+  - Contingent Interest Rate: At least 15.00%* per annum, payable at a rate of at least 1.25%* per month, if applicable
+    - *The actual Contingent Interest Rate will be provided in the pricing supplement and will not be less than 15.00% per annum.
+  - Automatic Call: If the closing price of one share of the Reference Stock on any Observation Date (other than the first and final Observation Dates) is greater than or equal to the Initial Price, the Notes will be automatically called for a cash payment, for each $1,000 principal amount Note, equal to (a) $1,000 plus (b) the Contingent Interest Payment applicable to that Observation Date, payable on the applicable Call Settlement Date.
+  - Payment at Maturity: If the Notes have not been automatically called and the Final Price is greater than or equal to the Knock-In Level, you will receive a cash payment at maturity, for each $1,000 principal amount Note, equal to (a) $1,000 plus (b) the Contingent Interest Payment applicable to the Valuation Date.
+    - If the Notes have not been automatically called and the Final Price is less than the Knock-In Level, at maturity you will lose 1% of the principal amount of your Notes for every 1% that the Final Price is less than the Initial Price. Under these circumstances, your payment at maturity per $1,000 principal amount Note will be calculated as follows: $1,000 + ($1,000 × Stock Return)
+    - If the Notes have not been automatically called and the Final Price is less than the Knock-In Level, you will lose more than 39% of your principal amount and could lose up to the entire principal amount of your Notes at maturity.
+  - Stock Return: (Final Price – Initial Price) / Initial Price
+  - Initial Price: The closing price of one share of the Reference Stock on August 21, 2014, which was $40.49, divided by the Stock Adjustment Factor. The Initial Price is not determined by reference to the closing price of one share of the Reference Stock on the Pricing Date.
+  - Final Price: The closing price of one share of the Reference Stock on the Valuation Date
+  - Stock Adjustment Factor: Set initially at 1.0 on August 21, 2014 and subject to adjustment upon the occurrence of certain corporate events affecting the Reference Stock. See “General Terms of Notes — Additional Reference Stock Provisions — Anti-Dilution Adjustments” in the accompanying product supplement no. 20-I for further information.
+  - Pricing Date: On or about August 22, 2014
+  - Settlement Date: On or about August 27, 2014
+  - Observation Dates†: September 22, 2014, October 22, 2014, November 24, 2014, December 22, 2014, January 22, 2015, February 23, 2015, March 23, 2015, April 22, 2015, May 22, 2015, June 22, 2015, July 22, 2015 and August 24, 2015 (the “Valuation Date”)
+  - Contingent Interest Payment Dates†: Notwithstanding anything to the contrary in the accompanying product supplement no. 20-I, the Contingent Interest Payment Dates will be September 25, 2014, October 27, 2014, November 28, 2014, December 26, 2014, January 27, 2015, February 26, 2015, March 26, 2015, April 27, 2015, May 28, 2015, June 25, 2015, July 27, 2015 and the Maturity Date
+  - Call Settlement Date†: If the Notes are automatically called on any Observation Date (other than the first and final Observation Dates), the first Contingent Interest Payment Date immediately following that Observation Date
+  - Maturity Date†: August 27, 2015
+  - CUSIP: 48127DXW3",AutocallableEquityLinkedNote,48127DXW3,2014-08-27,2015-08-27,,,,USD,,,,,GME,,,,15,,,,,,,40.49,,,,,,,,,24.6989,,,,
+AutocallableEquityLinkedRangeAccrualNote.1,"**Issuer:**
+- Bank of America Corporation (“BAC”)
+
+**Original Offering Price:**
+- $10.00 per unit
+
+**Term:**
+- Fifteen years
+
+**Market Measure:**
+- S&P 500® Index (Bloomberg symbol: “SPX”). See the section entitled “The S&P 500® Index” on page TS-6 of this term sheet.
+
+**Automatic Call:**
+- The notes will be automatically called on any Observation Date on which the level of the Index is above the Call Reference Level. The redemption price will be 100% of the principal amount of the notes, plus any accrued and unpaid interest. The redemption price will be paid on the interest payment date immediately following the applicable Observation Date.
+
+**Observation Dates:**
+- Quarterly, on the fifth scheduled Market Measure Business Days prior to each interest payment date, beginning with the interest payment date occurring on December     , 2012
+
+**Call Reference Level:**
+- 120% of the closing level of the Index on the pricing date.
+
+**Reference Level:**
+- 75% of the closing level of the Index on the pricing date.
+
+**Payment at Maturity:**
+- If the notes are not automatically called, we will pay to you at maturity the principal amount of the notes, plus any accrued and unpaid interest, subject to our credit risk.
+
+**Interest Rates:**
+- For the first four quarterly interest periods, interest will accrue at a rate of R per annum.
+- For each subsequent quarterly interest period, interest will accrue at a rate per annum equal to: R × (N/D)
+    - “R” will be determined on the pricing date and will be between 9.50% and 10.00% per annum, inclusive.
+    - “N” will be the total number of Market Measure Business Days during the applicable quarterly interest period on which the level of the Index is equal to or greater than the Reference Level.
+    - “D” will be the total number of Market Measure Business Days during the applicable quarterly interest period.
+- Beginning one year after the issue date, interest will not accrue on any Market Measure Business Day on which the level of the Index is less than the Reference Level. After the first four quarterly interest periods, you may not earn any interest on the notes at all.
+- In no event will the annualized interest rate applicable to any quarterly interest period be greater than R or less than 0.00%.
+- The levels of the Index for the last four Market Measure Business Days of a quarterly interest period will be the same as the level of the Index on the Market Measure Business Day immediately preceding those four days.
+
+**Interest Periods:**
+- Each interest period (other than the first interest period) will commence on, and will include, the Market Measure Business Day immediately following the previous interest payment date, and will extend to, and will include, the next succeeding interest payment date or the maturity date (or any applicable early redemption date), as applicable. The first interest period will commence on, and will include, the settlement date of the notes, and will extend to, and will include, the first interest payment date.
+
+**Interest Payment Dates:**
+- Quarterly, on March     , June     , September     , and December     , beginning on March     , 2012, subject to postponement as described in the section entitled “Description of the Notes—Interest” beginning on page S-19 of product supplement RANGE-1.
+
+**Day Count Convention:**
+- 30/360
+
+**Market Measure Business Day:**
+- Any day that is a day on which (1) the New York Stock Exchange and The NASDAQ Stock Market, or their successors, are open for trading and (2) the S&P 500® Index or any successor thereto is calculated and published.",AutocallableEquityLinkedRangeAccrualNote,,2011-12-15,2026-12-15,,,,USD,,,,10,SPX,,,,,,,,,,,,,,,,,75,,,,120,,,
+AutocallableFixedRateNote.1,"Principal Amount: $1,000 per security
+
+Term: 15 months
+
+Reference Asset: Composed of the S&P 500® Index (“SPX”) and the Russell 2000® Index (“RTY”) (each an “Underlying” and together the “Underlyings”).
+
+Annual Coupon Rate: At least 6.25% per annum (to be determined on the Pricing Date), approximately 0.5208% per month.
+
+Call Feature: The Notes will be automatically called if the Official Closing Level of each Underlying is at or above its Initial Level on any Call Observation Date on or after December 22, 2017. In that case, you will receive a payment, per $1,000 Principal Amount of Notes, equal to the Principal Amount plus the coupon payment payable on the corresponding Call Payment Date
+
+Final  Return: With respect to each Underlying Final Level – Initial Level Initial Level
+
+Least Performing Underlying: The Underlying with the lowest
+
+Final Return Payment at Maturity per Note: Unless the Notes are automatically called, for each $1,000 Principal Amount of Notes, you will receive a payment on the Maturity Date calculated as follows, plus the final coupon payment: (a) If a Trigger Event does not occur, 100% of the Principal Amount. (b) If a Trigger Event occurs and the Final Return of the Least Performing Underlying is positive or zero, an amount equal to 100% of the Principal Amount. (c) If a Trigger Event occurs and the Final Return of the Least Performing Underlying is negative, an amount equal to (i) 100% of the Principal Amount multiplied by (ii) the sum of one plus the Final Return of the Least Performing Underlying.
+
+Trigger Event: A Trigger Event occurs if the Official Closing Level of either Underlying is below its Trigger Level on any scheduled trading day during the Observation Period.
+
+Trigger Level: For each Underlying, 70% of its Initial Level.
+
+Trade Date and Pricing Date: June 27, 2017
+
+Original Issue Date: June 30, 2017
+
+Final Valuation Date: September 25, 2018
+
+Maturity Date: September 28, 2018",AutocallableFixedRateNote,,2017-06-28,2018-09-28,1000,,,,,,,6.25,SPX,RTY,,,,,,Monthly,,,,,,,,,,,,,,70,,,Yes
+CallableFixedForFloatingSwap.1,"EFFECTIVE DATE:               January 15, 2004
+
+TERMINATION DATE:             The earlier of (i) January 15, 2014 and (ii) the
+                              Optional Termination Date (as specified below)
+                              subject to adjustment in accordance with the
+                              Modified Following Business Day Convention
+
+OPTIONAL TERMINATION DATE:    Party A has the option to terminate this Swap
+                              Transaction effective January 15, 2009 and any
+                              Business Day thereafter (the """"Optional Termination
+                              Date""""), no later than 30 calendar days prior to
+                              such Optional Termination Date. Payment with
+                              respect to the Optional Termination Date will be
+                              made by Party A to Party B in accordance with the
+                              following schedule
+
+                              Optional Termination Date
+                              -------------------------
+                              From and including:        To But Excluding:      Payment:
+                              1/15/09                     1/15/10               3.500%
+                              1/15/10                     1/15/11               2.333%
+                              1/15/11                     1/15/12               1.167%
+                              1/15/12                     1/15/14               0.000%
+
+NOTIONAL AMOUNT:              $100,000,000
+
+FLOATING RATE PAYER:          CSK Auto Inc.  (""""Party B"""")
+
+FLOATING RATE INDEX:          6 Month USD-LIBOR-BBA (Telerate page 3750)
+
+FLOATING RATE SPREAD:         283 bps
+
+FLOATING RATE PAYMENT DATES:  Payable semi-annually on the 15th of each January
+                              and July, beginning on July 15, 2004 to and
+                              including the Termination Date subject to
+                              adjustment in accordance with the Modified
+                              Following Business Day Convention
+
+FLOATING RATE PAYMENT BUSINESS DAY CONVENTION:      Modified Following
+
+FLOATING RATE PAYMENT DAY
+COUNT:                        Actual/360
+
+FLOATING RATE RESET DATES:    The last day of each Calculation Period
+
+FLOATING RATE PAYMENT
+BUSINESS DAYS:                New York and London
+
+FIXED RATE PAYER:             Lehman Commerical Paper Inc.  (""""LCPI""""; """"Party A"""")
+
+FIXED RATE:                   7.00%
+
+FIXED RATE PAYMENT DATES:     Payable semi-annually on the 15th of each January
+                              and July, beginning on July 15, 2004 to and
+                              including the Termination Date
+
+FIXED RATE PAYMENT BUSINESS DAY CONVENTION:               Modified Following
+
+FIXED RATE PAYMENT DAY COUNT: 30/360",CallableFixedForFloatingSwap,,2004-01-15,2014-01-15,,100000000,100000000,,USD,USD,PayFixed,7,6 Month USD-LIBOR-BBA,,283,,,,InArrears,,Semiannual,Semiannual,Daily,,,,,,,,,,,,,,
+CallableFixedRateNote.1,"Issuer: This firm
+Currency: U.S. Dollars
+Denomination: $1,000
+Issue Date: June 15, 2023
+Maturity Date: June 15, 2038
+Interest Rate: 6.00% per annum
+Interest Payment Dates:Semi-annually, on June 15th and December 15th of each year, commencing on December 15, 2023, and ending on the maturity date. If an Interest Payment Date is not a New York business day, interest will be paid on the next New York business day, without adjustment for period end dates and no interest will be paid in respect of the delay.
+Redemption: Redeemable at our option. If we redeem the Notes, we will pay you the principal amount, together with the applicable interest payment.
+Call Dates: The Notes are callable, in whole, but not in part, beginning on June 15, 2025, and on each Interest Payment Date thereafter upon 10 business days’ prior written notice.",CallableFixedRateNote,,2023-06-15,2038-06-15,,1000,,USD,,,PayFixed,6,,,,,,,,,Semiannual,,Semiannual,,,,,,,,,,,,,,
+KnockOutCommodityLinkedNote.1,"- **The notes offered are:**
+  - Senior unsecured obligations of Morgan Stanley
+  - Will pay no interest
+  - Have terms described in the accompanying prospectus supplement and prospectus
+  - Terms supplemented or modified by these preliminary terms
+
+- **At maturity:**
+  - **If an upside knock-out event has not occurred on the determination date:**
+    - Payment per note: $1,000 (stated principal amount) + supplemental redemption amount based on the price of gold, if any
+  - **If an upside knock-out event has occurred on the determination date:**
+    - Payment per note: $1,000 (stated principal amount) + (product of $1,000 and knock-out rate of 18%)
+    - Note: If an upside knock-out event occurs, the return of 18% at maturity is substantially less than the appreciation of gold
+
+- **The notes:**
+  - Are for investors who are concerned about principal risk but seek a gold-based return
+  - Investors must be willing to forgo current income and a reduction in their return if an upside knock-out event occurs
+  - Offer participation in any positive performance of gold up to the knock-out price
+  - Ensure repayment of principal at maturity
+  - Are senior notes issued as part of Morgan Stanley’s Series F Global Medium-Term Notes program
+  - All payments, including repayment of principal at maturity, are subject to Morgan Stanley's credit risk
+
+- **SUMMARY TERMS:**
+  - Issuer: Morgan Stanley
+  - Issue price: $1,000 per note
+  - Stated principal amount: $1,000 per note
+  - Original issue date: November 16, 2020 (3 business days after the pricing date)
+  - Maturity date: November 16, 2025
+  - Interest: None
+  - Underlying commodity: Gold
+  - Payment at maturity: Described above
+
+- **Payment at maturity per $1,000 stated principal amount will equal:**
+  - If an upside knock-out event has not occurred: $1,000 + supplemental redemption amount, if any
+  - If an upside knock-out event has occurred: $1,000 + ($1,000 x knock-out rate)
+  - Note: In no event will the payment due at maturity be less than $1,000 per note
+
+- **Upside knock-out event:**
+  - Occurs if the final commodity price is greater than the knock-out price
+
+- **Knock-out price:**
+  - $ 190% of the initial commodity price
+
+- **Knock-out rate:** 18%
+
+- **Supplemental redemption amount:**
+  - Calculated as $1,000 times the commodity percent change times the participation rate
+  - Minimum of $0 per note
+
+- **Participation rate:** 100%
+
+- **Commodity percent change:**
+  - Calculated as (final commodity price – initial commodity price) / initial commodity price
+
+- **Initial commodity price:**
+  - $ 1885.6, which is the commodity price on the pricing date
+
+- **Final commodity price:**
+  - The commodity price on the determination date
+
+- **Commodity price:**
+  - For any trading day, the afternoon gold fixing price per troy ounce of gold
+  - Price stated in U.S. dollars
+  - Calculated by the London Gold Market and published by the LBMA on such day",KnockOutCommodityLinkedNote,,2020-11-16,2025-11-16,1000,,,,,,,,Gold,,,,,,,,,,,,,,,,,,,1885.6,3582.64,,18,,
+NonCallableFixedToFloatingNote.1,"- Summary:
+  - 42,531 Units
+  - Due June 15, 2016
+  - $1,000 principal amount per unit
+  - Pricing Date: June 7, 2012
+  - Settlement Date: June 15, 2012
+  - Maturity Date: June 15, 2016
+  - CUSIP No. 06048WMN7
+
+- Interest payable quarterly, beginning in September 2012
+- The notes have a maturity of four years
+- The notes will accrue interest at the following rates:
+  - From the settlement date to, but excluding, June 15, 2013: at a fixed rate of 5.48% per annum.
+  - From June 15, 2013 to, but excluding, the maturity date: at a floating rate equal to 3-month LIBOR plus 1.75%. The interest rate during this period will not be less than 1.75% per annum.
+- Payment of principal plus any accrued and unpaid interest at maturity
+- Payments on the notes are subject to the credit risk of Bank of America Corporation
+- No listing on any securities exchange
+
+
+- Issuer:
+  - Bank of America Corporation (“BAC”)
+
+- Original Offering Price:
+  - $1,000.00 per unit
+
+- Term:
+  - Four years
+
+- Payment at Maturity:
+  - At maturity, you will receive for each unit of your notes a cash payment of $1,000 plus any accrued and unpaid interest, subject to our credit risk. See “Risk Factors — Payments on the notes are subject to our credit risk, and actual or perceived changes in our creditworthiness are expected to affect the value of the notes” on page TS-3 of this term sheet.
+
+- Interest Periods:
+  - Quarterly. Each interest period (other than the first interest period, which will begin on the settlement date) will begin on, and will include, an interest payment date, and will extend to, but will exclude, the next succeeding interest payment date (or the maturity date, as applicable).
+
+- Interest Payment Dates:
+  - March 15, June 15, September 15, and December 15 of each year, beginning on September 15, 2012, with the final interest payment due on the maturity date, subject to postponement as described in the section entitled “Other Terms of the Notes — Interest” beginning on page TS-5 of this term sheet.
+
+- Interest Rate:
+  - Fixed Rate Period: From the settlement date to, but excluding, June 15, 2013, the notes will bear interest at a fixed rate of 5.48% per annum.
+  - Floating Rate Period: From June 15, 2013 to, but excluding, the maturity date (the “Floating Rate Period”), the notes will bear interest at a per annum floating rate equal to the Reference Rate plus the Spread. The minimum rate of interest payable on the notes during the Floating Rate Period will be the Minimum Coupon.
+    - For additional information as to the calculation of interest during the Floating Rate Period, see “Description of Debt Securities — Floating-Rate Notes” beginning on page 15 of the prospectus.
+
+- Spread:
+  - 1.75%
+
+- Minimum Coupon:
+  - 1.75% per annum
+
+- Reference Rate:
+  - 3-Month U.S. Dollar LIBOR that appears on Reuters page LIBOR01, or any page substituted for that page, as of 11:00 A.M., London time, on the applicable London Banking Day (as defined below), as determined by the calculation agent in the manner described in the section entitled “Other Terms of the Notes — Interest” on page TS-5 of this term sheet. The Reference Rate is more fully described beginning on page TS-7.
+
+- Day Count Fraction:
+  - 30/360",NonCallableFixedToFloatingNote,06048WMN7,2012-06-15,2016-06-15,42531000,,,USD,,,,5.48,3-month LIBOR,,175,,,175,,Quarterly,,,,,,,,,,,,,,,,,
+NonCallableFloatingSpreadNote.1,"Summary:
+  - The notes offered by this pricing supplement are unsecured debt securities issued by Citigroup Global Markets Holdings Inc. and guaranteed by Citigroup Inc. The notes will pay interest at a floating rate based on 3-month U.S. dollar LIBOR during the LIBOR period specified below and based on the CMS spread (as described below) during the CMS spread period specified below. The notes will have characteristics of a conventional floating rate note based on 3-month U.S. dollar LIBOR during the LIBOR period. However, during the CMS spread period, the floating rate payable on the notes will vary not based on a single market interest rate, but rather based on the spread between two constant maturity swap rates of different maturities. This may result in a floating rate during the CMS spread period that is significantly less than it would have been had it continued to be based on 3-month U.S. dollar LIBOR. Interest payments on the notes will fluctuate and may be paid at a rate as low as 0% for one or more interest periods.
+  - There is uncertainty about the future of 3-month U.S. dollar LIBOR as well as the Constant Maturity Swap (CMS) rates used to calculate the CMS spread, and such uncertainty may adversely affect the return on and value of the notes.. The amount of interest payable on the notes may be calculated using one or more substitute or successor rates selected by the issuer (or one of its affiliates), which may be subject to adjustment by the issuer or an affiliate of the issuer, if 3-month U.S. dollar LIBOR or a relevant CMS rate is discontinued. At this time, no consensus exists as to what rate or rates may become accepted alternatives, and it is impossible to predict the effect of any such alternatives on the value of securities, such as the notes, that are linked to such rates. See “Summary Risk Factors” and “Determination of 3-month U.S. Dollar LIBOR” and “Information About the CMS Spread” in this pricing supplement.
+  - Investors in the notes must be willing to accept (i) an investment that may have limited or no liquidity and (ii) the risk of not receiving any amount due under the notes if we and Citigroup Inc. default on our obligations. All payments on the notes are subject to the credit risk of Citigroup Global Markets Holdings Inc. and Citigroup Inc.
+
+Issuer: This firm
+
+Guarantee: All payments due on the notes are fully and unconditionally guaranteed by Citigroup Inc.
+
+Stated principal amount: $1,000 per note
+
+Pricing date: August 6, 2018
+
+Issue date: August 9, 2018. See “Supplemental Plan of Distribution” in this pricing supplement for additional information.
+
+Maturity date: August 9, 2022
+
+Payment at maturity: At maturity, you will receive for each note you then hold an amount in cash equal to $1,000 plus any accrued and unpaid interest
+
+Interest: 
+-    During each interest period that occurs during the LIBOR period, the notes will bear interest at a per annum floating rate equal to 3-month U.S. dollar LIBOR, as determined on the interest determination date for that interest period, plus 1.00%, subject to a minimum interest rate of 0.00% per annum
+-    During each interest period that occurs during the CMS spread period, the notes will bear interest at a per annum floating rate equal to 6 times the CMS spread, as determined on the interest determination date for that interest period, subject to a minimum interest rate of 0.00% per annum.
+
+Interest payments on the notes will be paid at a floating rate that may be as low as 0.00% per annum for one or more interest periods.
+
+LIBOR period: The period from and including the issue date to but excluding August 9, 2020
+
+CMS spread period: The period from and including August 9, 2020 to but excluding the maturity date
+
+CMS spread: On any interest determination date, the 10-year constant maturity swap rate (“CMS10”) minus the 2-year constant maturity swap rate (“CMS2”), each as determined on that interest determination date
+Interest determination date: 
+  - For any interest period that occurs during the LIBOR period, the second London business day prior to the first day of that interest period
+  - For any interest period that occurs during the CMS spread period, the second U.S. government securities business day prior to the first day of that interest period
+
+Interest period: Each three-month period from and including an interest payment date (or the issue date, in the case of the first interest period) to but excluding the next interest payment date
+
+Interest payment dates: The 9th day of each February, May, August and November, beginning on November 9, 2018 and ending on the maturity date",NonCallableFloatingSpreadNote,,2018-08-09,2022-08-09,1000,,,USD,,,,,CMS10,CMS2,,6,,0,,Quarterly,,,,,,,,,,,,,,,,,
+NonCallableInflationLinkedNote.1,"- $14,878,000 Notes, due July 25, 2013
+- The notes are our unsecured senior notes.
+- The notes will mature on July 25, 2013. At maturity, you will receive the principal amount of the notes and any applicable final interest payment.
+- Interest on the notes will be determined and will be payable on a monthly basis. As further described below, it is possible that no interest will be payable on the notes during one or more interest periods.
+- Interest for the notes will be calculated from and including the 25th day of each month to but excluding the 25th day of the following month.
+- Interest will be paid on the 25th day of each month, beginning August 25, 2008.
+- The annualized interest rate applicable to any interest period will equal the CPI Inflation Adjustment (as defined below) multiplied by the Participation Rate (as defined below). We further describe how to determine the interest payable on the notes beginning on page PS-3.
+- As described in more detail below, the CPI Inflation Adjustment will equal the percentage change in the Consumer Price Index (the “CPI”) between (a) the month that is 15 months prior to the month in which the applicable interest period ends and (b) the month that is 3 months prior to the month in which the applicable interest period ends.
+- The Participation Rate is 123%.
+- Interest Payment Terms
+    - For each monthly interest period, we will determine the CPI Inflation Adjustment.
+    - If the CPI Inflation Adjustment is greater than zero, you will receive interest for that interest period.
+    - If the CPI Inflation Adjustment is equal to or less than zero, no interest will be paid for that interest period.
+    - The amount of interest due for any interest period will be determined based on a rate equal to the applicable CPI Inflation Adjustment multiplied by the Participation Rate.
+    - If an interest payment is due for an interest period, it will be paid on the 25th day of the applicable month, beginning in August 2008.
+    - Interest is computed on the basis of a 360-day year of twelve 30-day months.
+    - If any interest payment date or the maturity date of the notes falls on a day that is not a business day, we will make the required payment on the next business day, and no additional interest will accrue in respect of the payment made on the next business day.
+    - However, if an interest payment date falls on a date that is not a business day, and the next business day is in the next calendar month, the interest payment date will be the immediately preceding business day.",NonCallableInflationLinkedNote,,,2013-07-25,14878000,,,USD,,,,,CPI,,,,,,,Monthly,,,,,123,,,,,,,,,,,3,
