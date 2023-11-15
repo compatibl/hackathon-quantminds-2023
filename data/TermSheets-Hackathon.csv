@@ -72,7 +72,7 @@ AutocallableEquityLinkedNote.1,"- General
   - Contingent Interest Payment Dates†: Notwithstanding anything to the contrary in the accompanying product supplement no. 20-I, the Contingent Interest Payment Dates will be September 25, 2014, October 27, 2014, November 28, 2014, December 26, 2014, January 27, 2015, February 26, 2015, March 26, 2015, April 27, 2015, May 28, 2015, June 25, 2015, July 27, 2015 and the Maturity Date
   - Call Settlement Date†: If the Notes are automatically called on any Observation Date (other than the first and final Observation Dates), the first Contingent Interest Payment Date immediately following that Observation Date
   - Maturity Date†: August 27, 2015
-  - CUSIP: 48127DXW3",AutocallableEquityLinkedNote,48127DXW3,2014-08-27,2015-08-21,,,,USD,,,,,GME,,,,,15,,,,,,,,,,,,40.49,24.6989,,,,
+  - CUSIP: 48127DXW3",AutocallableEquityLinkedNote,48127DXW3,2014-08-27,2015-08-27,,,,USD,,,,,GME,,,,,15,,,,,,,,,,,,40.49,24.6989,,,,
 AutocallableEquityLinkedRangeAccrualNote.1,"**Issuer:**
 - Bank of America Corporation (“BAC”)
 
@@ -215,7 +215,7 @@ Maturity Date: June 15, 2038
 Interest Rate: 6.00% per annum
 Interest Payment Dates:Semi-annually, on June 15th and December 15th of each year, commencing on December 15, 2023, and ending on the maturity date. If an Interest Payment Date is not a New York business day, interest will be paid on the next New York business day, without adjustment for period end dates and no interest will be paid in respect of the delay.
 Redemption: Redeemable at our option. If we redeem the Notes, we will pay you the principal amount, together with the applicable interest payment.
-Call Dates: The Notes are callable, in whole, but not in part, beginning on June 15, 2025, and on each Interest Payment Date thereafter upon 10 business days’ prior written notice.",CallableFixedRateNote,,2023-06-15,2038-06-15,,1000,,USD,,,PayFixed,6,,,,,,,,,Semiannual,,Semiannual,,,,,,,,,,,,
+Call Dates: The Notes are callable, in whole, but not in part, beginning on June 15, 2025, and on each Interest Payment Date thereafter upon 10 business days’ prior written notice.",CallableFixedRateNote,,2023-06-15,2038-06-15,,1000,,USD,,,PayFixed,6,,,,,,,,Semiannual,,,Semiannual,,,,,,,,,,,,
 KnockOutCommodityLinkedNote.1,"- **The notes offered are:**
   - Senior unsecured obligations of Morgan Stanley
   - Will pay no interest

@@ -41,12 +41,12 @@ int expiry_step = 50;
 int side = 1;
 double s = 3.5;
 
-std::vector<double> underlying = model.get_underlying_path(expiry_step);
+std::vector<double> underlying = model.get_underlying_path(""SPX"", expiry_step);
 double m = underlying[0];
 for (int i = 1; i < expiry_step; ++i)
 {
     double u = underlying[i];
-    if (u > m) u = m;
+    if (u > m) m = u;
 }
 
 double payoff = side * n * std::max(m - s, 0.0);
@@ -104,7 +104,7 @@ int end_step = 60;
 int side = 1;
 double f = 0.05;
 
-double dcf = model.get_dcf(""30/365"", start_step, end_step);
+double dcf = model.get_dcf(""ACT/365"", start_step, end_step);
 TimeSlice s = model.get_const_time_slice(start_step, 1.0);
 TimeSlice e = model.get_const_time_slice(end_step, 1.0);
 e.discounted_rollback(start_step);
