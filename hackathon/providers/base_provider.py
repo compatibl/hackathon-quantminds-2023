@@ -14,7 +14,7 @@
 
 import abc
 import asyncio
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Final, Optional
 
 
@@ -28,7 +28,9 @@ class ProviderParam:
     temperature: Optional[float] = None
     top_p: Optional[float] = None
     top_k: Optional[int] = None
-
+    question: Optional[str] = None
+    # def dict(self):
+    #     return {k: str(v) for k, v in asdict(self).items()}
 
 @dataclass
 class ProviderAnswer:
