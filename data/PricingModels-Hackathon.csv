@@ -15,10 +15,10 @@ double s = 1.5;
 TimeSlice option = model.get_const_time_slice(expiry_step, 0.0);
 for (int i = expiry_step; i >= 0; --i)
 {
-    TimeSlice u = model.get_underlying_time_slice(expiry_step);
+    TimeSlice u = model.get_underlying_time_slice(i);
     TimeSlice payoff = s - u;
-    option = max(payoff, option);
     option.discounted_rollback(i);
+    option = max(payoff, option);
 }
 return side * n * option;",AmericanVanillaOption,200000,Buy,,Put,,,,1.5,,,,,,,
 AsianOption.1,"double n = 20000.0;
