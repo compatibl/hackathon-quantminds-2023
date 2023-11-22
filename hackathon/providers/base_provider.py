@@ -55,7 +55,7 @@ class BaseProvider(abc.ABC):
         return results
 
     @staticmethod
-    def get_error_answer(msg: str) -> str:
+    def get_error_answer(msg: str = "") -> str:
         return f"An error has occurred: {msg}"
 
     @staticmethod

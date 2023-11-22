@@ -20,12 +20,14 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.cors import CORSMiddleware
 
 from hackathon.api import routes
+from hackathon.api import routes_lbg
 from hackathon.exception import AppException
 from hackathon.hackathon_settings import get_settings
 
 app = FastAPI()
 
 app.include_router(routes.router)
+app.include_router(routes_lbg.router, prefix="/lbg")
 
 app.add_middleware(
     CORSMiddleware,

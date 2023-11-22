@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     static_path: Path = Path(__file__).parents[1].joinpath("./wwwroot")
     prompts_path: Path = Path(__file__).parents[1].joinpath("./prompts")
     data_path: Path = Path(__file__).parents[1].joinpath("./data")
+    results_path: Path = Path(data_path, "results.json")
     log_level: str = os.getenv("LOG_LEVEL", "DEBUG")
     host: str = os.getenv("UVICORN_HOST", "localhost")
     port: int = os.getenv("UVICORN_PORT", 8000)
