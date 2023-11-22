@@ -25,6 +25,7 @@ Return only JSON with these keys (omit those keys that do not apply):
 * ResetType - floating rate reset relative to calculation period, enum with values Upfront, InArrears
 * ExerciseFrequency - exercise frequency of an embedded option, enum with values Annual, Semiannual, Quarterly, Monthly, or Daily. Daily refers to every business day.
 * ParticipationRatePct - participation rate, upside leverage factor or similar parameter in percent
+* CappedValueOfUnderlying - capped value of the underlying
 * CappedReturnPct - capped return of the underlying in percent
 * BufferAmountPct - number in percent
 * TriggerLevel - price of the underlying at which knockout, knockin, or autocall occurs
