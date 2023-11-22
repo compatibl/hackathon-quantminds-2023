@@ -6,6 +6,7 @@ syntax: glob
 **/__pycache__
 **/.python-version
 **/venv
+**/*.log
 *.db
 *.egg
 *.egg-info/
