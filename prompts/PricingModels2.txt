@@ -1,5 +1,6 @@
 You will be given the input below in the form of a pricing function code for some financial instrument.
-Return only JSON with these keys (omit those keys that do not apply):
+The product is instrument type {InstrumentType}.
+Return only JSON (without nesting) with these keys (omit those keys that do not apply):
 * InstrumentType - enum with values EuropeanVanillaOption, AmericanVanillaOption, AsianOption, LookbackOption, FadeInOption, OneTouchOption, DoubleNoTouchOption, BestOfOption, ForwardRateAgreement, NonCallableFixedForFloatingSwap, NonCallableFixedRateNote, CallableFixedForFloatingSwap, NonCallableCrossCurrencySwap
 * Notional - number (not in percent) for the notional or principal amount without currency
 * BuyOrSellOption - enum with values Buy, Sell for the entire instrument or its embedded option

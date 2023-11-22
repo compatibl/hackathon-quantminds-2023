@@ -1,0 +1,20 @@
+Act as a Quant.
+Use the information in the input to determine the financial instrument.
+First determine if it is Accelerated Return, Autocallable, Callable, Knock-out or non-callable.
+Then determine if the underlying is best described as a Equity Linked Note, Equity Linked Range Accrual Note,
+Fixed Rate Note, Fixed For Floating Swap, Fixed To Floating Note, Floating Spread Note, Commodity Linked Note, Equity,
+Currency Linked Note, or Inflation Linked Note.
+
+Combine and get the best fitting instrument name from this list: AcceleratedReturnEquityLinkedNote,
+ AutocallableEquityLinkedNote, AutocallableEquityLinkedRangeAccrualNote, AutocallableFixedRateNote,
+ CallableEquityLinkedNote, CallableFixedForFloatingSwap, CallableFixedRateNote, CallableFloatingSpreadNote,
+  KnockOutCommodityLinkedNote, KnockOutEquityLinkedNote, NonCallableCommodityLinkedNote,
+  NonCallableCurrencyLinkedNote, NonCallableEquityLinkedNote, NonCallableFixedForFloatingSwap,
+  NonCallableFixedToFloatingNote, NonCallableFloatingSpreadNote, NonCallableInflationLinkedNote.
+
+Please explain to an experienced person why the information in the instrument fact sheet are consistent
+with your classification.
+
+Respond with the name of the instrument in a JSON  with key "InstrumentType" and value the name of the financial instruments.
+
+Term sheet: ```{input}```

@@ -1,5 +1,7 @@
 You will be given the input below in the form of a term sheet describing
-some financial instrument. Return only JSON with these keys (omit those keys that do not apply):
+some financial instrument.
+The product is instrument type {InstrumentType}.
+Return only JSON with these keys (omit those keys that do not apply):
 * InstrumentType - enum with values AcceleratedReturnEquityLinkedNote, AutocallableEquityLinkedNote, AutocallableEquityLinkedRangeAccrualNote, AutocallableFixedRateNote, CallableEquityLinkedNote, CallableFixedForFloatingSwap, CallableFixedRateNote, CallableFloatingSpreadNote, KnockOutCommodityLinkedNote, KnockOutEquityLinkedNote, NonCallableCommodityLinkedNote, NonCallableCurrencyLinkedNote, NonCallableEquityLinkedNote, NonCallableFixedForFloatingSwap, NonCallableFixedToFloatingNote, NonCallableFloatingSpreadNote, NonCallableInflationLinkedNote
 * Notional - number for the notional or principal amount for notes and instruments with one leg (do not specify when more than one leg is present)
 * FixedLegNotional - number for the notional or principal amount of the fixed leg (specify only when more than one leg is present)

@@ -1,0 +1,203 @@
+Analyze the following pseudocode for pricing several financial instruments:
+
+class OneTouchOption:
+    properties:
+        notional: number
+        option_type: enum (Put, Call)
+        barrier_level: number
+    method calculate_payoff(spot_price):
+        if option_type == "Call" and spot_price >= barrier_level:
+            return notional
+        elif option_type == "Put" and spot_price <= barrier_level:
+            return notional
+        else:
+            return 0
+
+
+class DoubleNoTouchOption:
+    properties:
+        notional: number
+        option_type: enum (Put, Call)
+        upper_barrier: number
+        lower_barrier: number
+    method calculate_payoff(spot_price):
+        if option_type == "Call" and spot_price <= upper_barrier and spot_price >= lower_barrier:
+            return notional
+        elif option_type == "Put" and (spot_price > upper_barrier or spot_price < lower_barrier):
+            return notional
+        else:
+            return 0
+
+
+class BestOfOption:
+    properties:
+        notional: number
+        option_type: enum (Put, Call)
+        asset_prices: list
+    method calculate_payoff():
+        if option_type == "Call":
+            return max(asset_prices) * notional
+        elif option_type == "Put":
+            return min(asset_prices) * notional
+        else:
+            return 0
+
+
+class ForwardRateAgreement:
+    properties:
+        notional: number
+        fixed_rate: number
+        floating_rate: number
+        time_to_maturity: number
+    method calculate_payoff():
+        forward_rate = (floating_rate - fixed_rate) * time_to_maturity
+        return forward_rate * notional
+
+
+class NonCallableFixedForFloatingSwap:
+    properties:
+        notional: number
+        fixed_rate: number
+        floating_rate: list
+        time_to_maturity: number
+    method calculate_payoff():
+        present_value_fixed_leg = fixed_rate * notional * time_to_maturity
+        present_value_floating_leg = sum(floating_rate) * notional * time_to_maturity
+        return present_value_fixed_leg - present_value_floating_leg
+
+
+class NonCallableFixedRateNote:
+    properties:
+        notional: number
+        fixed_rate: number
+        time_to_maturity: number
+    method calculate_payoff():
+        return fixed_rate * notional * time_to_maturity
+
+
+class CallableFixedForFloatingSwap:
+    properties:
+        notional: number
+        fixed_rate: number
+        floating_rate: list
+        time_to_maturity: number
+        call_option_strike: number
+    method calculate_payoff():
+        present_value_fixed_leg = fixed_rate * notional * time_to_maturity
+        present_value_floating_leg = sum(floating_rate) * notional * time_to_maturity
+        return max(present_value_fixed_leg - present_value_floating_leg, 0)
+
+
+class NonCallableCrossCurrencySwap:
+    properties:
+        notional_foreign: number
+        notional_domestic: number
+        fixed_rate_foreign: number
+        floating_rate_domestic: list
+        time_to_maturity: number
+        exchange_rate: number
+    method calculate_payoff():
+        present_value_fixed_leg_foreign = fixed_rate_foreign * notional_foreign * time_to_maturity
+        present_value_floating_leg_domestic = sum(floating_rate_domestic) * notional_domestic * time_to_maturity
+        return (present_value_fixed_leg_foreign - present_value_floating_leg_domestic) * exchange_rate
+
+
+class EuropeanVanillaOption:
+    properties:
+        notional: number
+        option_type: enum (Put, Call)
+        strike_price: number
+        spot_price: number
+    method calculate_payoff():
+        if option_type == "Call":
+            return max(spot_price - strike_price, 0) * notional
+        elif option_type == "Put":
+            return max(strike_price - spot_price, 0) * notional
+        else:
+            return 0
+
+
+class AmericanVanillaOption:
+    properties:
+        notional: number
+        option_type: enum (Put, Call)
+        strike_price: number
+        spot_price: number
+    method calculate_payoff():
+        if option_type == "Call":
+            intrinsic_value = max(spot_price - strike_price, 0)
+        elif option_type == "Put":
+            intrinsic_value = max(strike_price - spot_price, 0)
+        else:
+            return 0
+        return max(intrinsic_value, 0) * notional
+
+
+class AsianOption:
+    properties:
+        notional: number
+        option_type: enum (Put, Call)
+        averaging_type: enum (Arithmetic, Geometric)
+        strike_price: number
+        spot_prices: list
+    method calculate_payoff():
+        if averaging_type == "Arithmetic":
+            average_price = sum(spot_prices) / len(spot_prices)
+        elif averaging_type == "Geometric":
+            average_price = (spot_prices[0] * spot_prices[1] * ... * spot_prices[n-1]) ^ (1/n)
+        else:
+            return 0
+        if option_type == "Call":
+            return max(average_price - strike_price, 0) * notional
+        elif option_type == "Put":
+            return max(strike_price - average_price, 0) * notional
+        else:
+            return 0
+
+
+class LookbackOption:
+    properties:
+        notional: number
+        option_type: enum (Put, Call)
+        lookback_type: enum (FixedStrike, FloatingStrike)
+        spot_prices: list
+    method calculate_payoff():
+        if lookback_type == "FixedStrike":
+            if option_type == "Call":
+                return max(max(spot_prices) - min(spot_prices), 0) * notional
+            elif option_type == "Put":
+                return max(min(spot_prices) - max(spot_prices), 0) * notional
+            else:
+                return 0
+        elif lookback_type == "FloatingStrike":
+            if option_type == "Call":
+                return max(spot_prices[-1] - min(spot_prices), 0) * notional
+            elif option_type == "Put":
+                return max(max(spot_prices) - spot_prices[-1], 0) * notional
+            else:
+                return 0
+        else:
+            return 0
+
+
+class FadeInOption:
+    properties:
+        notional: number
+        option_type: enum (Put, Call)
+        fade_in_condition: number
+        strike_price: number
+    method calculate_payoff(spot_price):
+        if spot_price >= fade_in_condition:
+            if option_type == "Call":
+                return max(spot_price - strike_price, 0) * notional
+            elif option_type == "Put":
+                return max(strike_price - spot_price, 0) * notional
+            else:
+                return 0
+        else:
+            return 0
+
+You will be given the input below in the form of a pricing cpp code for a financial instrument.
+Determine the pseudocode object it is most similar to and output the object name.
+Respond with the name of the instrument in a JSON  with key "InstrumentType" and value the name of the financial instruments.
+Source code to classify: ```{input}```
