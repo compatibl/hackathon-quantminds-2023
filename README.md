@@ -1,10 +1,35 @@
 # QuantMinds-CompatibL Hackathon (2023)
 ![GitHub](https://img.shields.io/github/license/compatibl/hackathon)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/compatibl/hackathon/pulls)
-## Deadline extended to 6pm London time!
+## Leaderboard
 
-- The hackathon samples and parameters lists for scoring are available below
-- Online application at [hackathon.compatibl.com](hackathon.compatibl.com) was updated with the same examples and default prompt
+**Congratulations to the winners of QuantMinds-CompatibL Hackathon 2023!**
+
+The online application at [hackathon.compatibl.com](hackathon.compatibl.com) has been updated
+with the leaderboard and award-winning prompts.
+
+- Click on a leaderboard line or select a competition entry to run the code.
+- Source code for the coding entries has been merged to the main branch of this repo.
+
+#### TermSheets-GPT Category Leaderboard
+- 1st place - Emanuele Cagliero and Chiara Borsani
+- 2nd place - Shih-Hau Tan
+- 3rd place - Joao Fonseca De Araujo
+
+#### PricingModels-GPT Category Leaderboard
+- 1st place - Shih-Hau Tan
+- 2nd place - Giuseppe Mascolo and Miren Gutierrez Rodriguez
+- 3rd place - Marko Petrov
+
+#### TermSheets-LLAMA Category Leaderboard
+- 1st place - Peter Hufton, Paolo Tripoli and Maksymilian Wojtas
+
+#### PricingModels-LLAMA Category Leaderboard
+- 1st place - Peter Hufton, Paolo Tripoli and Maksymilian Wojtas
+
+#### Grand Prize Winner
+
+- Shih-Hau Tan
 
 ### TermSheets Stream
 
@@ -18,17 +43,8 @@
 
 ## Technical Support
 
-For technical support before and during the hackathon, email
+For technical support before, during and after the hackathon, email
 [support@compatibl-hackathon.freshdesk.com](mailto:support@compatibl-hackathon.freshdesk.com)
-
-## Date and Venue
-
-The Hackathon will take place on Monday, November 13, from 9am to 4pm London time at
-the InterContinental London - The O2, 1 Waterview Drive, SE10 0TW, London. The hotel is located
-on Greenwich Peninsula near the O2 Arena
-([Google Maps](https://maps.app.goo.gl/bRSPhmtevTKvqy6x8)).
-
-Further venue and event details can be found [here](https://informaconnect.com/quantminds-international/hackathon/).
 
 ## Competition
 
